@@ -1,0 +1,33 @@
+{
+  "name": "usdocker",
+  "version": "2.0.0",
+  "description": "A collection of Useful Scripts for Docker http://usdocker.com",
+  "main": "usdocker.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jest"
+  },
+  "author": "Joao Gilberto Magalhães",
+  "bin": {
+    "usdocker": "./usdocker.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.0.1",
+    "clear": "0.0.1",
+    "clui": "^0.3.6",
+    "commander": "^2.11.0",
+    "figlet": "^1.2.0",
+    "inquirer": "^3.2.1",
+    "marked": "^0.3.6",
+    "marked-terminal": "^2.0.0",
+    "minimist": "^1.2.0",
+    "moment-timezone": "^0.5.13",
+    "nconf": "^0.8.4",
+    "preferences": "^0.2.1",
+    "shelljs": "^0.7.8",
+    "sys": "0.0.1"
+  },
+  "devDependencies": {
+    "jest": "^20.0.1"
+  }
+}

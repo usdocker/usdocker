@@ -9,8 +9,8 @@ function pushArray(source, array, prefix) {
 }
 
 function pushString(source, str, prefix) {
-    if (str.trim() !== "") {
-        let parts = str.match(/"[^"]+"\b|\S+/g);
+    if (str.toString().trim() !== "") {
+        let parts = str.toString().match(/"[^"]+"\b|\S+/g);
         if (parts.length === 1) {
             if (prefix) {
                 source.push(prefix);
@@ -102,9 +102,6 @@ class DockerRunWrapper {
     };
 
     isRemove(value) {
-        if (this.detached) {
-            throw new Error('Cannot add --rm parameter if daemon is set');
-        }
         this.remove = value;
         return this;
     };
@@ -120,7 +117,7 @@ class DockerRunWrapper {
     };
 
     commandParam(param) {
-        this.cmdParam.push(param);
+        this.cmdParam.push(param.toString());
         return this;
     };
 
@@ -167,10 +164,10 @@ class DockerRunWrapper {
         dockerOptions.HostConfig = {};
         dockerOptions.HostConfig.AutoRemove = this.remove;
         dockerOptions.HostConfig.Binds = this.volumes;
-        dockerOptions.HostConfig.PortBinds = {};
+        dockerOptions.HostConfig.PortBindings = {};
         for(let i=0; i<this.ports.length; i++) {
             let ports = this.ports[i].split(':');
-            dockerOptions.HostConfig.PortBinds[ports[1] + "/tcp"] = [ { "HostPort": ports[0].toString() } ];
+            dockerOptions.HostConfig.PortBindings[ports[1] + "/tcp"] = [ { "HostPort": ports[0].toString() } ];
         }
 
         dockerOptions.Tty = !this.detached;
@@ -224,6 +221,11 @@ class DockerRunWrapper {
             CTRL_Q = '\u0011';
 
         function handler(err, container) {
+            if (err) {
+                console.log(err.message);
+                return;
+            }
+
             var attach_opts = {stream: true, stdin: true, stdout: true, stderr: true};
 
             container.attach(attach_opts, function handler(err, stream) {
@@ -252,6 +254,10 @@ class DockerRunWrapper {
                     container.wait(function(err, data) {
                         exit(stream, isRaw);
                     });
+
+                    if (!optsc.AttachStdin) {
+                        exit(stream, isRaw);
+                    }
                 });
             });
         }

@@ -3,6 +3,7 @@
 const nconf = require('nconf');
 const shell = require('shelljs');
 const path = require('path');
+const fs = require('fs');
 const moment = require('moment-timezone');
 
 class Config {
@@ -13,6 +14,9 @@ class Config {
             alternateHome = shell.config.HOME;
         }
 
+        if (!script) {
+            script = "";
+        }
         this._configPath = path.join(alternateHome, '.usdocker', script);
         this._configDataPath = path.join(alternateHome, '.usdocker_data', script);
         this._configJson = path.join(this._configPath, 'environment.json')
@@ -74,6 +78,10 @@ class Config {
     clear(key) {
         nconf.clear(key);
         this.save();
+    };
+
+    dump() {
+        return fs.readFileSync(this._configJson).toString();
     };
 
     getLocalTimeZone() {

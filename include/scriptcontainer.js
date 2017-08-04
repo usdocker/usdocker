@@ -91,6 +91,11 @@ class ScriptContainer {
         }
     }
 
+    existsScript(script) {
+        let scripts = this.availableScripts();
+        return scripts.indexOf(script) >= 0;
+    }
+
     availableScripts() {
         if (!this.isLoaded()) {
             this.load()

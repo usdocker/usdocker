@@ -1,15 +1,17 @@
 'use strict';
 
-const nconf = require('nconf');
 const shell = require('shelljs');
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment-timezone');
+const requireNew = require('require-new');
 
 class Config {
 
     constructor(script, alternateHome) {
 
+        this.nconf = requireNew('nconf');
+        
         if (alternateHome === undefined) {
             alternateHome = shell.config.HOME;
         }
@@ -23,16 +25,16 @@ class Config {
         shell.mkdir('-p', this._configPath);
         shell.mkdir('-p', this._configDataPath);
 
-        nconf.use('file', { file: this._configJson });
+        this.nconf.use('file', { file: this._configJson });
         this.reload();
     };
 
     reload() {
-        nconf.load();
+        this.nconf.load();
     };
 
     save() {
-        nconf.save();
+        this.nconf.save();
     }
 
     configUserDir(source) {
@@ -57,7 +59,7 @@ class Config {
     }
 
     set(key, value) {
-        nconf.set(key, value);
+        this.nconf.set(key, value);
         this.save()
     };
 
@@ -68,7 +70,7 @@ class Config {
     }
 
     get(key, defaultValue) {
-        let result = nconf.get(key);
+        let result = this.nconf.get(key);
         if (result === undefined) {
             return defaultValue;
         }
@@ -76,7 +78,7 @@ class Config {
     };
 
     clear(key) {
-        nconf.clear(key);
+        this.nconf.clear(key);
         this.save();
     };
 

@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.0.1",
+    "charm": "^1.0.2",
     "clear": "0.0.1",
     "clui": "^0.3.6",
     "commander": "^2.11.0",
@@ -25,6 +26,7 @@
     "moment-timezone": "^0.5.13",
     "nconf": "^0.8.4",
     "preferences": "^0.2.1",
+    "require-new": "^1.1.1",
     "shelljs": "^0.7.8",
     "sys": "0.0.1"
   },

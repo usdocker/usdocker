@@ -1,6 +1,7 @@
 'use strict';
 
 const Docker = require('dockerode');
+const Config = require('./config');
 
 function pushArray(source, array, prefix) {
     for(let i=0; i<array.length; i++) {
@@ -58,7 +59,9 @@ class DockerRunWrapper {
         this.it = false;
         this.remove = false;
         this.name = "rename-container";
-        this.connection = process.env.DOCKER_SOCKET || process.env.DOCKER_HOST || '/var/run/docker.sock';
+
+        let configGlobal = new Config(null, '/tmp');
+        this.connection = configGlobal.get('docker-host');
     };
 
     host(hostName) {
@@ -213,7 +216,17 @@ class DockerRunWrapper {
 
     runApi() {
 
-        var docker = new Docker({ socketPath: this.connection });
+        var opts = {};
+        if (this.connection.startsWith('http')) {
+            var parts = this.connection.match(/^(https?):\/\/(.*?):(\d+)/);
+            opts.protocol = parts[1];
+            opts.host = parts[2];
+            opts.port = parts[3];
+        } else {
+            opts.socketPath = this.connection;
+        }
+
+        var docker = new Docker(opts);
         var optsc = this.buildApi();
 
         var previousKey,

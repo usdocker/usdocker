@@ -57,6 +57,12 @@ class Config {
         this.save()
     };
 
+    setEmpty(key, value) {
+        if (!this.get(key)) {
+            this.set(key, value);
+        }
+    }
+
     get(key, defaultValue) {
         let result = nconf.get(key);
         if (result === undefined) {

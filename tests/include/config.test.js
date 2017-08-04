@@ -44,6 +44,25 @@ test('Test set and get config', () => {
     expect(content2).toEqual({});
 });
 
+test('Test set empty', () => {
+    expect(fs.existsSync('/tmp/.usdocker/mymodule/environment.json')).toBe(false);
+
+    let check = config.get('test');
+    expect(check).toBe(undefined);
+
+    config.setEmpty('test', 'value');
+    let result = config.get('test');
+    expect(result).toBe('value');
+
+    config.setEmpty('test', 'newvalue');
+    let result2 = config.get('test');
+    expect(result2).toBe('value');
+
+    config.set('test', 'other');
+    let result3 = config.get('test');
+    expect(result3).toBe('other');
+});
+
 test('Test set and get nested keys', () => {
     expect(fs.existsSync('/tmp/.usdocker/mymodule/environment.json')).toBe(false);
     config.set('test:a', 'valuea');

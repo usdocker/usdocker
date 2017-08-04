@@ -65,32 +65,51 @@ class DockerRunWrapper {
     };
 
     host(hostName) {
+        if (!hostName) {
+            return this.connection;
+        }
         this.connection = hostName;
+        return this;
     };
 
     port(host, container) {
+        if (!host) {
+            return this.ports;
+        }
         this.ports.push(host + ":" + container);
         return this;
     };
 
     volume(host, container) {
+        if (!host) {
+            return this.volumes;
+        }
         this.volumes.push(host + ':' + container);
         return this;
     };
 
     env(variable, value) {
+        if (!variable) {
+            return this.environment;
+        }
         this.environment.push(variable + "=" + value);
         return this;
     };
 
     dockerParam(param) {
+        if (!param) {
+            return this.params;
+        }
         this.params.push(param);
         return this;
     };
 
     isDetached(value) {
-        if (this.it || this.remove) {
+        if (this.it) {
             throw new Error('Cannot add -d parameter if -it or --rm is set');
+        }
+        if (value === undefined) {
+            return this.detached;
         }
         this.detached = value;
         return this;
@@ -100,26 +119,41 @@ class DockerRunWrapper {
         if (this.detached) {
             throw new Error('Cannot add -it parameter if daemon is set');
         }
+        if (value === undefined) {
+            return this.it;
+        }
         this.it = value;
         return this;
     };
 
     isRemove(value) {
+        if (value === undefined) {
+            return this.remove;
+        }
         this.remove = value;
         return this;
     };
 
     containerName(value) {
+        if (value === undefined) {
+            return this.name;
+        }
         this.name = value;
         return this;
     };
 
     imageName(value) {
+        if (value === undefined) {
+            return this.image;
+        }
         this.image = value;
         return this;
     };
 
     commandParam(param) {
+        if (param === undefined) {
+            return this.cmdParam;
+        }
         this.cmdParam.push(param.toString());
         return this;
     };

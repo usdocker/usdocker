@@ -38,6 +38,16 @@ module.exports = {
         });
     },
 
+    /**
+     *
+     * @param {DockerRunWrapper} dockerRunWrapper
+     */
+    up(dockerRunWrapper) {
+        this.pull(dockerRunWrapper.imageName(), function () {
+            dockerRunWrapper.runApi();
+        });
+    },
+
     down(instance) {
         let docker = new Docker();
         let container = docker.getContainer(instance + '-container');

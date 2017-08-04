@@ -42,9 +42,7 @@ module.exports = {
 
     up: function()
     {
-        usdockerhelper.pull(config.get('image'), function () {
-            getContainerDef().runApi();
-        });
+        usdockerhelper.up(getContainerDef());
     },
 
     status: function() {

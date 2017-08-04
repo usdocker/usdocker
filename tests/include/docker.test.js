@@ -10,78 +10,78 @@ afterEach(() => {
     docker = null;
 });
 
-test('docker test 1', () => {
+test('Test basic container creation', () => {
     let result = docker
         .containerName('mycontainer')
-        .isDaemon(true)
+        .isDetached(true)
         .imageName('test/image')
-        .build()
+        .buildConsole()
         .join(' ');
     expect(result).toBe('run --name mycontainer -d test/image');
 });
 
-test('docker test 2', () => {
+test('Test container creation with interactive mode', () => {
     let result = docker
         .containerName('mycontainer')
         .isInteractive(true)
         .isRemove(true)
         .imageName('test/image')
         .commandParam('bash')
-        .build()
+        .buildConsole()
         .join(' ');
     expect(result).toBe('run --name mycontainer -it --rm test/image bash');
 });
 
-test('docker test 3', () => {
+test('Container creation with ports', () => {
     let result = docker
         .containerName('mycontainer')
         .port(3306, 3306)
         .port(80, 80)
-        .isDaemon(true)
+        .isDetached(true)
         .imageName('test/image')
-        .build()
+        .buildConsole()
         .join(' ');
     expect(result).toBe('run --name mycontainer -p 3306:3306 -p 80:80 -d test/image');
 });
 
-test('docker test 4', () => {
+test('Container creation volume', () => {
     let result = docker
         .containerName('mycontainer')
         .volume('/home/jg', '/srv/web')
         .volume('/etc/test', '/etc/test')
-        .isDaemon(true)
+        .isDetached(true)
         .imageName('test/image')
-        .build()
+        .buildConsole()
         .join(' ');
     expect(result).toBe('run --name mycontainer -v /home/jg:/srv/web -v /etc/test:/etc/test -d test/image');
 });
 
-test('docker test 5', () => {
+test('Container creation environment', () => {
     let result = docker
         .containerName('mycontainer')
         .env('TZ', 'America/Sao_Paulo')
         .env('APPLICATION_ENV', 'test')
-        .isDaemon(true)
+        .isDetached(true)
         .imageName('test/image')
-        .build()
+        .buildConsole()
         .join(' ');
     expect(result).toBe('run --name mycontainer -e TZ=America/Sao_Paulo -e APPLICATION_ENV=test -d test/image');
 });
 
-test('docker test 6', () => {
+test('Container creation with extra-param', () => {
     let result = docker
         .containerName('mycontainer')
         .dockerParam('--ulimit memlock=-1:-1')
         .dockerParam('--cap-add=IPC_LOCK')
-        .isDaemon(true)
+        .isDetached(true)
         .imageName('test/image')
-        .build()
+        .buildConsole()
         .join(' ');
     expect(result).toBe('run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -d test/image');
 });
 
 
-test('docker test 7', () => {
+test('Container creation with all togheter', () => {
     let result = docker
         .containerName('mycontainer')
         .port(3306, 3306)
@@ -92,9 +92,9 @@ test('docker test 7', () => {
         .env('APPLICATION_ENV', 'test')
         .dockerParam('--ulimit memlock=-1:-1')
         .dockerParam('--cap-add=IPC_LOCK')
-        .isDaemon(true)
+        .isDetached(true)
         .imageName('test/image')
-        .build()
+        .buildConsole()
         .join(' ');
     expect(result).toBe(
         'run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -e TZ=America/Sao_Paulo '
@@ -103,31 +103,31 @@ test('docker test 7', () => {
     );
 });
 
-test('docker validations 1', () => {
+test('Have to fail with empty data', () => {
     expect(() => {
-        docker.build();
+        docker.buildConsole();
     }).toThrow();
 });
 
-test('docker validations 2', () => {
+test('Error mixing detached and remove', () => {
     expect(() => {
-        docker.isDaemon(true).isRemove(true);
+        docker.isDetached(true).isRemove(true);
     }).toThrow();
 });
 
-test('docker validations 3', () => {
+test('Error mixing detached and interactive', () => {
     expect(() => {
-        docker.isDaemon(true).isInteractive(true);
+        docker.isDetached(true).isInteractive(true);
     }).toThrow();
 });
 
-test('docker validations 4', () => {
+test('Error mixing interactive and detached', () => {
     expect(() => {
-        docker.isInteractive(true).isDaemon(true);
+        docker.isInteractive(true).isDetached(true);
     }).toThrow();
 });
 
 // test('run', () => {
-//     console.log(docker.containerName('aaaa').isInteractive(true).isRemove(true).port(123,123).volume('/tmp', '/tmp').imageName('ubuntu:16.04').commandParam('bash').run());
+//     console.log(docker.containerName('aaaa').isInteractive(true).isRemove(true).port(123,123).volume('/tmp', '/tmp').imageName('ubuntu:16.04').commandParam('bash').runConsole());
 // });
 

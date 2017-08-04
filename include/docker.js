@@ -1,15 +1,18 @@
 'use strict';
 
-function pushArray(source, array) {
+function pushArray(source, array, prefix) {
     for(let i=0; i<array.length; i++) {
-        pushString(source, array[i]);
+        pushString(source, array[i], prefix);
     }
 }
 
-function pushString(source, str) {
+function pushString(source, str, prefix) {
     if (str.trim() !== "") {
         let parts = str.match(/"[^"]+"\b|\S+/g);
         if (parts.length === 1) {
+            if (prefix) {
+                source.push(prefix);
+            }
             source.push(parts[0]);
         } else {
             pushArray(source, parts);
@@ -17,9 +20,9 @@ function pushString(source, str) {
     }
 }
 
-function pushStringCond(source, cond, str) {
+function pushStringCond(source, cond, str, prefix) {
     if (cond) {
-        pushString(source, str);
+        pushString(source, str, prefix);
     }
 }
 
@@ -56,17 +59,17 @@ class Docker {
     };
 
     port(host, container) {
-        this.ports.push("-p " + host + ":" + container);
+        this.ports.push(host + ":" + container);
         return this;
     };
 
     volume(host, container) {
-        this.volumes.push('-v ' + host + ':' + container);
+        this.volumes.push(host + ':' + container);
         return this;
     };
 
     env(variable, value) {
-        this.environment.push("-e " + variable + "=" + value);
+        this.environment.push(variable + "=" + value);
         return this;
     };
 
@@ -75,7 +78,7 @@ class Docker {
         return this;
     };
 
-    isDaemon(value) {
+    isDetached(value) {
         if (this.it || this.remove) {
             throw new Error('Cannot add -d parameter if -it or --rm is set');
         }
@@ -114,7 +117,7 @@ class Docker {
         return this;
     };
 
-    build(addLinks) {
+    buildConsole(addLinks) {
 
         if (this.image === "") {
             throw new Error('Image cannot be empty');
@@ -132,9 +135,9 @@ class Docker {
         }
 
         pushArray(dockerCmd, this.params);
-        pushArray(dockerCmd, this.environment);
-        pushArray(dockerCmd, this.ports);
-        pushArray(dockerCmd, this.volumes);
+        pushArray(dockerCmd, this.environment, '-e');
+        pushArray(dockerCmd, this.ports, '-p');
+        pushArray(dockerCmd, this.volumes, '-v');
 
         pushStringCond(dockerCmd, this.daemon, '-d');
 
@@ -144,8 +147,8 @@ class Docker {
         return dockerCmd;
     };
 
-    run() {
-        let dockerParams = this.build(true);
+    runConsole() {
+        let dockerParams = this.buildConsole(true);
 
         const spawn = require('child_process').spawnSync;
 

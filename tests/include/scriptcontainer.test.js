@@ -42,7 +42,7 @@ test('Get and Execute a script', () => {
     expect(result2['close']()).toBe('close command');
 });
 
-test('ScripContainer with a config object for cache', () => {
+test('ScriptContainer with a config object for cache', () => {
     // Create a fresh object
     let config = new ConfigObject('scriptmodule', '/tmp');
     scriptcontainer = new ScriptContainerObject(config, [path.join(__dirname, 'mockdir')]);

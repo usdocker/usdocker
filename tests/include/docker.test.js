@@ -17,7 +17,7 @@ test('Test basic container creation', () => {
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('run --name mycontainer -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -d test/image');
 });
 
 test('Test container creation with interactive mode', () => {
@@ -29,7 +29,7 @@ test('Test container creation with interactive mode', () => {
         .commandParam('bash')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('run --name mycontainer -it --rm test/image bash');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -it --rm test/image bash');
 });
 
 test('Container creation with ports', () => {
@@ -41,7 +41,7 @@ test('Container creation with ports', () => {
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('run --name mycontainer -p 3306:3306 -p 80:80 -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -p 3306:3306 -p 80:80 -d test/image');
 });
 
 test('Container creation volume', () => {
@@ -53,7 +53,7 @@ test('Container creation volume', () => {
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('run --name mycontainer -v /home/jg:/srv/web -v /etc/test:/etc/test -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -v /home/jg:/srv/web -v /etc/test:/etc/test -d test/image');
 });
 
 test('Container creation environment', () => {
@@ -65,7 +65,7 @@ test('Container creation environment', () => {
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('run --name mycontainer -e TZ=America/Sao_Paulo -e APPLICATION_ENV=test -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -e TZ=America/Sao_Paulo -e APPLICATION_ENV=test -d test/image');
 });
 
 test('Container creation with extra-param', () => {
@@ -77,7 +77,7 @@ test('Container creation with extra-param', () => {
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -d test/image');
 });
 
 
@@ -97,7 +97,8 @@ test('Container creation with all togheter', () => {
         .buildConsole()
         .join(' ');
     expect(result).toBe(
-        'run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -e TZ=America/Sao_Paulo '
+        '-H unix:///var/run/docker.sock '
+        + 'run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -e TZ=America/Sao_Paulo '
         + '-e APPLICATION_ENV=test -p 3306:3306 -p 80:80 -v /home/jg:/srv/web -v /etc/test:/etc/test '
         + '-d test/image'
     );

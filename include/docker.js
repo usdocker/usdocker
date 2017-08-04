@@ -56,6 +56,11 @@ class Docker {
         this.it = false;
         this.remove = false;
         this.name = "rename-container";
+        this.connection = 'unix:///var/run/docker.sock';
+    };
+
+    host(hostName) {
+        this.connection = hostName;
     };
 
     port(host, container) {
@@ -125,6 +130,7 @@ class Docker {
 
         let dockerCmd = [];
 
+        pushString(dockerCmd,'-H ' + this.connection);
         pushString(dockerCmd, 'run');
         pushString(dockerCmd, '--name ' + this.name);
         pushStringCond(dockerCmd, this.it, '-it');

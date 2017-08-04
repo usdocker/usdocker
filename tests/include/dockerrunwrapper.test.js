@@ -1,9 +1,9 @@
-const DockerObject = require('../../include/docker');
+const DockerRunWrapper = require('../../include/dockerrunwrapper');
 
 let docker;
 
 beforeEach(() => {
-    docker = new DockerObject();
+    docker = new DockerRunWrapper();
 });
 
 afterEach(() => {

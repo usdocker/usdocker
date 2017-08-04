@@ -43,7 +43,7 @@ function pushLinkContainer(source) {
 
 
 
-class Docker {
+class DockerRunWrapper {
 
     constructor() {
         this.ports = [];
@@ -184,4 +184,4 @@ class Docker {
 }
 
 
-module.exports = Docker;
+module.exports = DockerRunWrapper;

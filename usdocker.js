@@ -5,12 +5,12 @@ const ScriptContainer = require('./include/scriptcontainer');
 const Config = require('./include/config');
 const usdockerhelper = require('./include/usdockerhelper');
 
-let config = new Config(null, '/tmp');
-config.setEmpty('container-suffix', '-container');
-config.setEmpty('timezone', config.getLocalTimeZone());
-config.setEmpty('docker-host', '/var/run/docker.sock')
+let configGlobal = new Config(null, '/tmp');
+configGlobal.setEmpty('container-suffix', '-container');
+configGlobal.setEmpty('timezone', configGlobal.getLocalTimeZone());
+configGlobal.setEmpty('docker-host', '/var/run/docker.sock')
 
-let sc = new ScriptContainer(config, [__dirname]);
+let sc = new ScriptContainer(configGlobal, [__dirname]);
 
 let version = require(__dirname + '/package.json').version;
 
@@ -30,13 +30,13 @@ program
                 console.log('refreshed')
                 sc.load(true);
             } else if (var1.dumpGlobal) {
-                console.log(config.dump());
+                console.log(configGlobal.dump());
             } else if (var1.dump) {
                 console.log(usdockerhelper.getConfig(sc, var1.dump).dump());
             }
         } else if (var2.global) {
-            let oldValue = config.get(var2.global);
-            config.set(var2.global, var1);
+            let oldValue = configGlobal.get(var2.global);
+            configGlobal.set(var2.global, var1);
             console.log('global "' + var2.global + '" replaced "' + oldValue + '" by "' + var1 + '"');
         } else if (var2.get) {
             let config = usdockerhelper.getConfig(sc, var2.get);

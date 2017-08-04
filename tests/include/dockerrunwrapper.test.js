@@ -42,6 +42,9 @@ test('Container creation with ports', () => {
         .buildConsole()
         .join(' ');
     expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -p 3306:3306 -p 80:80 -d test/image');
+
+    let result2 = docker.buildApi();
+    expect(result2).toBe({});
 });
 
 test('Container creation volume', () => {
@@ -94,14 +97,19 @@ test('Container creation with all togheter', () => {
         .dockerParam('--cap-add=IPC_LOCK')
         .isDetached(true)
         .imageName('test/image')
+        .commandParam('bash')
+        .commandParam('ls')
         .buildConsole()
         .join(' ');
     expect(result).toBe(
         '-H unix:///var/run/docker.sock '
         + 'run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -e TZ=America/Sao_Paulo '
         + '-e APPLICATION_ENV=test -p 3306:3306 -p 80:80 -v /home/jg:/srv/web -v /etc/test:/etc/test '
-        + '-d test/image'
+        + '-d test/image bash ls'
     );
+
+    let result2 = docker.buildApi();
+    expect(result2).toBe({});
 });
 
 test('Have to fail with empty data', () => {
@@ -132,3 +140,10 @@ test('Error mixing interactive and detached', () => {
 //     console.log(docker.containerName('aaaa').isInteractive(true).isRemove(true).port(123,123).volume('/tmp', '/tmp').imageName('ubuntu:16.04').commandParam('bash').runConsole());
 // });
 
+
+// test('runApi', () => {
+//     docker.containerName('aaaa').isInteractive(true).isRemove(true).port(123,123).volume('/tmp', '/tmp').imageName('ubuntu:16.04').commandParam('bash').runApi();
+//
+//     // docker.containerName('aaaa').isDetached(true).port(123,123).volume('/tmp', '/tmp').imageName('ubuntu:16.04').commandParam('bash').runApi();
+//
+// });

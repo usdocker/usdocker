@@ -16,6 +16,7 @@
     "clear": "0.0.1",
     "clui": "^0.3.6",
     "commander": "^2.11.0",
+    "dockerode": "^2.5.0",
     "figlet": "^1.2.0",
     "inquirer": "^3.2.1",
     "marked": "^0.3.6",

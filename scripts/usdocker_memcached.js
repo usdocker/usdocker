@@ -8,11 +8,11 @@ const showdocs = require('../include/showdocs');
 const SCRIPTNAME = 'memcached';
 
 let config = new Config(SCRIPTNAME, '/tmp');
+let configGlobal = new Config(null, '/tmp');
 
 function getContainerDef() {
-    let configGlobal = new Config(null, '/tmp');
 
-    let docker = new DockerRunWrapper();
+    let docker = new DockerRunWrapper(configGlobal);
     return docker
         .containerName(SCRIPTNAME + configGlobal.get('container-suffix'))
         .port(config.get('port'), 11211)

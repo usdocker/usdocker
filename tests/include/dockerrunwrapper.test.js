@@ -1,13 +1,23 @@
 const DockerRunWrapper = require('../../include/dockerrunwrapper');
+const Config = require('../../include/config');
+const shell = require('shelljs');
 
 let docker;
+let configGlobal
 
 beforeEach(() => {
-    docker = new DockerRunWrapper();
+    configGlobal = new Config(null, '/tmp');
+
+
+
+    docker = new DockerRunWrapper(configGlobal);
 });
 
 afterEach(() => {
+    shell.rm('-rf', '/tmp/.usdocker');
+    shell.rm('-rf', '/tmp/.usdocker_data');
     docker = null;
+    configGlobal = null
 });
 
 test('Test basic container creation', () => {
@@ -18,6 +28,26 @@ test('Test basic container creation', () => {
         .buildConsole()
         .join(' ');
     expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -d test/image');
+
+    let result2 = docker.buildApi();
+    expect(result2).toEqual({
+        "AttachErr": true,
+        "AttachStdin": false,
+        "AttachStdout": true,
+        "Cmd": [],
+        "Dns": ["8.8.8.8", "8.8.4.4"],
+        "Env": [],
+        "HostConfig": {
+            "AutoRemove": false,
+            "Binds": [],
+            "PortBindings": {}
+        },
+        "Image": "test/image",
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Tty": false,
+        "name": "mycontainer"
+    });
 });
 
 test('Test container creation with interactive mode', () => {
@@ -30,6 +60,27 @@ test('Test container creation with interactive mode', () => {
         .buildConsole()
         .join(' ');
     expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -it --rm test/image bash');
+
+    let result2 = docker.buildApi();
+    expect(result2).toEqual({
+        "AttachErr": true,
+        "AttachStdin": true,
+        "AttachStdout": true,
+        "Cmd": ['bash'],
+        "Dns": ["8.8.8.8", "8.8.4.4"],
+        "Env": [],
+        "HostConfig": {
+            "AutoRemove": true,
+            "Binds": [],
+            "PortBindings": {}
+        },
+        "Image": "test/image",
+        "OpenStdin": true,
+        "StdinOnce": false,
+        "Tty": true,
+        "name": "mycontainer"
+    });
+
 });
 
 test('Container creation with ports', () => {
@@ -44,7 +95,24 @@ test('Container creation with ports', () => {
     expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -p 3306:3306 -p 80:80 -d test/image');
 
     let result2 = docker.buildApi();
-    expect(result2).toBe({});
+    expect(result2).toEqual({
+        "AttachErr": true,
+        "AttachStdin": false,
+        "AttachStdout": true,
+        "Cmd": [],
+        "Dns": ["8.8.8.8", "8.8.4.4"],
+        "Env": [],
+        "HostConfig": {
+            "AutoRemove": false,
+            "Binds": [],
+            "PortBindings": {"3306/tcp": [{"HostPort": "3306"}], "80/tcp": [{"HostPort": "80"}]}
+        },
+        "Image": "test/image",
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Tty": false,
+        "name": "mycontainer"
+    });
 });
 
 test('Container creation volume', () => {
@@ -57,6 +125,26 @@ test('Container creation volume', () => {
         .buildConsole()
         .join(' ');
     expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -v /home/jg:/srv/web -v /etc/test:/etc/test -d test/image');
+
+    let result2 = docker.buildApi();
+    expect(result2).toEqual({
+        "AttachErr": true,
+        "AttachStdin": false,
+        "AttachStdout": true,
+        "Cmd": [],
+        "Dns": ["8.8.8.8", "8.8.4.4"],
+        "Env": [],
+        "HostConfig": {
+            "AutoRemove": false,
+            "Binds": ['/home/jg:/srv/web', '/etc/test:/etc/test'],
+            "PortBindings": {}
+        },
+        "Image": "test/image",
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Tty": false,
+        "name": "mycontainer"
+    });
 });
 
 test('Container creation environment', () => {
@@ -69,6 +157,26 @@ test('Container creation environment', () => {
         .buildConsole()
         .join(' ');
     expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -e TZ=America/Sao_Paulo -e APPLICATION_ENV=test -d test/image');
+
+    let result2 = docker.buildApi();
+    expect(result2).toEqual({
+        "AttachErr": true,
+        "AttachStdin": false,
+        "AttachStdout": true,
+        "Cmd": [],
+        "Dns": ["8.8.8.8", "8.8.4.4"],
+        "Env": ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test'],
+        "HostConfig": {
+            "AutoRemove": false,
+            "Binds": [],
+            "PortBindings": {}
+        },
+        "Image": "test/image",
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Tty": false,
+        "name": "mycontainer"
+    });
 });
 
 test('Container creation with extra-param', () => {
@@ -81,6 +189,27 @@ test('Container creation with extra-param', () => {
         .buildConsole()
         .join(' ');
     expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -d test/image');
+
+    let result2 = docker.buildApi();
+    expect(result2).toEqual({
+        "AttachErr": true,
+        "AttachStdin": false,
+        "AttachStdout": true,
+        "Cmd": [],
+        "Dns": ["8.8.8.8", "8.8.4.4"],
+        "Env": [],
+        "HostConfig": {
+            "AutoRemove": false,
+            "Binds": [],
+            "PortBindings": {}
+        },
+        "Image": "test/image",
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Tty": false,
+        "name": "mycontainer"
+    });
+
 });
 
 
@@ -109,18 +238,29 @@ test('Container creation with all togheter', () => {
     );
 
     let result2 = docker.buildApi();
-    expect(result2).toBe({});
+    expect(result2).toEqual({
+        "AttachErr": true,
+        "AttachStdin": false,
+        "AttachStdout": true,
+        "Cmd": ['bash', 'ls'],
+        "Dns": ["8.8.8.8", "8.8.4.4"],
+        "Env": ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test'],
+        "HostConfig": {
+            "AutoRemove": false,
+            "Binds": ['/home/jg:/srv/web', '/etc/test:/etc/test'],
+            "PortBindings": {"3306/tcp": [{"HostPort": "3306"}], "80/tcp": [{"HostPort": "80"}]}
+        },
+        "Image": "test/image",
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Tty": false,
+        "name": "mycontainer"
+    });
 });
 
 test('Have to fail with empty data', () => {
     expect(() => {
         docker.buildConsole();
-    }).toThrow();
-});
-
-test('Error mixing detached and remove', () => {
-    expect(() => {
-        docker.isDetached(true).isRemove(true);
     }).toThrow();
 });
 

@@ -27,6 +27,13 @@ class Config {
 
         this.nconf.use('file', { file: this._configJson });
         this.reload();
+
+        // Setting defaults for global
+        if (script === "") {
+            this.setEmpty('container-suffix', '-container');
+            this.setEmpty('timezone', this.getLocalTimeZone());
+            this.setEmpty('docker-host', '/var/run/docker.sock')
+        }
     };
 
     reload() {

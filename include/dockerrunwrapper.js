@@ -48,7 +48,11 @@ function pushLinkContainer(source) {
 
 class DockerRunWrapper {
 
-    constructor() {
+    /**
+     *
+     * @param {Config} configGlobal
+     */
+    constructor(configGlobal) {
         this.ports = [];
         this.volumes = [];
         this.environment = [];
@@ -59,8 +63,6 @@ class DockerRunWrapper {
         this.it = false;
         this.remove = false;
         this.name = "rename-container";
-
-        let configGlobal = new Config(null, '/tmp');
         this.connection = configGlobal.get('docker-host');
     };
 

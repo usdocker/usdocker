@@ -6,9 +6,6 @@ const Config = require('./include/config');
 const usdockerhelper = require('./include/usdockerhelper');
 
 let configGlobal = new Config(null, '/tmp');
-configGlobal.setEmpty('container-suffix', '-container');
-configGlobal.setEmpty('timezone', configGlobal.getLocalTimeZone());
-configGlobal.setEmpty('docker-host', '/var/run/docker.sock')
 
 let sc = new ScriptContainer(configGlobal, [__dirname]);
 

@@ -79,11 +79,11 @@ test('Test set and get nested keys', () => {
 
 test('Test creating config user dir', () => {
     expect(fs.existsSync('/tmp/.usdocker/mymodule/mockdir')).toBe(false);
-    let result = config.configUserDir(__dirname + '/mockdir');
+    let result = config.copyToUserDir(__dirname + '/mockdir');
     expect(result).toBe(undefined);
     expect(fs.existsSync('/tmp/.usdocker/mymodule/mockdir')).toBe(true);
     expect(fs.existsSync('/tmp/.usdocker/mymodule/mockdir/justfortest.txt')).toBe(true);
-    let result2 = config.configUserDir(__dirname + '/mockdir');
+    let result2 = config.copyToUserDir(__dirname + '/mockdir');
     expect(result2).toBe(true);
 });
 
@@ -111,6 +111,6 @@ test('Test store an object and retrieve data', () => {
 
 test('Check error treatment for user dir inexistant', () => {
     expect(() => {
-        config.configUserDir(__dirname + '/does-not-exists')
+        config.copyToUserDir(__dirname + '/does-not-exists')
     }).toThrow();
 });

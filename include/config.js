@@ -44,7 +44,7 @@ class Config {
         this.nconf.save();
     }
 
-    configUserDir(source) {
+    copyToUserDir(source) {
 
         if (shell.test('-e', path.join(this._configPath, path.basename(source)))) {
             return true;

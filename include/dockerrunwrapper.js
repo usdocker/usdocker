@@ -107,22 +107,22 @@ class DockerRunWrapper {
     };
 
     isDetached(value) {
-        if (this.it) {
-            throw new Error('Cannot add -d parameter if -it or --rm is set');
-        }
         if (value === undefined) {
             return this.detached;
+        }
+        if (this.it) {
+            throw new Error('Cannot add -d parameter if -it or --rm is set');
         }
         this.detached = value;
         return this;
     };
 
     isInteractive(value) {
-        if (this.detached) {
-            throw new Error('Cannot add -it parameter if daemon is set');
-        }
         if (value === undefined) {
             return this.it;
+        }
+        if (this.detached) {
+            throw new Error('Cannot add -it parameter if daemon is set');
         }
         this.it = value;
         return this;

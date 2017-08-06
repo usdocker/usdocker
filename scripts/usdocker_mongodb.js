@@ -32,6 +32,11 @@ module.exports = {
         config.setEmpty('port', 27017);
     },
 
+    client: function()
+    {
+        usdockerhelper.exec(SCRIPTNAME, ['mongo']);
+    },
+
     debugcli() {
         console.log('docker ' + getContainerDef().buildConsole().join(' '));
     },
@@ -52,6 +57,11 @@ module.exports = {
     down: function()
     {
         usdockerhelper.down(SCRIPTNAME);
+    },
+
+    restart: function()
+    {
+        usdockerhelper.restart(SCRIPTNAME, getContainerDef());
     },
 
     help: function () {

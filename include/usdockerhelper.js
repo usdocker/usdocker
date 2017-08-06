@@ -49,13 +49,21 @@ module.exports = {
         });
     },
 
-    down(instance) {
+    down(instance, callback) {
         let docker = new Docker();
         let container = docker.getContainer(instance + '-container');
         container.stop(function (err, data) {
             if (err) {
                 console.log(err.message);
             }
+            if (callback) callback();
+        });
+    },
+
+    restart(instance, dockerRunWrapper) {
+        var me = this;
+        this.down(instance, function () {
+            me.up(dockerRunWrapper);
         });
     },
 
@@ -99,56 +107,11 @@ module.exports = {
         return new Config(script, '/tmp');
     },
 
-    handleTerminal: function(err, container) {
+    handleTerminal: function(err, stream, container, hasTerminal) {
 
         var previousKey,
             CTRL_P = '\u0010',
             CTRL_Q = '\u0011';
-
-        function handler(err, container) {
-            if (err) {
-                console.log(err.message);
-                return;
-            }
-
-            var attach_opts = {stream: true, stdin: true, stdout: true, stderr: true};
-
-            container.attach(attach_opts, function (err, stream) {
-                // Show outputs
-                stream.pipe(process.stdout);
-
-                // Connect stdin
-                var isRaw = process.isRaw;
-                process.stdin.resume();
-                process.stdin.setEncoding('utf8');
-                process.stdin.setRawMode(true);
-                process.stdin.pipe(stream);
-
-                process.stdin.on('data', function(key) {
-                    // Detects it is detaching a running container
-                    if (previousKey === CTRL_P && key === CTRL_Q) exit(stream, isRaw);
-                    previousKey = key;
-                });
-
-                container.start(function(err, data) {
-                    resize(container);
-                    process.stdout.on('resize', function() {
-                        resize(container);
-                    });
-
-                    container.wait(function(err, data) {
-                        exit(stream, isRaw);
-                    });
-
-                    container.inspect(function (err, data) {
-                        if (!data.Config.AttachStdin) {
-                            exit(stream, isRaw);
-                        }
-                    });
-
-                });
-            });
-        }
 
         // Resize tty
         function resize (container) {
@@ -172,7 +135,40 @@ module.exports = {
             process.exit();
         }
 
-        handler(err, container);
+        // Show outputs
+        stream.pipe(process.stdout);
+
+        // Connect stdin
+        var isRaw = process.isRaw;
+        process.stdin.resume();
+        process.stdin.setEncoding('utf8');
+        process.stdin.setRawMode(true);
+        process.stdin.pipe(stream);
+
+        process.stdin.on('data', function(key) {
+            // Detects it is detaching a running container
+            if (previousKey === CTRL_P && key === CTRL_Q) exit(stream, isRaw);
+            previousKey = key;
+        });
+
+        stream.on('end', function(a,b) {
+            exit(stream, isRaw);
+        });
+
+        container.start(function(err, data) {
+            resize(container);
+            process.stdout.on('resize', function() {
+                resize(container);
+            });
+
+            container.wait(function(err, data) {
+                exit(stream, isRaw);
+            });
+
+            if (!hasTerminal) {
+                exit(stream, isRaw);
+            }
+        });
     },
 
     /**
@@ -196,7 +192,18 @@ module.exports = {
 
         var me = this;
 
-        docker.createContainer(optsc, me.handleTerminal);
+        docker.createContainer(optsc, function (err, container) {
+            if (err) {
+                console.log(err.message);
+                return;
+            }
+
+            var attach_opts = {stream: true, stdin: true, stdout: true, stderr: true};
+
+            container.attach(attach_opts, function (err, stream) {
+                me.handleTerminal(err, stream, container, dockerrunwrapper.isInteractive());
+            });
+        });
     },
 
     /**
@@ -231,7 +238,25 @@ module.exports = {
                 console.log('docker ' + dockerParams.join(' '))
             }
         }
-    }
+    },
+
+    exec(instance, cmd) {
+        var me = this;
+
+        let docker = new Docker();
+        let container = docker.getContainer(instance + '-container');
+        container.exec({Cmd: cmd, AttachStdin: true, AttachStdout: true, Tty: true, OpenStdin: true}, function (err, exec) {
+            if (err) {
+                console.log(err.message);
+                return;
+            }
+
+            exec.start( {stream: true, stdin: true, stdout: true, stderr: true}, function(err, stream) {
+                me.handleTerminal(err, stream, container, true);
+            });
+        });
+    },
+
 
 
 };

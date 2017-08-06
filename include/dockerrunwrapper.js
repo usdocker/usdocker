@@ -58,6 +58,7 @@ class DockerRunWrapper {
         this.environment = [];
         this.detached = false;
         this.params = [];
+        this.links = [];
         this.cmdParam = [];
         this.image = "";
         this.it = false;
@@ -87,6 +88,11 @@ class DockerRunWrapper {
             return this.volumes;
         }
         this.volumes.push(host + ':' + container);
+        return this;
+    };
+
+    link(source, target) {
+        this.links.push(source + ':' + target);
         return this;
     };
 
@@ -182,6 +188,7 @@ class DockerRunWrapper {
         pushArray(dockerCmd, this.environment, '-e');
         pushArray(dockerCmd, this.ports, '-p');
         pushArray(dockerCmd, this.volumes, '-v');
+        pushArray(dockerCmd, this.links, '--link');
 
         pushStringCond(dockerCmd, this.detached, '-d');
 
@@ -211,6 +218,7 @@ class DockerRunWrapper {
             HostConfig: {
                 AutoRemove: this.remove,
                 Binds: this.volumes,
+                Links: this.links,
                 PortBindings: portsBindings
             },
             Dns: ['8.8.8.8', '8.8.4.4'],

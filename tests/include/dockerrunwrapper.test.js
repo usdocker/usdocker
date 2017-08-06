@@ -40,6 +40,7 @@ test('Test basic container creation', () => {
         "HostConfig": {
             "AutoRemove": false,
             "Binds": [],
+            "Links": [],
             "PortBindings": {}
         },
         "Image": "test/image",
@@ -72,6 +73,7 @@ test('Test container creation with interactive mode', () => {
         "HostConfig": {
             "AutoRemove": true,
             "Binds": [],
+            "Links": [],
             "PortBindings": {}
         },
         "Image": "test/image",
@@ -105,6 +107,7 @@ test('Container creation with ports', () => {
         "HostConfig": {
             "AutoRemove": false,
             "Binds": [],
+            "Links": [],
             "PortBindings": {"3306/tcp": [{"HostPort": "3306"}], "80/tcp": [{"HostPort": "80"}]}
         },
         "Image": "test/image",
@@ -137,6 +140,40 @@ test('Container creation volume', () => {
         "HostConfig": {
             "AutoRemove": false,
             "Binds": ['/home/jg:/srv/web', '/etc/test:/etc/test'],
+            "Links": [],
+            "PortBindings": {}
+        },
+        "Image": "test/image",
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Tty": false,
+        "name": "mycontainer"
+    });
+});
+
+test('Container Links', () => {
+    let result = docker
+    .containerName('mycontainer')
+    .link('mysql', 'mysql')
+    .link('redis', 'redis')
+    .isDetached(true)
+    .imageName('test/image')
+    .buildConsole()
+    .join(' ');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer --link mysql:mysql --link redis:redis -d test/image');
+
+    let result2 = docker.buildApi();
+    expect(result2).toEqual({
+        "AttachErr": true,
+        "AttachStdin": false,
+        "AttachStdout": true,
+        "Cmd": [],
+        "Dns": ["8.8.8.8", "8.8.4.4"],
+        "Env": [],
+        "HostConfig": {
+            "AutoRemove": false,
+            "Binds": [],
+            "Links": ['mysql:mysql', 'redis:redis'],
             "PortBindings": {}
         },
         "Image": "test/image",
@@ -169,6 +206,7 @@ test('Container creation environment', () => {
         "HostConfig": {
             "AutoRemove": false,
             "Binds": [],
+            "Links": [],
             "PortBindings": {}
         },
         "Image": "test/image",
@@ -201,6 +239,7 @@ test('Container creation with extra-param', () => {
         "HostConfig": {
             "AutoRemove": false,
             "Binds": [],
+            "Links": [],
             "PortBindings": {}
         },
         "Image": "test/image",
@@ -222,6 +261,8 @@ test('Container creation with all togheter', () => {
         .volume('/etc/test', '/etc/test')
         .env('TZ', 'America/Sao_Paulo')
         .env('APPLICATION_ENV', 'test')
+        .link('mysql', 'mysql')
+        .link('redis', 'redis')
         .dockerParam('--ulimit memlock=-1:-1')
         .dockerParam('--cap-add=IPC_LOCK')
         .isDetached(true)
@@ -234,6 +275,7 @@ test('Container creation with all togheter', () => {
         '-H unix:///var/run/docker.sock '
         + 'run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -e TZ=America/Sao_Paulo '
         + '-e APPLICATION_ENV=test -p 3306:3306 -p 80:80 -v /home/jg:/srv/web -v /etc/test:/etc/test '
+        + '--link mysql:mysql --link redis:redis '
         + '-d test/image bash ls'
     );
 
@@ -248,6 +290,7 @@ test('Container creation with all togheter', () => {
         "HostConfig": {
             "AutoRemove": false,
             "Binds": ['/home/jg:/srv/web', '/etc/test:/etc/test'],
+            "Links": ['mysql:mysql', 'redis:redis'],
             "PortBindings": {"3306/tcp": [{"HostPort": "3306"}], "80/tcp": [{"HostPort": "80"}]}
         },
         "Image": "test/image",

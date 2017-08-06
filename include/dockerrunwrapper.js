@@ -193,148 +193,33 @@ class DockerRunWrapper {
 
     buildApi() {
 
-        let dockerOptions = {};
-
-        dockerOptions.name = this.name;
-        dockerOptions.AttachStdin = this.it;
-        dockerOptions.AttachStdout = true;
-        dockerOptions.AttachErr = true;
-        dockerOptions.Env = this.environment;
-        dockerOptions.HostConfig = {};
-        dockerOptions.HostConfig.AutoRemove = this.remove;
-        dockerOptions.HostConfig.Binds = this.volumes;
-        dockerOptions.HostConfig.PortBindings = {};
+        let portsBindings = {};
         for(let i=0; i<this.ports.length; i++) {
             let ports = this.ports[i].split(':');
-            dockerOptions.HostConfig.PortBindings[ports[1] + "/tcp"] = [ { "HostPort": ports[0].toString() } ];
+            portsBindings[ports[1] + "/tcp"] = [ { "HostPort": ports[0].toString() } ];
         }
 
-        dockerOptions.Tty = !this.detached;
-        dockerOptions.OpenStdin = !this.detached;
-        dockerOptions.StdinOnce = false;
-        dockerOptions.Dns = ['8.8.8.8', '8.8.4.4'];
-
-        dockerOptions.Image = this.image;
-        dockerOptions.Cmd = this.cmdParam;
+        let dockerOptions = {
+            name: this.name,
+            AttachStdin: this.it,
+            AttachStdout: true,
+            AttachErr: true,
+            Tty: !this.detached,
+            OpenStdin: !this.detached,
+            StdinOnce: false,
+            Env: this.environment,
+            HostConfig: {
+                AutoRemove: this.remove,
+                Binds: this.volumes,
+                PortBindings: portsBindings
+            },
+            Dns: ['8.8.8.8', '8.8.4.4'],
+            Image: this.image,
+            Cmd: this.cmdParam
+        };
 
         return dockerOptions;
-
-    }
-
-    runConsole() {
-        let dockerParams = this.buildConsole(true);
-
-        const spawn = require('child_process').spawnSync;
-
-        let options = {};
-        if (this.it) {
-            options = {stdio: 'inherit'};
-        }
-
-        // const shell = require('shelljs');
-        // shell.exec('docker ' + dockerParams.join(' '));
-
-        let docker = spawn('docker', dockerParams, options);
-
-        if (!this.it) {
-            console.log(docker.stdout.toString());
-
-            if (docker.status > 0) {
-                console.log(docker.stderr.toString());
-            }
-        } else {
-            if (docker.status > 0) {
-                console.log('The command causes an unexpected error:');
-                console.log('docker ' + dockerParams.join(' '))
-            }
-        }
     };
-
-    runApi() {
-
-        var opts = {};
-        if (this.connection.startsWith('http')) {
-            var parts = this.connection.match(/^(https?):\/\/(.*?):(\d+)/);
-            opts.protocol = parts[1];
-            opts.host = parts[2];
-            opts.port = parts[3];
-        } else {
-            opts.socketPath = this.connection;
-        }
-
-        var docker = new Docker(opts);
-        var optsc = this.buildApi();
-
-        var previousKey,
-            CTRL_P = '\u0010',
-            CTRL_Q = '\u0011';
-
-        function handler(err, container) {
-            if (err) {
-                console.log(err.message);
-                return;
-            }
-
-            var attach_opts = {stream: true, stdin: true, stdout: true, stderr: true};
-
-            container.attach(attach_opts, function handler(err, stream) {
-                // Show outputs
-                stream.pipe(process.stdout);
-
-                // Connect stdin
-                var isRaw = process.isRaw;
-                process.stdin.resume();
-                process.stdin.setEncoding('utf8');
-                process.stdin.setRawMode(true);
-                process.stdin.pipe(stream);
-
-                process.stdin.on('data', function(key) {
-                    // Detects it is detaching a running container
-                    if (previousKey === CTRL_P && key === CTRL_Q) exit(stream, isRaw);
-                    previousKey = key;
-                });
-
-                container.start(function(err, data) {
-                    resize(container);
-                    process.stdout.on('resize', function() {
-                        resize(container);
-                    });
-
-                    container.wait(function(err, data) {
-                        exit(stream, isRaw);
-                    });
-
-                    if (!optsc.AttachStdin) {
-                        exit(stream, isRaw);
-                    }
-                });
-            });
-        }
-
-        // Resize tty
-        function resize (container) {
-            var dimensions = {
-                h: process.stdout.rows,
-                w: process.stderr.columns
-            };
-
-            if (dimensions.h != 0 && dimensions.w != 0) {
-                container.resize(dimensions, function() {});
-            }
-        }
-
-        // Exit container
-        function exit (stream, isRaw) {
-            process.stdout.removeListener('resize', resize);
-            process.stdin.removeAllListeners();
-            process.stdin.setRawMode(isRaw);
-            process.stdin.resume();
-            stream.end();
-            process.exit();
-        }
-
-        docker.createContainer(optsc, handler);
-    }
 }
 
 

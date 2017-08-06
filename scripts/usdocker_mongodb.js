@@ -12,7 +12,7 @@ let configGlobal = new Config(null, '/tmp');
 
 function getContainerDef() {
 
-    let docker = new DockerRunWrapper(config);
+    let docker = new DockerRunWrapper(configGlobal);
     return docker
         .containerName(SCRIPTNAME + configGlobal.get('container-suffix'))
         .port(config.get('port'), 27017)

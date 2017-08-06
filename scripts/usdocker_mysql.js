@@ -47,6 +47,21 @@ module.exports = {
         console.log(getContainerDef().buildApi());
     },
 
+    client: function()
+    {
+        usdockerhelper.exec(SCRIPTNAME, ['mysql']);
+    },
+
+    connect: function()
+    {
+        usdockerhelper.exec(SCRIPTNAME, ['bash']);
+    },
+
+    dump: function()
+    {
+        usdockerhelper.exec(SCRIPTNAME, ['mysqldump']);
+    },
+
     up: function()
     {
         usdockerhelper.up(getContainerDef());
@@ -59,6 +74,11 @@ module.exports = {
     down: function()
     {
         usdockerhelper.down(SCRIPTNAME);
+    },
+
+    restart: function()
+    {
+        usdockerhelper.restart(SCRIPTNAME, getContainerDef());
     },
 
     help: function () {

@@ -58,6 +58,11 @@ module.exports = {
         usdockerhelper.down(SCRIPTNAME);
     },
 
+    restart: function()
+    {
+        usdockerhelper.restart(SCRIPTNAME, getContainerDef());
+    },
+
     help: function () {
 
         showdocs.getDocumentation(__dirname);

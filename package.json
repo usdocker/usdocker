@@ -12,6 +12,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "ansi": "^0.3.1",
     "chalk": "^2.0.1",
     "charm": "^1.0.2",
     "clear": "0.0.1",

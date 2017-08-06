@@ -151,7 +151,7 @@ module.exports = {
             previousKey = key;
         });
 
-        stream.on('end', function(a,b) {
+        stream.on('end', function() {
             exit(stream, isRaw);
         });
 

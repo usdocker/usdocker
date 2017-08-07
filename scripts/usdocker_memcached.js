@@ -37,11 +37,11 @@ module.exports = {
     },
 
     debugcli() {
-        console.log('docker ' + getContainerDef().buildConsole().join(' '));
+        usdockerhelper.outputRaw('cli', getContainerDef());
     },
 
     debugapi() {
-        console.log(getContainerDef().buildApi());
+        usdockerhelper.outputRaw('api', getContainerDef());
     },
 
     up: function()

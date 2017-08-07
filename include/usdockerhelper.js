@@ -68,6 +68,14 @@ module.exports = {
         });
     },
 
+    outputRaw(option, dockerrunwrapper) {
+        if (option === 'api') {
+            console.log(dockerrunwrapper.buildApi());
+        } else {
+            console.log('docker ' + dockerrunwrapper.buildConsole().join(' '));
+        }
+    },
+
     restart(instance, dockerRunWrapper) {
         var me = this;
         this.down(instance, function () {

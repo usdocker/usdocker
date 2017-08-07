@@ -18,7 +18,7 @@ module.exports = {
 
             docker.pull(image, function(err, stream) {
                 if (err) {
-                    console.log(err.message);
+                    callback(err);
                     return;
                 }
 
@@ -26,7 +26,7 @@ module.exports = {
 
                 function onFinished(err, output) {
                     if (err) {
-                        console.log(err.message);
+                        callback(err);
                         return;
                     }
                     callback();
@@ -51,8 +51,8 @@ module.exports = {
                 for (let i=0; i<data.length; i++) {
                     dockerRunWrapper.link(data[i].Names[0], data[i].Names[0])
                 }
-                me.runUsingApi(dockerRunWrapper);
-                callback(null, instance + ' was started');
+                callback(null, 'started creation of instance ' + instance);
+                me.runUsingApi(dockerRunWrapper, callback);
             });
         });
     },
@@ -204,7 +204,7 @@ module.exports = {
      *
      * @param {DockerRunWrapper} dockerrunwrapper
      */
-    runUsingApi(dockerrunwrapper) {
+    runUsingApi(dockerrunwrapper, callback) {
 
         var docker = dockerrunwrapper.getInstance();
         var optsc = dockerrunwrapper.buildApi();
@@ -213,7 +213,7 @@ module.exports = {
 
         docker.createContainer(optsc, function (err, container) {
             if (err) {
-                console.log(err.message);
+                callback(err);
                 return;
             }
 
@@ -229,7 +229,7 @@ module.exports = {
      *
      * @param {DockerRunWrapper} dockerrunwrapper
      */
-    runUsingCli(dockerrunwrapper) {
+    runUsingCli(dockerrunwrapper, callback) {
         let dockerParams = dockerrunwrapper.buildConsole(true);
 
         const spawn = require('child_process').spawnSync;
@@ -246,27 +246,27 @@ module.exports = {
 
         // Show the proper result.
         if (!dockerrunwrapper.isInteractive()) {
-            console.log(docker.stdout.toString());
+            callback(docker.stdout.toString());
 
             if (docker.status > 0) {
-                console.log(docker.stderr.toString());
+                callback(new Error(docker.stderr.toString()));
             }
         } else {
             if (docker.status > 0) {
-                console.log('The command causes an unexpected error:');
-                console.log('docker ' + dockerParams.join(' '))
+                callback('The command causes an unexpected error.');
+                callback(null, 'docker ' + dockerParams.join(' '))
             }
         }
     },
 
-    exec(instance, cmd) {
+    exec(instance, cmd, callback) {
         var me = this;
 
         let docker = new Docker();
         let container = docker.getContainer(instance + '-container');
         container.exec({Cmd: cmd, AttachStdin: true, AttachStdout: true, Tty: true, OpenStdin: true}, function (err, exec) {
             if (err) {
-                console.log(err.message);
+                callback(err);
                 return;
             }
 

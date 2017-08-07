@@ -33,9 +33,9 @@ module.exports = {
         callback(null, 'setup ' + SCRIPTNAME);
     },
 
-    client: function()
+    client: function(callback)
     {
-        usdockerhelper.exec(SCRIPTNAME, ['mongo']);
+        usdockerhelper.exec(SCRIPTNAME, ['mongo'], callback);
     },
 
     debugcli(callback) {

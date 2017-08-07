@@ -40,19 +40,19 @@ module.exports = {
         callback(null, 'setup ' + SCRIPTNAME);
     },
 
-    client: function()
+    client: function(callback)
     {
-        usdockerhelper.exec(SCRIPTNAME, ['mysql']);
+        usdockerhelper.exec(SCRIPTNAME, ['mysql'], callback);
     },
 
-    connect: function()
+    connect: function(callback)
     {
-        usdockerhelper.exec(SCRIPTNAME, ['bash']);
+        usdockerhelper.exec(SCRIPTNAME, ['bash'], callback);
     },
 
-    dump: function()
+    dump: function(callback)
     {
-        usdockerhelper.exec(SCRIPTNAME, ['mysqldump']);
+        usdockerhelper.exec(SCRIPTNAME, ['mysqldump'], callback);
     },
 
     debugcli(callback) {

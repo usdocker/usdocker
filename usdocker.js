@@ -10,39 +10,64 @@ let configGlobal = new Config(null, '/tmp');
 let sc = new ScriptContainer(configGlobal, [__dirname]);
 
 let version = require(__dirname + '/package.json').version;
+let verbose = false;
 
 program
     .version(version)
-    .description('USDocker')
+    .usage('<command> [action] [options]')
+    .description('USDocker is a colletion of useful scripts to make easier brings a service up or down, ' +
+        'check status and a lot of other features.'
+    )
     .command('setup')
-    .option('-r, --refresh','refresh the list')
-    .option('-d, --dump <module>','refresh the list')
-    .option('--dump-global','refresh the list')
-    .option('--global <variable> <value>','refresh the list')
-    .option('-s, --set <module> <variable> <value>','refresh the list')
-    .option('-g, --get <module> <variable>','refresh the list')
+    .description('run setup commands for USDocker and scripts')
+    .option('-r, --refresh','refresh the list of available scripts')
+    .option('-v, --verbose','Print extra information')
+    .option('-d, --dump <script>','Dump the scripts options')
+    .option('--dump-global','Dump the global options')
+    .option('--global <variable> <value>','Set a global option')
+    .option('-s, --set <script> <variable> <value>','Set a script option')
+    .option('-g, --get <script> <variable>','Get a script option')
     .action((var1, var2, var3) => {
-        if (var2 === undefined && var3 === undefined) {
-            if (var1.refresh) {
-                console.log('refreshed')
-                sc.load(true);
-            } else if (var1.dumpGlobal) {
-                console.log(configGlobal.dump());
-            } else if (var1.dump) {
-                console.log(usdockerhelper.getConfig(sc, var1.dump).dump());
-            }
-        } else if (var2.global) {
-            let oldValue = configGlobal.get(var2.global);
-            configGlobal.set(var2.global, var1);
+        let options = var1;
+        if (typeof var2 === 'object') {
+            options = var2;
+        } else if (typeof var3 === 'object') {
+            options = var3;
+        }
+
+        if (options.verbose) {
+            verbose = true;
+        }
+
+        if (options.refresh) {
+            sc.load(true);
+            console.log('refreshed')
+        }
+
+        if (options.global) {
+            let oldValue = configGlobal.get(options.global);
+            configGlobal.set(options.global, var1);
             console.log('global "' + var2.global + '" replaced "' + oldValue + '" by "' + var1 + '"');
-        } else if (var2.get) {
-            let config = usdockerhelper.getConfig(sc, var2.get);
-            console.log(config.get(variable));
-        } else if (var3.set) {
-            let config = usdockerhelper.getConfig(sc, var3.set);
+        }
+
+        if (options.get) {
+            let config = usdockerhelper.getConfig(sc, options.get);
+            console.log(config.get(var1));
+        }
+
+        if (options.set) {
+            let config = usdockerhelper.getConfig(sc, options.set);
             let oldValue = config.get(var1);
             config.set(var1, var2);
             console.log('variable "' + var1 + '" replaced "' + oldValue + '" by "' + var2 + '"');
+        }
+
+        if (options.dumpGlobal) {
+            console.log(configGlobal.dump());
+        }
+
+        if (options.dump) {
+            console.log(usdockerhelper.getConfig(sc, var1.dump).dump());
         }
     });
 
@@ -51,16 +76,27 @@ let available = sc.availableScripts();
 for (let i=0; i<available.length; i++) {
     program
         .command(available[i] + ' <command>')
-        // .description('run setup commands for all envs')
+        .option('-v, --verbose', 'Print extra information')
+        .description('Scripts for ' + available[i])
         .action(function(command, options){
+            if (options.verbose) {
+                verbose = true;
+            }
             usdockerhelper.run(sc, available[i], command, true);
         });
 }
 
-program.parse(process.argv);
+try {
+    program.parse(process.argv);
 
-if (!process.argv.slice(2).length) {
-    program.outputHelp();
+    if (!process.argv.slice(2).length) {
+        program.outputHelp();
+    }
+} catch (err) {
+    console.error("Error: " + err.message);
+    if (verbose) {
+        console.error(err);
+    }
 }
 
 

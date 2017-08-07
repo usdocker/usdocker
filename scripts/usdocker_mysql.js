@@ -28,7 +28,7 @@ function getContainerDef() {
 }
 
 module.exports = {
-    setup: function()
+    setup: function(callback)
     {
         config.setEmpty('image', 'mysql:5.7');
         config.setEmpty('folder', config.getDataDir());
@@ -37,14 +37,7 @@ module.exports = {
 
         config.copyToUserDir(__dirname + '/mysql/conf.d');
         config.copyToUserDir(__dirname + '/mysql/home');
-    },
-
-    debugcli() {
-        usdockerhelper.outputRaw('cli', getContainerDef());
-    },
-
-    debugapi() {
-        usdockerhelper.outputRaw('api', getContainerDef());
+        callback(null, 'setup ' + SCRIPTNAME);
     },
 
     client: function()
@@ -62,23 +55,33 @@ module.exports = {
         usdockerhelper.exec(SCRIPTNAME, ['mysqldump']);
     },
 
-    up: function()
-    {
-        usdockerhelper.up(getContainerDef());
+    debugcli(callback) {
+        let result = usdockerhelper.outputRaw('cli', getContainerDef());
+        callback(result)
     },
 
-    status: function() {
-        usdockerhelper.status(SCRIPTNAME);
+    debugapi(callback) {
+        let result = usdockerhelper.outputRaw('api', getContainerDef());
+        callback(result)
     },
 
-    down: function()
+    up: function(callback)
     {
-        usdockerhelper.down(SCRIPTNAME);
+        usdockerhelper.up(SCRIPTNAME, getContainerDef(), callback);
     },
 
-    restart: function()
+    status: function(callback) {
+        usdockerhelper.status(SCRIPTNAME, callback);
+    },
+
+    down: function(callback)
     {
-        usdockerhelper.restart(SCRIPTNAME, getContainerDef());
+        usdockerhelper.down(SCRIPTNAME, callback);
+    },
+
+    restart: function(callback)
+    {
+        usdockerhelper.restart(SCRIPTNAME, getContainerDef(), callback);
     },
 
     help: function () {

@@ -4,13 +4,14 @@ const program = require('commander');
 const ScriptContainer = require('./include/scriptcontainer');
 const Config = require('./include/config');
 const usdockerhelper = require('./include/usdockerhelper');
+const Output = require('./include/output');
 
 let configGlobal = new Config(null, '/tmp');
 
 let sc = new ScriptContainer(configGlobal, [__dirname]);
 
 let version = require(__dirname + '/package.json').version;
-let verbose = false;
+let output = new Output(false);
 
 program
     .version(version)
@@ -36,38 +37,38 @@ program
         }
 
         if (options.verbose) {
-            verbose = true;
+            output.verbosity = true;
         }
 
         if (options.refresh) {
             sc.load(true);
-            console.log('refreshed')
+            output.print(null, 'refreshed')
         }
 
         if (options.global) {
             let oldValue = configGlobal.get(options.global);
             configGlobal.set(options.global, var1);
-            console.log('global "' + var2.global + '" replaced "' + oldValue + '" by "' + var1 + '"');
+            output.print(null, 'global "' + var2.global + '" replaced "' + oldValue + '" by "' + var1 + '"');
         }
 
         if (options.get) {
             let config = usdockerhelper.getConfig(sc, options.get);
-            console.log(config.get(var1));
+            output.print(config.get(var1));
         }
 
         if (options.set) {
             let config = usdockerhelper.getConfig(sc, options.set);
             let oldValue = config.get(var1);
             config.set(var1, var2);
-            console.log('variable "' + var1 + '" replaced "' + oldValue + '" by "' + var2 + '"');
+            output.print(null, 'variable "' + var1 + '" replaced "' + oldValue + '" by "' + var2 + '"');
         }
 
         if (options.dumpGlobal) {
-            console.log(configGlobal.dump());
+            output.print(configGlobal.dump());
         }
 
         if (options.dump) {
-            console.log(usdockerhelper.getConfig(sc, var1.dump).dump());
+            output.print(usdockerhelper.getConfig(sc, var1.dump).dump());
         }
     });
 
@@ -80,9 +81,9 @@ for (let i=0; i<available.length; i++) {
         .description('Scripts for ' + available[i])
         .action(function(command, options){
             if (options.verbose) {
-                verbose = true;
+                output.verbosity = true;
             }
-            usdockerhelper.run(sc, available[i], command, true);
+            usdockerhelper.run(sc, available[i], command, true, output);
         });
 }
 
@@ -93,84 +94,5 @@ try {
         program.outputHelp();
     }
 } catch (err) {
-    console.error("Error: " + err.message);
-    if (verbose) {
-        console.error(err);
-    }
+    output.printErr(err);
 }
-
-
-
-// program
-//     .version('0.0.1')
-//     .command('command <req> [optional]')
-//     .description('command description')
-//     .option('-x, --xadrez','we can still have add options')
-//     .option('-t, --test','we can still have add options')
-//     .action((req,optional,options) => {
-//         console.log('.action() allows us to implement the command');
-//         console.log('User passed %s', req);
-//         console.log(optional);
-//         console.log(options);
-//         if (options.xadrez) {
-//             console.log('passou a opção "option"');
-//         }
-//     });
-//
-// program.parse(process.argv);
-//
-// if (!process.argv.slice(2).length) {
-//     program.outputHelp();
-// }
-
-
-/*
-var x = require('./include/config');
-
-x.init('a');
-
-
-
-// https://stackoverflow.com/questions/10914751/loading-node-js-modules-dynamically-based-on-route
-
-
-program
-    .version('0.1.0')
-    .option('-C, --chdir <path>', 'change the working directory')
-    .option('-c, --config <path>', 'set config path. defaults to ./deploy.conf')
-    .option('-T, --no-tests', 'ignore test hook');
-
-program
-    .command('setup [env]')
-    .description('run setup commands for all envs')
-    .option("-s, --setup_mode [mode]", "Which setup mode to use")
-    .action(function(env, options){
-        var mode = options.setup_mode || "normal";
-        env = env || 'all';
-        console.log('setup for %s env(s) with %s mode', env, mode);
-    });
-
-program
-    .command('exec <cmd>')
-    .alias('ex')
-    .description('execute the given remote cmd')
-    .option("-e, --exec_mode <mode>", "Which exec mode to use")
-    .action(function(cmd, options){
-        console.log('exec "%s" using %s mode', cmd, options.exec_mode);
-    }).on('--help', function() {
-        console.log('  Examples:');
-        console.log();
-        console.log('    $ deploy exec sequential');
-        console.log('    $ deploy exec async');
-        console.log();
-    });
-
-program
-    .command('*')
-    .action(function(env){
-        console.log('deploying "%s"', env);
-    });
-
-program.parse(process.argv);
-
-*/

@@ -25,11 +25,12 @@ function getContainerDef() {
 }
 
 module.exports = {
-    setup: function()
+    setup: function(callback)
     {
         config.setEmpty('image', 'mongo:3');
         config.setEmpty('folder', config.getDataDir());
         config.setEmpty('port', 27017);
+        callback(null, 'setup ' + SCRIPTNAME);
     },
 
     client: function()
@@ -37,32 +38,35 @@ module.exports = {
         usdockerhelper.exec(SCRIPTNAME, ['mongo']);
     },
 
-    debugcli() {
-        usdockerhelper.outputRaw('cli', getContainerDef());
+    debugcli(callback) {
+        let result = usdockerhelper.outputRaw('cli', getContainerDef());
+        callback(result)
     },
 
-    debugapi() {
-        usdockerhelper.outputRaw('api', getContainerDef());
+    debugapi(callback) {
+        let result = usdockerhelper.outputRaw('api', getContainerDef());
+        callback(result)
     },
 
-    up: function()
+    up: function(callback)
     {
-        usdockerhelper.up(getContainerDef());
+        usdockerhelper.up(SCRIPTNAME, getContainerDef(), callback);
     },
 
-    status: function() {
-        usdockerhelper.status(SCRIPTNAME);
+    status: function(callback) {
+        usdockerhelper.status(SCRIPTNAME, callback);
     },
 
-    down: function()
+    down: function(callback)
     {
-        usdockerhelper.down(SCRIPTNAME);
+        usdockerhelper.down(SCRIPTNAME, callback);
     },
 
-    restart: function()
+    restart: function(callback)
     {
-        usdockerhelper.restart(SCRIPTNAME, getContainerDef());
+        usdockerhelper.restart(SCRIPTNAME, getContainerDef(), callback);
     },
+
 
     help: function () {
 

@@ -43,16 +43,16 @@ module.exports = {
      *
      * @param {DockerRunWrapper} dockerRunWrapper
      */
-    up(dockerRunWrapper) {
+    up(instance, dockerRunWrapper, callback) {
         let me = this;
         this.pull(dockerRunWrapper.imageName(), function () {
             let list = new DockerListWrapper(dockerRunWrapper.configGlobal);
             list.getRunning(function (data) {
-                console.log(data);
                 for (let i=0; i<data.length; i++) {
                     dockerRunWrapper.link(data[i].Names[0], data[i].Names[0])
                 }
                 me.runUsingApi(dockerRunWrapper);
+                callback(null, instance + ' was started');
             });
         });
     },
@@ -62,40 +62,47 @@ module.exports = {
         let container = docker.getContainer(instance + '-container');
         container.stop(function (err, data) {
             if (err) {
-                console.log(err.message);
+                callback(err);
+                return;
             }
-            if (callback) callback();
+            callback(null, instance + ' was finished');
         });
     },
 
     outputRaw(option, dockerrunwrapper) {
         if (option === 'api') {
-            console.log(dockerrunwrapper.buildApi());
+            return dockerrunwrapper.buildApi();
         } else {
-            console.log('docker ' + dockerrunwrapper.buildConsole().join(' '));
+            return 'docker ' + dockerrunwrapper.buildConsole().join(' ');
         }
     },
 
-    restart(instance, dockerRunWrapper) {
+    restart(instance, dockerRunWrapper, callback) {
         var me = this;
-        this.down(instance, function () {
-            me.up(dockerRunWrapper);
+        this.down(instance, function (data, dataverb) {
+            if (data instanceof Error) {
+                callback(null, instance + ' was not started.')
+            } else {
+                callback(data, dataverb);
+            }
+
+            me.up(instance, dockerRunWrapper, callback);
         });
     },
 
-    status(instance) {
+    status(instance, callback) {
         let docker = new Docker();
         let container = docker.getContainer(instance + '-container');
 
         container.inspect(function(err, data) {
             if (err) {
                 if (err.statusCode === 404) {
-                    console.log(instance + ' is down');
+                    callback(instance + ' is down');
                     return;
                 }
             }
 
-            console.log(instance + ' is ' + data.State.Status);
+            callback(instance + ' is ' + data.State.Status);
         });
     },
 
@@ -106,16 +113,22 @@ module.exports = {
      * @param {string} command
      * @param {boolean} setup
      */
-    run(sc, script, command, setup) {
+    run(sc, script, command, setup, output) {
         if (!sc.existsScript(script)) {
             throw new Error('Script "' + script + '" does not exists');
         }
 
         if (setup){
-            sc.getScript(script)['setup']();
+            sc.getScript(script)['setup'](function(data, dataverb) {
+                output.printErr(data);
+                output.print(data, dataverb);
+            });
         }
 
-        sc.getScript(script)[command]();
+        return sc.getScript(script)[command](function(data, dataverb) {
+            output.printErr(data);
+            output.print(data, dataverb);
+        });
     },
 
     getConfig(sc, script) {

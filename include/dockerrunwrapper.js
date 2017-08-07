@@ -1,6 +1,7 @@
 'use strict';
 
 const Docker = require('dockerode');
+const DockerWrapper = require('./dockerwrapper');
 const Config = require('./config');
 
 function pushArray(source, array, prefix) {
@@ -46,13 +47,14 @@ function pushLinkContainer(source) {
 
 
 
-class DockerRunWrapper {
+class DockerRunWrapper extends DockerWrapper {
 
     /**
      *
      * @param {Config} configGlobal
      */
     constructor(configGlobal) {
+        super(configGlobal);
         this.ports = [];
         this.volumes = [];
         this.environment = [];
@@ -64,15 +66,6 @@ class DockerRunWrapper {
         this.it = false;
         this.remove = false;
         this.name = "rename-container";
-        this.connection = configGlobal.get('docker-host');
-    };
-
-    host(hostName) {
-        if (!hostName) {
-            return this.connection;
-        }
-        this.connection = hostName;
-        return this;
     };
 
     port(host, container) {

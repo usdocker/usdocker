@@ -1,6 +1,7 @@
 'use strict';
 
 const Docker = require('dockerode');
+const DockerListWrapper = require('./dockerlistwrapper');
 const Config = require('./config');
 
 module.exports = {
@@ -45,7 +46,14 @@ module.exports = {
     up(dockerRunWrapper) {
         let me = this;
         this.pull(dockerRunWrapper.imageName(), function () {
-            me.runUsingApi(dockerRunWrapper);
+            let list = new DockerListWrapper(dockerRunWrapper.configGlobal);
+            list.getRunning(function (data) {
+                console.log(data);
+                for (let i=0; i<data.length; i++) {
+                    dockerRunWrapper.link(data[i].Names[0], data[i].Names[0])
+                }
+                me.runUsingApi(dockerRunWrapper);
+            });
         });
     },
 
@@ -104,7 +112,7 @@ module.exports = {
 
     getConfig(sc, script) {
         this.run(sc, script, 'setup', false);
-        return new Config(script, '/tmp');
+        return new Config(script, '/tmp/ustemp');
     },
 
     handleTerminal: function(err, stream, container, hasTerminal) {
@@ -177,17 +185,7 @@ module.exports = {
      */
     runUsingApi(dockerrunwrapper) {
 
-        var opts = {};
-        if (dockerrunwrapper.host().startsWith('http')) {
-            var parts = dockerrunwrapper.host().match(/^(https?):\/\/(.*?):(\d+)/);
-            opts.protocol = parts[1];
-            opts.host = parts[2];
-            opts.port = parts[3];
-        } else {
-            opts.socketPath = dockerrunwrapper.host();
-        }
-
-        var docker = new Docker(opts);
+        var docker = dockerrunwrapper.getInstance();
         var optsc = dockerrunwrapper.buildApi();
 
         var me = this;
@@ -256,7 +254,4 @@ module.exports = {
             });
         });
     },
-
-
-
 };

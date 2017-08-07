@@ -7,8 +7,8 @@ const showdocs = require('../include/showdocs');
 
 const SCRIPTNAME = 'mongodb';
 
-let config = new Config(SCRIPTNAME, '/tmp');
-let configGlobal = new Config(null, '/tmp');
+let config = new Config(SCRIPTNAME, '/tmp/ustemp');
+let configGlobal = new Config(null, '/tmp/ustemp');
 
 function getContainerDef() {
 

@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 
 class Output
 {
@@ -21,10 +22,10 @@ class Output
             return;
         }
 
-        if (!this.verbosity) {
-            console.error('Error: ' + err.message);
+        if (this.verbosity) {
+            console.error(chalk.red(err.stack));
         } else {
-            console.error(err);
+            console.error(chalk.red('Error: ' + err.message));
         }
         process.exit(1);
     }

@@ -12,6 +12,7 @@ let sc = new ScriptContainer(configGlobal, [__dirname]);
 
 let version = require(__dirname + '/package.json').version;
 let output = new Output(false);
+let found = false;
 
 program
     .version(version)
@@ -29,6 +30,7 @@ program
     .option('-s, --set <script> <variable> <value>','Set a script option')
     .option('-g, --get <script> <variable>','Get a script option')
     .action((var1, var2, var3) => {
+        found = true;
         let options = var1;
         if (typeof var2 === 'object') {
             options = var2;
@@ -80,6 +82,7 @@ for (let i=0; i<available.length; i++) {
         .option('-v, --verbose', 'Print extra information')
         .description('Scripts for ' + available[i])
         .action(function(command, options){
+            found = true;
             if (options.verbose) {
                 output.verbosity = true;
             }
@@ -101,6 +104,9 @@ for (let i=0; i<available.length; i++) {
 try {
     program.parse(process.argv);
 
+    if (!found) {
+        console.log('\n  error: command/script is invalid!\n');
+    }
     if (!process.argv.slice(2).length) {
         program.outputHelp();
     }

@@ -6,6 +6,18 @@ const fs = require('fs');
 const moment = require('moment-timezone');
 const requireNew = require('require-new');
 
+function copyConfig(source, dest) {
+    if (shell.test('-e', path.join(dest, path.basename(source)))) {
+        return true;
+    }
+
+    if (!shell.test('-e', source)) {
+        throw new Error('Source path "' + source + '"does not exists');
+    }
+
+    shell.cp('-R', source, dest);
+}
+
 class Config {
 
     constructor(script, alternateHome) {
@@ -45,16 +57,11 @@ class Config {
     }
 
     copyToUserDir(source) {
+        return copyConfig(source, this._configPath);
+    };
 
-        if (shell.test('-e', path.join(this._configPath, path.basename(source)))) {
-            return true;
-        }
-
-        if (!shell.test('-e', source)) {
-            throw new Error('Source path "' + source + '"does not exists');
-        }
-
-        shell.cp('-R', source, this._configPath);
+    copyToDataDir(source) {
+        return copyConfig(source, this._configDataPath);
     };
 
     getUserDir(name) {

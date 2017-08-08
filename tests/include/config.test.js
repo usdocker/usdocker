@@ -87,6 +87,16 @@ test('Test creating config user dir', () => {
     expect(result2).toBe(true);
 });
 
+test('Test creating config data dir', () => {
+    expect(fs.existsSync('/tmp/.usdocker_data/mymodule/mockdir')).toBe(false);
+    let result = config.copyToDataDir(__dirname + '/mockdir');
+    expect(result).toBe(undefined);
+    expect(fs.existsSync('/tmp/.usdocker_data/mymodule/mockdir')).toBe(true);
+    expect(fs.existsSync('/tmp/.usdocker_data/mymodule/mockdir/justfortest.txt')).toBe(true);
+    let result2 = config.copyToDataDir(__dirname + '/mockdir');
+    expect(result2).toBe(true);
+});
+
 
 test('Test store an object and retrieve data', () => {
     expect(fs.existsSync('/tmp/.usdocker/mymodule/environment.json')).toBe(false);

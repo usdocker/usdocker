@@ -52,12 +52,12 @@ program
         }
 
         if (options.get) {
-            let config = usdockerhelper.getConfig(sc, options.get);
+            let config = usdockerhelper.getConfig(sc, options.get, output);
             output.print(config.get(var1));
         }
 
         if (options.set) {
-            let config = usdockerhelper.getConfig(sc, options.set);
+            let config = usdockerhelper.getConfig(sc, options.set, output);
             let oldValue = config.get(var1);
             config.set(var1, var2);
             output.print(null, 'variable "' + var1 + '" replaced "' + oldValue + '" by "' + var2 + '"');
@@ -68,7 +68,7 @@ program
         }
 
         if (options.dump) {
-            output.print(usdockerhelper.getConfig(sc, var1.dump).dump());
+            output.print(usdockerhelper.getConfig(sc, var1.dump, output).dump());
         }
     });
 

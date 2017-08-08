@@ -131,8 +131,8 @@ module.exports = {
         });
     },
 
-    getConfig(sc, script) {
-        this.run(sc, script, 'setup', false);
+    getConfig(sc, script, output) {
+        this.run(sc, script, 'setup', false, output);
         return new Config(script, '/tmp/ustemp');
     },
 

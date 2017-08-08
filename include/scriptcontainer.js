@@ -87,7 +87,9 @@ class ScriptContainer {
             if (!this._usdockerModules[script]) {
                 let scriptOpts = {
                     'file': item,
-                    'commands': Object.keys(require(item))
+                    'commands': Object.keys(require(item)).map(function (key) {
+                        return key.replace(/([A-Z])/g, '-$1').toLowerCase()
+                    })
                 };
                 this._usdockerModules[script] = scriptOpts;
             }
@@ -128,6 +130,12 @@ class ScriptContainer {
         return item;
     }
 
+    cc(name) {
+        function toCamelCase(match, offset, string) {
+            return match.replace('-','').toUpperCase();
+        }
+        return name.replace(/\-[a-z]/g, toCamelCase);
+    }
 }
 
 module.exports = ScriptContainer;

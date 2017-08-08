@@ -18,10 +18,6 @@ module.exports = {
         return 'down command';
     },
 
-    helpPath: function () {
-        return path.join(__dirname, 'docs');
-    },
-
     expose: function (program) {
 
     }

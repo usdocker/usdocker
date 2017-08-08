@@ -26,11 +26,15 @@ test('Check availableScripts', () => {
 
 test('Check availableCommands', () => {
     let result = scriptcontainer.availableCommands('main');
-    expect(result).toEqual(["setup", "up", "down", "helpPath", "expose"]);
+    expect(result).toEqual(["setup", "up", "down", "expose"]);
     let result2 = scriptcontainer.availableCommands('another');
-    expect(result2).toEqual(["index", "close"]);
+    expect(result2).toEqual(["index", "close", "two-words"]);
 });
 
+test('Mapping from Hyphen to camel case', () => {
+    expect(scriptcontainer.cc('two-words')).toBe('twoWords');
+    expect(scriptcontainer.cc('three-words-now')).toBe('threeWordsNow');
+});
 
 test('Get and Execute a script', () => {
     let result = scriptcontainer.getScript('main');
@@ -40,6 +44,7 @@ test('Get and Execute a script', () => {
     let result2 = scriptcontainer.getScript('another');
     expect(result2['index']()).toBe('index command');
     expect(result2['close']()).toBe('close command');
+    expect(result2[scriptcontainer.cc('two-words')]()).toBe('two-words command');
 });
 
 test('ScriptContainer with a config object for cache', () => {
@@ -53,11 +58,11 @@ test('ScriptContainer with a config object for cache', () => {
     expect(config.get('cachescripts')).toEqual({
         "another": {
             "file": __dirname + "/mockdir/script2/usdocker_another.js",
-            "commands": ['index', 'close']
+            "commands": ['index', 'close', 'two-words']
         },
         "main": {
             "file": __dirname + "/mockdir/script1/usdocker_main.js",
-            "commands": ['setup', 'up', 'down', 'helpPath', 'expose']
+            "commands": ['setup', 'up', 'down', 'expose']
         }
     });
 

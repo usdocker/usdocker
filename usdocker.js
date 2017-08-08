@@ -86,6 +86,7 @@ for (let i=0; i<available.length; i++) {
             if (options.verbose) {
                 output.verbosity = true;
             }
+            command = sc.cc(command);
             usdockerhelper.run(sc, available[i], command, true, output);
         })
         .on('--help', function(){

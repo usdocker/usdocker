@@ -9,5 +9,9 @@ module.exports = {
     close: function()
     {
         return 'close command';
+    },
+
+    twoWords: function() {
+        return 'two-words command';
     }
 };

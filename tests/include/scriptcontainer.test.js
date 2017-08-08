@@ -51,8 +51,14 @@ test('ScriptContainer with a config object for cache', () => {
     let result2 = scriptcontainer.load();  // Already Readed!!
     expect(result2).toBe(false);
     expect(config.get('cachescripts')).toEqual({
-        "another": __dirname + "/mockdir/script2/usdocker_another.js",
-        "main": __dirname + "/mockdir/script1/usdocker_main.js"
+        "another": {
+            "file": __dirname + "/mockdir/script2/usdocker_another.js",
+            "commands": ['index', 'close']
+        },
+        "main": {
+            "file": __dirname + "/mockdir/script1/usdocker_main.js",
+            "commands": ['setup', 'up', 'down', 'helpPath', 'expose']
+        }
     });
 
     // Test if cache is working

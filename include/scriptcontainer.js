@@ -85,7 +85,11 @@ class ScriptContainer {
             let script = path.basename(item, '.js').replace(prefix, '');
 
             if (!this._usdockerModules[script]) {
-                this._usdockerModules[script] = item;
+                let scriptOpts = {
+                    'file': item,
+                    'commands': Object.keys(require(item))
+                };
+                this._usdockerModules[script] = scriptOpts;
             }
 
         }
@@ -109,9 +113,9 @@ class ScriptContainer {
             this.load()
         }
 
-        let item = this.getScript(script)
+        let item = this._usdockerModules[script]['commands'];
 
-        return Object.keys(item);
+        return item;
     }
 
     getScript(script) {
@@ -119,7 +123,7 @@ class ScriptContainer {
             this.load()
         }
 
-        let item = require(this._usdockerModules[script]);
+        let item = require(this._usdockerModules[script]['file']);
 
         return item;
     }

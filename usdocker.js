@@ -84,7 +84,18 @@ for (let i=0; i<available.length; i++) {
                 output.verbosity = true;
             }
             usdockerhelper.run(sc, available[i], command, true, output);
+        })
+        .on('--help', function(){
+            console.log('');
+            console.log('  Available Scripts:');
+            console.log('');
+            let scripts = sc.availableCommands(available[i]);
+            for (let i=0; i<scripts.length; i++) {
+                console.log('    - ' + scripts[i]);
+            }
+            console.log('');
         });
+    ;
 }
 
 try {

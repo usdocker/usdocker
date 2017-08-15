@@ -125,7 +125,7 @@ module.exports = {
      * @param {string} command
      * @param {boolean} setup
      */
-    run(sc, script, command, setup, output, extraArgs) {
+    run(sc, script, command, setup, output, extraArgs, options) {
         if (!sc.existsScript(script)) {
             throw new Error('Script "' + script + '" does not exists');
         }
@@ -142,6 +142,11 @@ module.exports = {
             throw new Error('Command "' + script + ' ' + command + '" does not exists.');
         }
 
+        if (!options) {
+            options = {};
+        }
+
+        scriptInstance.options = options;
         return scriptInstance[command](function(data, dataverb) {
             output.printErr(data);
             output.print(data, dataverb);

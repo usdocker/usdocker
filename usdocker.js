@@ -27,6 +27,8 @@ program
         'check status and a lot of other features.'
     )
     .option('-r, --refresh','refresh the list of available scripts')
+    .option('--yes', 'answer YES to question')
+    .option('--no', 'answer NO to question')
     .option('-v, --verbose','Print extra information')
     .option('-d, --dump','Dump the scripts options')
     .option('--dump-global','Dump the global options')
@@ -120,7 +122,18 @@ try {
 
     if (command) {
         command = sc.cc(command);
-        usdockerhelper.run(sc, script, command, false, output, program.args.slice(2));
+        usdockerhelper.run(
+            sc,
+            script,
+            command,
+            false,
+            output,
+            program.args.slice(2),
+            {
+                yes: program.yes,
+                no: program.no
+            }
+        );
     }
 
     if ((!script && !found) || (script && !command && !found)) {

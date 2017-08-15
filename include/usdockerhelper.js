@@ -60,12 +60,24 @@ module.exports = {
     down(instance, callback) {
         let docker = new Docker();
         let container = docker.getContainer(instance + '-container');
-        container.stop(function (err, data) {
+        container.inspect(function (err, data) {
             if (err) {
                 callback(err);
                 return;
             }
-            callback(null, instance + ' was finished');
+
+            if (!data.State.Running) {
+                container.remove()
+                callback(null, instance + ' was removed');
+            } else {
+                container.stop(function (err, data) {
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+                    callback(null, instance + ' was finished');
+                });
+            }
         });
     },
 
@@ -113,7 +125,7 @@ module.exports = {
      * @param {string} command
      * @param {boolean} setup
      */
-    run(sc, script, command, setup, output) {
+    run(sc, script, command, setup, output, extraArgs) {
         if (!sc.existsScript(script)) {
             throw new Error('Script "' + script + '" does not exists');
         }
@@ -125,10 +137,15 @@ module.exports = {
             });
         }
 
-        return sc.getScript(script)[command](function(data, dataverb) {
+        let scriptInstance = sc.getScript(script);
+        if (Object.keys(scriptInstance).indexOf(command) < 0) {
+            throw new Error('Command "' + script + ' ' + command + '" does not exists.');
+        }
+
+        return scriptInstance[command](function(data, dataverb) {
             output.printErr(data);
             output.print(data, dataverb);
-        });
+        }, extraArgs);
     },
 
     getConfig(sc, script, output) {

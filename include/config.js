@@ -42,6 +42,7 @@ class Config {
 
         // Setting defaults for global
         if (script === "") {
+            this.setEmpty('version', require('../package.json').version);
             this.setEmpty('container-suffix', '-container');
             this.setEmpty('timezone', this.getLocalTimeZone());
             this.setEmpty('docker-host', '/var/run/docker.sock')

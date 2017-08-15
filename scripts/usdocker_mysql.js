@@ -37,7 +37,7 @@ module.exports = {
 
         config.copyToUserDir(__dirname + '/mysql/conf.d');
         config.copyToUserDir(__dirname + '/mysql/home');
-        callback(null, 'setup ' + SCRIPTNAME);
+        callback(null, 'setup loaded for ' + SCRIPTNAME);
     },
 
     client: function(callback)

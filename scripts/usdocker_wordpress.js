@@ -63,7 +63,7 @@ module.exports = {
                 // fs.chownSync(folderList[i], 33, 33);
             }
         }
-        callback(null, 'setup ' + SCRIPTNAME);
+        callback(null, 'setup loaded for ' + SCRIPTNAME);
     },
 
     debugcli(callback) {

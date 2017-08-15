@@ -30,7 +30,7 @@ module.exports = {
         config.setEmpty('image', 'mongo:3');
         config.setEmpty('folder', config.getDataDir());
         config.setEmpty('port', 27017);
-        callback(null, 'setup ' + SCRIPTNAME);
+        callback(null, 'setup loaded for ' + SCRIPTNAME);
     },
 
     client: function(callback)

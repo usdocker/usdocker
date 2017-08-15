@@ -34,7 +34,7 @@ module.exports = {
         config.setEmpty('folder', config.getDataDir());
         config.setEmpty('port', 11211);
         config.setEmpty('memory', 1);
-        callback(null, 'setup ' + SCRIPTNAME);
+        callback(null, 'setup loaded for ' + SCRIPTNAME);
     },
 
     debugcli(callback) {

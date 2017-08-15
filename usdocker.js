@@ -12,103 +12,118 @@ let sc = new ScriptContainer(configGlobal, [__dirname]);
 
 let version = require(__dirname + '/package.json').version;
 let output = new Output(false);
-let found = false;
+let script = null;
+let command = null;
+
+function collect(val, memo) {
+    memo.push(val);
+    return memo;
+}
 
 program
     .version(version)
-    .usage('<command> [action] [options]')
+    .usage('<script> [options] [command] ')
     .description('USDocker is a colletion of useful scripts to make easier brings a service up or down, ' +
         'check status and a lot of other features.'
     )
-    .command('setup')
-    .description('run setup commands for USDocker and scripts')
     .option('-r, --refresh','refresh the list of available scripts')
     .option('-v, --verbose','Print extra information')
-    .option('-d, --dump <script>','Dump the scripts options')
+    .option('-d, --dump','Dump the scripts options')
     .option('--dump-global','Dump the global options')
-    .option('--global <variable> <value>','Set a global option')
-    .option('-s, --set <script> <variable> <value>','Set a script option')
-    .option('-g, --get <script> <variable>','Get a script option')
-    .action((var1, var2, var3) => {
-        found = true;
-        let options = var1;
-        if (typeof var2 === 'object') {
-            options = var2;
-        } else if (typeof var3 === 'object') {
-            options = var3;
-        }
-
-        if (options.verbose) {
-            output.verbosity = true;
-        }
-
-        if (options.refresh) {
-            sc.load(true);
-            output.print(null, 'refreshed')
-        }
-
-        if (options.global) {
-            let oldValue = configGlobal.get(options.global);
-            configGlobal.set(options.global, var1);
-            output.print(null, 'global "' + var2.global + '" replaced "' + oldValue + '" by "' + var1 + '"');
-        }
-
-        if (options.get) {
-            let config = usdockerhelper.getConfig(sc, options.get, output);
-            output.print(config.get(var1));
-        }
-
-        if (options.set) {
-            let config = usdockerhelper.getConfig(sc, options.set, output);
-            let oldValue = config.get(var1);
-            config.set(var1, var2);
-            output.print(null, 'variable "' + var1 + '" replaced "' + oldValue + '" by "' + var2 + '"');
-        }
-
-        if (options.dumpGlobal) {
-            output.print(configGlobal.dump());
-        }
-
-        if (options.dump) {
-            output.print(usdockerhelper.getConfig(sc, var1.dump, output).dump());
-        }
-    });
-
-let available = sc.availableScripts();
-
-for (let i=0; i<available.length; i++) {
-    program
-        .command(available[i] + ' <command>')
-        .option('-v, --verbose', 'Print extra information')
-        .description('Scripts for ' + available[i])
-        .action(function(command, options){
-            found = true;
-            if (options.verbose) {
-                output.verbosity = true;
-            }
-            command = sc.cc(command);
-            usdockerhelper.run(sc, available[i], command, true, output);
-        })
+    .option('--global <key-pair>','Set a global configuration for usdocker. Key-pair is key=value', collect, [])
+    .option('-s, --set <key-pair>','Set a script configuration. Key-pair is key=value', collect, [])
+    .option('-g, --get <key>','Get a script option', collect, [])
         .on('--help', function(){
             console.log('');
-            console.log('  Available Scripts:');
-            console.log('');
-            let scripts = sc.availableCommands(available[i]);
-            for (let i=0; i<scripts.length; i++) {
-                console.log('    - ' + scripts[i]);
+            if (!script) {
+                console.log('  Available Scripts:');
+                console.log('');
+                let scripts = sc.availableScripts();
+                for (let i = 0; i < scripts.length; i++) {
+                    console.log('    - ' + scripts[i]);
+                }
+            } else {
+                console.log('  Available commands for script "' + script + '":');
+                console.log('');
+                let commands = sc.availableCommands(script)
+                for (let i = 0; i < commands.length; i++) {
+                    console.log('    - ' + commands[i]);
+                }
             }
             console.log('');
         });
-    ;
-}
+
 
 try {
     program.parse(process.argv);
 
-    if (!found) {
-        console.log('\n  error: command/script is invalid!\n');
+    script = program.args[0];
+    command = program.args[1];
+    let config = null;
+    let found = false;
+
+    if (program.verbose) {
+        output.verbosity = true;
     }
-    if (!process.argv.slice(2).length) {
+
+    if (script) {
+        if (!sc.existsScript(script)) {
+            throw new Error('Script "' + script + '" does not exists.');
+        }
+        config = usdockerhelper.getConfig(sc, script, output);
+    }
+
+    if (program.refresh) {
+        found = true;
+        sc.load(true);
+        output.print(null, 'refreshed')
+    }
+
+    if (program.global.length !== 0) {
+        found = true;
+        for (let i=0; i<program.global.length; i++) {
+            let setParts = program.global[i].split('=');
+            if (setParts.length !== 2) throw new Error('Invalid key pair set');
+            let oldValue = configGlobal.get(setParts[0]);
+            configGlobal.set(setParts[0], setParts[1]);
+            output.print(null, 'global "' + setParts[0].global + '" replaced "' + oldValue + '" by "' + setParts[1] + '"');
+        }
+    }
+
+    if (program.get.length !== 0 && script) {
+        found = true;
+        for (let i=0; i<program.get.length; i++) {
+            output.print(program.get[i] + '=' + config.get(program.get[i]));
+        }
+    }
+
+    if (program.set.length !== 0 && script) {
+        found = true;
+        for (let i=0; i<program.set.length; i++) {
+            let setParts = program.set[i].split('=');
+            if (setParts.length !== 2) throw new Error('Invalid key pair set');
+            let oldValue = config.get(setParts[0]);
+            config.set(setParts[0], setParts[1]);
+            output.print(null, 'variable "' + setParts[0] + '" replaced "' + oldValue + '" by "' + setParts[1] + '"');
+        }
+    }
+
+    if (program.dumpGlobal) {
+        found = true;
+        output.print(configGlobal.dump());
+    }
+
+    if (program.dump && script) {
+        found = true;
+        output.print(config.dump());
+    }
+
+    if (command) {
+        command = sc.cc(command);
+        usdockerhelper.run(sc, script, command, false, output, program.args.slice(2));
+    }
+
+    if ((!script && !found) || (script && !command && !found)) {
         program.outputHelp();
     }
 } catch (err) {

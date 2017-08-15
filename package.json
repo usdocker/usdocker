@@ -21,7 +21,9 @@
     "nconf": "^0.8.4",
     "preferences": "^0.2.1",
     "require-new": "^1.1.1",
-    "shelljs": "^0.7.8"
+    "shelljs": "^0.7.8",
+    "targz": "^1.0.1",
+    "yesno": "0.0.1"
   },
   "devDependencies": {
     "jest": "^20.0.1"

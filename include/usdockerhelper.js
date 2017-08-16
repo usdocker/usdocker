@@ -21,7 +21,7 @@ module.exports = {
         let docker = new Docker();
 
         let instance = docker.getImage(image);
-        instance.inspect(function (err, result) {
+        instance.inspect(function (err) {
             if (!err) {
                 callback();
                 return;
@@ -35,7 +35,7 @@ module.exports = {
 
                 docker.modem.followProgress(stream, onFinished, onProgress);
 
-                function onFinished(err, output) {
+                function onFinished(err) {
                     if (err) {
                         callback(err);
                         return;
@@ -60,7 +60,7 @@ module.exports = {
             let list = new DockerListWrapper(dockerRunWrapper.configGlobal);
             list.getRunning(function (data) {
                 for (let i=0; i<data.length; i++) {
-                    dockerRunWrapper.link(data[i].Names[0], data[i].Names[0])
+                    dockerRunWrapper.link(data[i].Names[0], data[i].Names[0]);
                 }
                 callback(null, 'started creation of instance ' + instance);
                 me.runUsingApi(dockerRunWrapper, callback);
@@ -83,10 +83,10 @@ module.exports = {
             }
 
             if (!data.State.Running) {
-                container.remove()
+                container.remove();
                 callback(null, instance + ' was removed');
             } else {
-                container.stop(function (err, data) {
+                container.stop(function (err) {
                     if (err) {
                         callback(err);
                         return;
@@ -118,10 +118,10 @@ module.exports = {
      * @param callback
      */
     restart(instance, dockerRunWrapper, callback) {
-        var me = this;
+        let me = this;
         this.down(instance, function (data, dataverb) {
             if (data instanceof Error) {
-                callback(null, instance + ' was not started.')
+                callback(null, instance + ' was not started.');
             } else {
                 callback(data, dataverb);
             }
@@ -200,18 +200,18 @@ module.exports = {
 
     handleTerminal: function(err, stream, container, hasTerminal) {
 
-        var previousKey,
+        let previousKey,
             CTRL_P = '\u0010',
             CTRL_Q = '\u0011';
 
         // Resize tty
         function resize (container) {
-            var dimensions = {
+            let dimensions = {
                 h: process.stdout.rows,
                 w: process.stderr.columns
             };
 
-            if (dimensions.h != 0 && dimensions.w != 0) {
+            if (dimensions.h !== 0 && dimensions.w !== 0) {
                 container.resize(dimensions, function() {});
             }
         }
@@ -230,7 +230,7 @@ module.exports = {
         stream.pipe(process.stdout);
 
         // Connect stdin
-        var isRaw = process.isRaw;
+        let isRaw = process.isRaw;
         process.stdin.resume();
         process.stdin.setEncoding('utf8');
         process.stdin.setRawMode(true);
@@ -246,13 +246,13 @@ module.exports = {
             exit(stream, isRaw);
         });
 
-        container.start(function(err, data) {
+        container.start(function() { /* callback uses (err, data) */
             resize(container);
             process.stdout.on('resize', function() {
                 resize(container);
             });
 
-            container.wait(function(err, data) {
+            container.wait(function() { /* callback uses (err, data) */
                 exit(stream, isRaw);
             });
 
@@ -268,10 +268,10 @@ module.exports = {
      */
     runUsingApi(dockerrunwrapper, callback) {
 
-        var docker = dockerrunwrapper.getInstance();
-        var optsc = dockerrunwrapper.buildApi();
+        let docker = dockerrunwrapper.getInstance();
+        let optsc = dockerrunwrapper.buildApi();
 
-        var me = this;
+        let me = this;
 
         docker.createContainer(optsc, function (err, container) {
             if (err) {
@@ -279,7 +279,7 @@ module.exports = {
                 return;
             }
 
-            var attach_opts = {stream: true, stdin: true, stdout: true, stderr: true};
+            let attach_opts = {stream: true, stdin: true, stdout: true, stderr: true};
 
             container.attach(attach_opts, function (err, stream) {
                 me.handleTerminal(err, stream, container, dockerrunwrapper.isInteractive());
@@ -316,7 +316,7 @@ module.exports = {
         } else {
             if (docker.status > 0) {
                 callback('The command causes an unexpected error.');
-                callback(null, 'docker ' + dockerParams.join(' '))
+                callback(null, 'docker ' + dockerParams.join(' '));
             }
         }
     },
@@ -328,7 +328,7 @@ module.exports = {
      * @param callback
      */
     exec(instance, cmd, callback) {
-        var me = this;
+        let me = this;
 
         let docker = new Docker();
         let container = docker.getContainer(instance + '-container');

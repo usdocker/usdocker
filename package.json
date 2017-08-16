@@ -4,8 +4,8 @@
   "description": "A collection of Useful Scripts for Docker http://usdocker.com",
   "main": "usdocker.js",
   "scripts": {
-    "test": "./node_modules/.bin/jest",
-    "docs": "jsdoc2md include/* > docs/api.md"
+    "test": "./node_modules/.bin/eslint include/* *.js && ./node_modules/.bin/jest",
+    "docs": "./node_modules/.bin/jsdoc2md include/* > docs/api.md"
   },
   "author": "Joao Gilberto Magalhães",
   "bin": {
@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.0.1",
+    "chalk": "^2.1.0",
     "commander": "^2.11.0",
     "dockerode": "^2.5.0",
     "marked": "^0.3.6",
@@ -27,6 +27,9 @@
     "yesno": "0.0.1"
   },
   "devDependencies": {
-    "jest": "^20.0.1"
+    "eslint": "^4.4.1",
+    "jest": "^20.0.1",
+    "jsdoc-to-markdown": "^3.0.0",
+    "jslint": "^0.11.0"
   }
 }

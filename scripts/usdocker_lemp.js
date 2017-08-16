@@ -54,7 +54,7 @@ module.exports = {
 
     domainAdd(callback, extraArgs) {
         if (extraArgs.length !== 1 && extraArgs.length !== 2) {
-            throw new Error('domain-add requires two parameters: domain and template (optional .tar.gz file)')
+            throw new Error('domain-add requires two parameters: domain and template (optional .tar.gz file)');
         }
 
         let destFolder = path.join(config.get('folder'), 'data', extraArgs[0]);
@@ -84,7 +84,7 @@ module.exports = {
 
     domainDel(callback, extraArgs) {
         if (extraArgs.length !== 1) {
-            throw new Error('domain-del requires one parameter: domain')
+            throw new Error('domain-del requires one parameter: domain');
         }
 
         let destFolder = path.join(config.get('folder'), 'data', extraArgs[0]);
@@ -114,12 +114,12 @@ module.exports = {
 
     debugcli(callback) {
         let result = usdockerhelper.outputRaw('cli', getContainerDef());
-        callback(result)
+        callback(result);
     },
 
     debugapi(callback) {
         let result = usdockerhelper.outputRaw('api', getContainerDef());
-        callback(result)
+        callback(result);
     },
 
     up: function(callback)

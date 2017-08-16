@@ -21,7 +21,7 @@ module.exports = {
         });
 
         if (file === undefined) {
-            file = "index.md";
+            file = 'index.md';
         }
 
         let data = fs.readFileSync(path.join(dirname, file));
@@ -29,9 +29,9 @@ module.exports = {
         return data.toString();
     },
 
-    showDocs: function(data) {
-        // Show the parsed data
-        console.log(marked());
-    }
+    // showDocs: function(data) {
+    //     // Show the parsed data
+    //     console.log(marked());
+    // }
 
 };

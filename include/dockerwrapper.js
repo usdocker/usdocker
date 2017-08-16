@@ -14,7 +14,7 @@ class DockerWrapper {
     constructor(configGlobal) {
         this.configGlobal = configGlobal;
         this.connection = configGlobal.get('docker-host');
-    };
+    }
 
     /**
      * Defines the docker host. Equals to -H parameter.
@@ -27,16 +27,16 @@ class DockerWrapper {
         }
         this.connection = hostName;
         return this;
-    };
+    }
 
     /**
      * Static method to return an instance of a DockerWrapper
      * @returns {Docker}
      */
     getInstance() {
-        var opts = {};
+        let opts = {};
         if (this.host().startsWith('http')) {
-            var parts = this.host().match(/^(https?):\/\/(.*?):(\d+)/);
+            let parts = this.host().match(/^(https?):\/\/(.*?):(\d+)/);
             opts.protocol = parts[1];
             opts.host = parts[2];
             opts.port = parts[3];

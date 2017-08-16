@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const Config = require('./config');
 
 let prefix = 'usdocker_';
 
@@ -29,7 +28,7 @@ class ScriptContainer {
             this._searchDir = [
                 path.join(__dirname, '..', 'scripts'),
                 path.join(__dirname, '..', '..'),
-            ]
+            ];
         }
     }
 
@@ -87,7 +86,7 @@ class ScriptContainer {
                 this.loadModules(f);
             }
         } else {
-            if (path.extname(item) !== ".js") {
+            if (path.extname(item) !== '.js') {
                 return;
             }
             if (!path.basename(item).startsWith(prefix)) {
@@ -97,13 +96,12 @@ class ScriptContainer {
             let script = path.basename(item, '.js').replace(prefix, '');
 
             if (!this._usdockerModules[script]) {
-                let scriptOpts = {
+                this._usdockerModules[script] = {
                     'file': item,
                     'commands': Object.keys(require(item)).map(function (key) {
-                        return key.replace(/([A-Z])/g, '-$1').toLowerCase()
+                        return key.replace(/([A-Z])/g, '-$1').toLowerCase();
                     })
                 };
-                this._usdockerModules[script] = scriptOpts;
             }
 
         }
@@ -125,7 +123,7 @@ class ScriptContainer {
      */
     availableScripts() {
         if (!this.isLoaded()) {
-            this.load()
+            this.load();
         }
 
         return Object.keys(this._usdockerModules);
@@ -138,12 +136,10 @@ class ScriptContainer {
      */
     availableCommands(script) {
         if (!this.isLoaded()) {
-            this.load()
+            this.load();
         }
 
-        let item = this._usdockerModules[script]['commands'];
-
-        return item;
+        return this._usdockerModules[script]['commands'];
     }
 
     /**
@@ -153,12 +149,10 @@ class ScriptContainer {
      */
     getScript(script) {
         if (!this.isLoaded()) {
-            this.load()
+            this.load();
         }
 
-        let item = require(this._usdockerModules[script]['file']);
-
-        return item;
+        return require(this._usdockerModules[script]['file']);
     }
 
     /**
@@ -166,10 +160,10 @@ class ScriptContainer {
      * @param {string} name
      */
     cc(name) {
-        function toCamelCase(match, offset, string) {
+        function toCamelCase(match) { /* callback (match, offset, string) */
             return match.replace('-','').toUpperCase();
         }
-        return name.replace(/\-[a-z]/g, toCamelCase);
+        return name.replace(/-[a-z]/g, toCamelCase);
     }
 }
 

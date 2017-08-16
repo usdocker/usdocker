@@ -7,7 +7,9 @@ function runListContainer(me, opts, callback) {
     let docker = me.getInstance();
 
     docker.listContainers(opts, function(err, data) {
-        if (err) {throw new Error(err.message)}
+        if (err) {
+            throw new Error(err.message);
+        }
         callback(data);
     });
 }
@@ -24,7 +26,7 @@ class DockerListWrapper extends DockerWrapper {
     constructor(configGlobal) {
         super(configGlobal);
         this.connection = configGlobal.get('docker-host');
-    };
+    }
 
     /**
      * Get all containers (including the stopped)
@@ -32,7 +34,7 @@ class DockerListWrapper extends DockerWrapper {
      */
     getAll(callback) {
         runListContainer(this, {all:true}, callback);
-    };
+    }
 
     /**
      * Get only the running containers
@@ -40,20 +42,18 @@ class DockerListWrapper extends DockerWrapper {
      */
     getRunning(callback) {
         runListContainer(this, {all:false}, callback);
-    };
+    }
 
     /**
      * Get a container based on the filter
      * @param {integer} limit The maximum number of results
      * @param {string} filters The filter '{"label": ["staging","env=green"]}'
      * @param callback
+     *
      */
     get(limit, filters, callback) {
-        let opts = {"limit": limit, "filters": filters}
-        docker.listContainers(opts, function(err, containers) {
-            console.log(containers);
-        });
-    };
+        runListContainer(this, {'limit': limit, 'filters': filters}, callback);
+    }
 }
 
 

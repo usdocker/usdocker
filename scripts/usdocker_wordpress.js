@@ -68,12 +68,12 @@ module.exports = {
 
     debugcli(callback) {
         let result = usdockerhelper.outputRaw('cli', getContainerDef());
-        callback(result)
+        callback(result);
     },
 
     debugapi(callback) {
         let result = usdockerhelper.outputRaw('api', getContainerDef());
-        callback(result)
+        callback(result);
     },
 
     up: function(callback)

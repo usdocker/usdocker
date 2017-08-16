@@ -38,25 +38,25 @@ program
     .option('--no', 'answer NO to any question')
     .option('--reset-datadir', 'reset all user data. Be careful because this operation is not reversible!')
     .option('--reset-userdir', 'reset all config user data. Be careful because this operation is not reversible!')
-        .on('--help', function(){
+    .on('--help', function(){
+        console.log('');
+        if (!script) {
+            console.log('  Available Scripts:');
             console.log('');
-            if (!script) {
-                console.log('  Available Scripts:');
-                console.log('');
-                let scripts = sc.availableScripts();
-                for (let i = 0; i < scripts.length; i++) {
-                    console.log('    - ' + scripts[i]);
-                }
-            } else {
-                console.log('  Available commands for script "' + script + '":');
-                console.log('');
-                let commands = sc.availableCommands(script)
-                for (let i = 0; i < commands.length; i++) {
-                    console.log('    - ' + commands[i]);
-                }
+            let scripts = sc.availableScripts();
+            for (let i = 0; i < scripts.length; i++) {
+                console.log('    - ' + scripts[i]);
             }
+        } else {
+            console.log('  Available commands for script "' + script + '":');
             console.log('');
-        });
+            let commands = sc.availableCommands(script);
+            for (let i = 0; i < commands.length; i++) {
+                console.log('    - ' + commands[i]);
+            }
+        }
+        console.log('');
+    });
 
 
 try {
@@ -90,10 +90,10 @@ try {
             program.no,
             function() {
                 shell.rm('-rf', config.getDataDir());
-                output.print('Data dir was deleted!')
+                output.print('Data dir was deleted!');
             },
             function() {
-                output.print('Cancelled!')
+                output.print('Cancelled!');
             }
         );
     }
@@ -110,10 +110,10 @@ try {
             program.no,
             function() {
                 shell.rm('-rf', config.getUserDir());
-                output.print('User dir was deleted!')
+                output.print('User dir was deleted!');
             },
             function() {
-                output.print('Cancelled!')
+                output.print('Cancelled!');
             }
         );
     }
@@ -121,7 +121,7 @@ try {
     if (program.refresh) {
         found = true;
         sc.load(true);
-        output.print(null, 'refreshed')
+        output.print(null, 'refreshed');
     }
 
     if (program.global.length !== 0) {

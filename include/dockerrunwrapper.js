@@ -1,8 +1,6 @@
 'use strict';
 
-const Docker = require('dockerode');
 const DockerWrapper = require('./dockerwrapper');
-const Config = require('./config');
 
 function pushArray(source, array, prefix) {
     for(let i=0; i<array.length; i++) {
@@ -11,7 +9,7 @@ function pushArray(source, array, prefix) {
 }
 
 function pushString(source, str, prefix) {
-    if (str.toString().trim() !== "") {
+    if (str.toString().trim() !== '') {
         let parts = str.toString().match(/"[^"]+"\b|\S+/g);
         if (parts.length === 1) {
             if (prefix) {
@@ -33,7 +31,7 @@ function pushStringCond(source, cond, str, prefix) {
 function pushLinkContainer(source) {
 
     const shell = require('shelljs');
-    let result = shell.exec("docker ps", {silent: true}).split('\n');
+    let result = shell.exec('docker ps', {silent: true}).split('\n');
 
     let iName = result[0].indexOf('NAMES');
 
@@ -41,7 +39,7 @@ function pushLinkContainer(source) {
         if (iName > result[i].length) {
             continue;
         }
-        pushString(source, "--link " + result[i].substring(iName).trim() + ":" + result[i].substring(iName).trim());
+        pushString(source, '--link ' + result[i].substring(iName).trim() + ':' + result[i].substring(iName).trim());
     }
 }
 
@@ -63,31 +61,31 @@ class DockerRunWrapper extends DockerWrapper {
         this.params = [];
         this.links = [];
         this.cmdParam = [];
-        this.image = "";
+        this.image = '';
         this.it = false;
         this.remove = false;
-        this.name = "rename-container";
-    };
+        this.name = 'rename-container';
+    }
 
     /**
      * Map the port. Equals to -p parameter
      * @param {int} host Port on host (if empty returns the string "host:container"
      * @param {int} container Port on container
-     * @returns {string}
+     * @returns {Array|DockerRunWrapper}
      */
     port(host, container) {
         if (!host) {
             return this.ports;
         }
-        this.ports.push(host + ":" + container);
+        this.ports.push(host + ':' + container);
         return this;
-    };
+    }
 
     /**
      * Map the volume. Equals to -v parameter
      * @param {string} host Path on the host (if empty returns the string "host:container")
      * @param {string} container Path on container
-     * @returns {*}
+     * @returns {Array|DockerRunWrapper}
      */
     volume(host, container) {
         if (!host) {
@@ -95,7 +93,7 @@ class DockerRunWrapper extends DockerWrapper {
         }
         this.volumes.push(host + ':' + container);
         return this;
-    };
+    }
 
     /**
      * Create a link to an existing docker container. Equals to --link parameter
@@ -106,26 +104,26 @@ class DockerRunWrapper extends DockerWrapper {
     link(source, target) {
         this.links.push(source + ':' + target);
         return this;
-    };
+    }
 
     /**
      * Set an environment variable on the container. Equals to --env parameter
      * @param {string} variable (if empty returns the string "variable=value")
      * @param {string} value
-     * @returns {*}
+     * @returns {Array|DockerRunWrapper}
      */
     env(variable, value) {
         if (!variable) {
             return this.environment;
         }
-        this.environment.push(variable + "=" + value);
+        this.environment.push(variable + '=' + value);
         return this;
-    };
+    }
 
     /**
      *
      * @param param
-     * @returns {*}
+     * @returns {Array|DockerRunWrapper}
      */
     dockerParam(param) {
         if (!param) {
@@ -133,12 +131,12 @@ class DockerRunWrapper extends DockerWrapper {
         }
         this.params.push(param);
         return this;
-    };
+    }
 
     /**
      * Defines if the container will be detached. Equals to -d
      * @param {boolean} value (if empty returns true or false)
-     * @returns {*}
+     * @returns {boolean|DockerRunWrapper}
      */
     isDetached(value) {
         if (value === undefined) {
@@ -149,12 +147,12 @@ class DockerRunWrapper extends DockerWrapper {
         }
         this.detached = value;
         return this;
-    };
+    }
 
     /**
      * Defines if the container will be a terminal interactive. Equals to -it parameter.
      * @param {boolean} value (if empty returns true or false)
-     * @returns {*}
+     * @returns {boolean|DockerRunWrapper}
      */
     isInteractive(value) {
         if (value === undefined) {
@@ -165,12 +163,12 @@ class DockerRunWrapper extends DockerWrapper {
         }
         this.it = value;
         return this;
-    };
+    }
 
     /**
      * Defines if the container removed on the end. Equals to --rm parameter.
      * @param {boolean} value (if empty returns true or false)
-     * @returns {*}
+     * @returns {boolean|DockerRunWrapper}
      */
     isRemove(value) {
         if (value === undefined) {
@@ -178,12 +176,12 @@ class DockerRunWrapper extends DockerWrapper {
         }
         this.remove = value;
         return this;
-    };
+    }
 
     /**
      * Defines the container name. Equals to --name parameter.
      * @param {string} value (if empty returns the container name)
-     * @returns {*}
+     * @returns {string|DockerRunWrapper}
      */
     containerName(value) {
         if (value === undefined) {
@@ -191,12 +189,12 @@ class DockerRunWrapper extends DockerWrapper {
         }
         this.name = value;
         return this;
-    };
+    }
 
     /**
      * Defines the image name.
      * @param {string} value (if empty returns the image name)
-     * @returns {*}
+     * @returns {string|DockerRunWrapper}
      */
     imageName(value) {
         if (value === undefined) {
@@ -204,12 +202,12 @@ class DockerRunWrapper extends DockerWrapper {
         }
         this.image = value;
         return this;
-    };
+    }
 
     /**
      * Defines the command paramters.
      * @param {string} param (if empty returns the array of parameters)
-     * @returns {*}
+     * @returns {Array|DockerRunWrapper}
      */
     commandParam(param) {
         if (param === undefined) {
@@ -217,7 +215,7 @@ class DockerRunWrapper extends DockerWrapper {
         }
         this.cmdParam.push(param.toString());
         return this;
-    };
+    }
 
     /**
      * Return the full command line
@@ -226,7 +224,7 @@ class DockerRunWrapper extends DockerWrapper {
      */
     buildConsole(addLinks) {
 
-        if (this.image === "") {
+        if (this.image === '') {
             throw new Error('Image cannot be empty');
         }
 
@@ -254,7 +252,7 @@ class DockerRunWrapper extends DockerWrapper {
         pushArray(dockerCmd, this.cmdParam);
 
         return dockerCmd;
-    };
+    }
 
     /**
      * Returns the object to be used in the docker API.
@@ -265,10 +263,10 @@ class DockerRunWrapper extends DockerWrapper {
         let portsBindings = {};
         for(let i=0; i<this.ports.length; i++) {
             let ports = this.ports[i].split(':');
-            portsBindings[ports[1] + "/tcp"] = [ { "HostPort": ports[0].toString() } ];
+            portsBindings[ports[1] + '/tcp'] = [ { 'HostPort': ports[0].toString() } ];
         }
 
-        let dockerOptions = {
+        return {
             name: this.name,
             AttachStdin: this.it,
             AttachStdout: true,
@@ -287,9 +285,7 @@ class DockerRunWrapper extends DockerWrapper {
             Image: this.image,
             Cmd: this.cmdParam
         };
-
-        return dockerOptions;
-    };
+    }
 }
 
 

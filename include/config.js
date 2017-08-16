@@ -37,11 +37,11 @@ class Config {
         }
 
         if (!script) {
-            script = "";
+            script = '';
         }
         this._configPath = path.join(alternateHome, '.usdocker', script);
         this._configDataPath = path.join(alternateHome, '.usdocker_data', script);
-        this._configJson = path.join(this._configPath, 'environment.json')
+        this._configJson = path.join(this._configPath, 'environment.json');
         shell.mkdir('-p', this._configPath);
         shell.mkdir('-p', this._configDataPath);
 
@@ -49,20 +49,20 @@ class Config {
         this.reload();
 
         // Setting defaults for global
-        if (script === "") {
+        if (script === '') {
             this.setEmpty('version', require('../package.json').version);
             this.setEmpty('container-suffix', '-container');
             this.setEmpty('timezone', this.getLocalTimeZone());
-            this.setEmpty('docker-host', '/var/run/docker.sock')
+            this.setEmpty('docker-host', '/var/run/docker.sock');
         }
-    };
+    }
 
     /**
      * Force reload from disk
      */
     reload() {
         this.nconf.load();
-    };
+    }
 
     /**
      * Save configuration to disk
@@ -78,7 +78,7 @@ class Config {
      */
     copyToUserDir(source) {
         return copyConfig(source, this._configPath);
-    };
+    }
 
     /**
      * Copy a folder from the script directory to the data directory
@@ -87,7 +87,7 @@ class Config {
      */
     copyToDataDir(source) {
         return copyConfig(source, this._configDataPath);
-    };
+    }
 
     /**
      * Get the full path of the folder "name" in the user directory area
@@ -113,8 +113,8 @@ class Config {
      */
     set(key, value) {
         this.nconf.set(key, value);
-        this.save()
-    };
+        this.save();
+    }
 
     /**
      * Set a key/value pair into the config ONLY if does not exists and do nothing if exists.
@@ -139,7 +139,7 @@ class Config {
             return defaultValue;
         }
         return result;
-    };
+    }
 
     /**
      * Remove a key
@@ -148,14 +148,14 @@ class Config {
     clear(key) {
         this.nconf.clear(key);
         this.save();
-    };
+    }
 
     /**
      * Dump the config
      */
     dump() {
         return fs.readFileSync(this._configJson).toString();
-    };
+    }
 
     /**
      * Get the time zone of the system

@@ -24,16 +24,14 @@ If you call `usdocker SERVICE` without the command you get the help for the serv
 ## Installing usdocker 
 
 USDocker is a npm package. Normally you do not want install only the USDocker
-but a usefull script. The install will be:
+but a usefull script running on top of USDocker library. 
+The install will be:
 
 ```bash
 npm install global usdocker_<SCRIPT>
 ``` 
 
 See below the list of official scripts available:
-- [docker](docker)
-- [docker-compose](docker-compose)
-- [docker-machine](docker-machine)
 - [elasticsearch](elasticsearch)
 - [jekyll](jekyll)
 - [kibana](kibana)
@@ -49,7 +47,7 @@ See below the list of official scripts available:
 - [wordpress](wordpress)
 
 Did not found the service you want? Feel free to create it and send to us again! 
-Follow our [guide](guide), read about [variables](variable) and [directories](directories) to create your own script.
+Follow our [guide](guide), read about the [API](api) and [directories](directories) to create your own script.
 After created your script you may want add to this list creating a pull request. 
 
 ## Most common Useful Scripts commands
@@ -108,7 +106,7 @@ Note that this operation is irreversible.
 ## Contributing 
 
 If you wanna contributing  to our project and create your own Useful Script for Docker, 
-follow our [guide](guide), read about [variables](variables) and [directories](directories) to create your own.
+follow our [guide](guide), read about [API](api) and [directories](directories) to create your own.
 After created your script you may want add to this list creating a pull request. 
 
 

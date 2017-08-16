@@ -6,16 +6,12 @@
 
 ## Installation
 
-```sh
-$ npm install global --save usdocker
-```
+USDocker is a npm package. See [here](docs/index) a list of packages
+are using usdocker. 
 
 ## Usage
 
-```js
-var usdocker = require('usdocker');
-usdocker();
-```
+Click [here](docs/index) to read more about USDocker and how to use. 
 
 ## License
 

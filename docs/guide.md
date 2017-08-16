@@ -167,3 +167,7 @@ function getContainerDef() {
     ;
 }
 ```
+
+## API Documentation
+
+You can get more information about the API [here](api).

@@ -1,7 +1,5 @@
 'use strict';
 
-const path = require('path');
-
 module.exports = {
     setup: function()
     {
@@ -18,7 +16,7 @@ module.exports = {
         return 'down command';
     },
 
-    expose: function (program) {
+    expose: function () {
 
     }
 };

@@ -3,7 +3,7 @@ const Config = require('../../include/config');
 const shell = require('shelljs');
 
 let docker;
-let configGlobal
+let configGlobal;
 
 beforeEach(() => {
     configGlobal = new Config(null, '/tmp');
@@ -17,7 +17,7 @@ afterEach(() => {
     shell.rm('-rf', '/tmp/.usdocker');
     shell.rm('-rf', '/tmp/.usdocker_data');
     docker = null;
-    configGlobal = null
+    configGlobal = null;
 });
 
 test('Test basic container creation', () => {
@@ -31,23 +31,23 @@ test('Test basic container creation', () => {
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
-        "AttachErr": true,
-        "AttachStdin": false,
-        "AttachStdout": true,
-        "Cmd": [],
-        "Dns": ["8.8.8.8", "8.8.4.4"],
-        "Env": [],
-        "HostConfig": {
-            "AutoRemove": false,
-            "Binds": [],
-            "Links": [],
-            "PortBindings": {}
+        'AttachErr': true,
+        'AttachStdin': false,
+        'AttachStdout': true,
+        'Cmd': [],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': [],
+        'HostConfig': {
+            'AutoRemove': false,
+            'Binds': [],
+            'Links': [],
+            'PortBindings': {}
         },
-        "Image": "test/image",
-        "OpenStdin": false,
-        "StdinOnce": false,
-        "Tty": false,
-        "name": "mycontainer"
+        'Image': 'test/image',
+        'OpenStdin': false,
+        'StdinOnce': false,
+        'Tty': false,
+        'name': 'mycontainer'
     });
 });
 
@@ -64,23 +64,23 @@ test('Test container creation with interactive mode', () => {
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
-        "AttachErr": true,
-        "AttachStdin": true,
-        "AttachStdout": true,
-        "Cmd": ['bash'],
-        "Dns": ["8.8.8.8", "8.8.4.4"],
-        "Env": [],
-        "HostConfig": {
-            "AutoRemove": true,
-            "Binds": [],
-            "Links": [],
-            "PortBindings": {}
+        'AttachErr': true,
+        'AttachStdin': true,
+        'AttachStdout': true,
+        'Cmd': ['bash'],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': [],
+        'HostConfig': {
+            'AutoRemove': true,
+            'Binds': [],
+            'Links': [],
+            'PortBindings': {}
         },
-        "Image": "test/image",
-        "OpenStdin": true,
-        "StdinOnce": false,
-        "Tty": true,
-        "name": "mycontainer"
+        'Image': 'test/image',
+        'OpenStdin': true,
+        'StdinOnce': false,
+        'Tty': true,
+        'name': 'mycontainer'
     });
 
 });
@@ -98,23 +98,23 @@ test('Container creation with ports', () => {
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
-        "AttachErr": true,
-        "AttachStdin": false,
-        "AttachStdout": true,
-        "Cmd": [],
-        "Dns": ["8.8.8.8", "8.8.4.4"],
-        "Env": [],
-        "HostConfig": {
-            "AutoRemove": false,
-            "Binds": [],
-            "Links": [],
-            "PortBindings": {"3306/tcp": [{"HostPort": "3306"}], "80/tcp": [{"HostPort": "80"}]}
+        'AttachErr': true,
+        'AttachStdin': false,
+        'AttachStdout': true,
+        'Cmd': [],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': [],
+        'HostConfig': {
+            'AutoRemove': false,
+            'Binds': [],
+            'Links': [],
+            'PortBindings': {'3306/tcp': [{'HostPort': '3306'}], '80/tcp': [{'HostPort': '80'}]}
         },
-        "Image": "test/image",
-        "OpenStdin": false,
-        "StdinOnce": false,
-        "Tty": false,
-        "name": "mycontainer"
+        'Image': 'test/image',
+        'OpenStdin': false,
+        'StdinOnce': false,
+        'Tty': false,
+        'name': 'mycontainer'
     });
 });
 
@@ -131,56 +131,56 @@ test('Container creation volume', () => {
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
-        "AttachErr": true,
-        "AttachStdin": false,
-        "AttachStdout": true,
-        "Cmd": [],
-        "Dns": ["8.8.8.8", "8.8.4.4"],
-        "Env": [],
-        "HostConfig": {
-            "AutoRemove": false,
-            "Binds": ['/home/jg:/srv/web', '/etc/test:/etc/test'],
-            "Links": [],
-            "PortBindings": {}
+        'AttachErr': true,
+        'AttachStdin': false,
+        'AttachStdout': true,
+        'Cmd': [],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': [],
+        'HostConfig': {
+            'AutoRemove': false,
+            'Binds': ['/home/jg:/srv/web', '/etc/test:/etc/test'],
+            'Links': [],
+            'PortBindings': {}
         },
-        "Image": "test/image",
-        "OpenStdin": false,
-        "StdinOnce": false,
-        "Tty": false,
-        "name": "mycontainer"
+        'Image': 'test/image',
+        'OpenStdin': false,
+        'StdinOnce': false,
+        'Tty': false,
+        'name': 'mycontainer'
     });
 });
 
 test('Container Links', () => {
     let result = docker
-    .containerName('mycontainer')
-    .link('mysql', 'mysql')
-    .link('redis', 'redis')
-    .isDetached(true)
-    .imageName('test/image')
-    .buildConsole()
-    .join(' ');
+        .containerName('mycontainer')
+        .link('mysql', 'mysql')
+        .link('redis', 'redis')
+        .isDetached(true)
+        .imageName('test/image')
+        .buildConsole()
+        .join(' ');
     expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer --link mysql:mysql --link redis:redis -d test/image');
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
-        "AttachErr": true,
-        "AttachStdin": false,
-        "AttachStdout": true,
-        "Cmd": [],
-        "Dns": ["8.8.8.8", "8.8.4.4"],
-        "Env": [],
-        "HostConfig": {
-            "AutoRemove": false,
-            "Binds": [],
-            "Links": ['mysql:mysql', 'redis:redis'],
-            "PortBindings": {}
+        'AttachErr': true,
+        'AttachStdin': false,
+        'AttachStdout': true,
+        'Cmd': [],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': [],
+        'HostConfig': {
+            'AutoRemove': false,
+            'Binds': [],
+            'Links': ['mysql:mysql', 'redis:redis'],
+            'PortBindings': {}
         },
-        "Image": "test/image",
-        "OpenStdin": false,
-        "StdinOnce": false,
-        "Tty": false,
-        "name": "mycontainer"
+        'Image': 'test/image',
+        'OpenStdin': false,
+        'StdinOnce': false,
+        'Tty': false,
+        'name': 'mycontainer'
     });
 });
 
@@ -197,23 +197,23 @@ test('Container creation environment', () => {
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
-        "AttachErr": true,
-        "AttachStdin": false,
-        "AttachStdout": true,
-        "Cmd": [],
-        "Dns": ["8.8.8.8", "8.8.4.4"],
-        "Env": ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test'],
-        "HostConfig": {
-            "AutoRemove": false,
-            "Binds": [],
-            "Links": [],
-            "PortBindings": {}
+        'AttachErr': true,
+        'AttachStdin': false,
+        'AttachStdout': true,
+        'Cmd': [],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test'],
+        'HostConfig': {
+            'AutoRemove': false,
+            'Binds': [],
+            'Links': [],
+            'PortBindings': {}
         },
-        "Image": "test/image",
-        "OpenStdin": false,
-        "StdinOnce": false,
-        "Tty": false,
-        "name": "mycontainer"
+        'Image': 'test/image',
+        'OpenStdin': false,
+        'StdinOnce': false,
+        'Tty': false,
+        'name': 'mycontainer'
     });
 });
 
@@ -230,23 +230,23 @@ test('Container creation with extra-param', () => {
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
-        "AttachErr": true,
-        "AttachStdin": false,
-        "AttachStdout": true,
-        "Cmd": [],
-        "Dns": ["8.8.8.8", "8.8.4.4"],
-        "Env": [],
-        "HostConfig": {
-            "AutoRemove": false,
-            "Binds": [],
-            "Links": [],
-            "PortBindings": {}
+        'AttachErr': true,
+        'AttachStdin': false,
+        'AttachStdout': true,
+        'Cmd': [],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': [],
+        'HostConfig': {
+            'AutoRemove': false,
+            'Binds': [],
+            'Links': [],
+            'PortBindings': {}
         },
-        "Image": "test/image",
-        "OpenStdin": false,
-        "StdinOnce": false,
-        "Tty": false,
-        "name": "mycontainer"
+        'Image': 'test/image',
+        'OpenStdin': false,
+        'StdinOnce': false,
+        'Tty': false,
+        'name': 'mycontainer'
     });
 
 });
@@ -281,23 +281,23 @@ test('Container creation with all togheter', () => {
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
-        "AttachErr": true,
-        "AttachStdin": false,
-        "AttachStdout": true,
-        "Cmd": ['bash', 'ls'],
-        "Dns": ["8.8.8.8", "8.8.4.4"],
-        "Env": ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test'],
-        "HostConfig": {
-            "AutoRemove": false,
-            "Binds": ['/home/jg:/srv/web', '/etc/test:/etc/test'],
-            "Links": ['mysql:mysql', 'redis:redis'],
-            "PortBindings": {"3306/tcp": [{"HostPort": "3306"}], "80/tcp": [{"HostPort": "80"}]}
+        'AttachErr': true,
+        'AttachStdin': false,
+        'AttachStdout': true,
+        'Cmd': ['bash', 'ls'],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test'],
+        'HostConfig': {
+            'AutoRemove': false,
+            'Binds': ['/home/jg:/srv/web', '/etc/test:/etc/test'],
+            'Links': ['mysql:mysql', 'redis:redis'],
+            'PortBindings': {'3306/tcp': [{'HostPort': '3306'}], '80/tcp': [{'HostPort': '80'}]}
         },
-        "Image": "test/image",
-        "OpenStdin": false,
-        "StdinOnce": false,
-        "Tty": false,
-        "name": "mycontainer"
+        'Image': 'test/image',
+        'OpenStdin': false,
+        'StdinOnce': false,
+        'Tty': false,
+        'name': 'mycontainer'
     });
 });
 

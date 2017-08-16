@@ -26,9 +26,9 @@ test('Check availableScripts', () => {
 
 test('Check availableCommands', () => {
     let result = scriptcontainer.availableCommands('main');
-    expect(result).toEqual(["setup", "up", "down", "expose"]);
+    expect(result).toEqual(['setup', 'up', 'down', 'expose']);
     let result2 = scriptcontainer.availableCommands('another');
-    expect(result2).toEqual(["index", "close", "two-words"]);
+    expect(result2).toEqual(['index', 'close', 'two-words']);
 });
 
 test('Mapping from Hyphen to camel case', () => {
@@ -56,13 +56,13 @@ test('ScriptContainer with a config object for cache', () => {
     let result2 = scriptcontainer.load();  // Already Readed!!
     expect(result2).toBe(false);
     expect(config.get('cachescripts')).toEqual({
-        "another": {
-            "file": __dirname + "/mockdir/script2/usdocker_another.js",
-            "commands": ['index', 'close', 'two-words']
+        'another': {
+            'file': __dirname + '/mockdir/script2/usdocker_another.js',
+            'commands': ['index', 'close', 'two-words']
         },
-        "main": {
-            "file": __dirname + "/mockdir/script1/usdocker_main.js",
-            "commands": ['setup', 'up', 'down', 'expose']
+        'main': {
+            'file': __dirname + '/mockdir/script1/usdocker_main.js',
+            'commands': ['setup', 'up', 'down', 'expose']
         }
     });
 

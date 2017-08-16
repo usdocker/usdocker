@@ -69,8 +69,8 @@ test('Test set and get nested keys', () => {
     expect(fs.existsSync('/tmp/.usdocker/mymodule/environment.json')).toBe(true);
     config.set('test:b', 'valueb');
     let result = config.get('test');
-    expect(result.a).toBe("valuea");
-    expect(result.b).toBe("valueb");
+    expect(result.a).toBe('valuea');
+    expect(result.b).toBe('valueb');
 
     // Check content
     let content = JSON.parse(fs.readFileSync('/tmp/.usdocker/mymodule/environment.json').toString());
@@ -100,27 +100,27 @@ test('Test creating config data dir', () => {
 
 test('Test store an object and retrieve data', () => {
     expect(fs.existsSync('/tmp/.usdocker/mymodule/environment.json')).toBe(false);
-    config.set('test', {a: "testa", b: {b1: "testb1", b2: "testb2"}});
+    config.set('test', {a: 'testa', b: {b1: 'testb1', b2: 'testb2'}});
     expect(fs.existsSync('/tmp/.usdocker/mymodule/environment.json')).toBe(true);
     let result = config.get('test');
-    expect(result).toEqual({a: "testa", b:  {b1: "testb1", b2: "testb2"}});
+    expect(result).toEqual({a: 'testa', b:  {b1: 'testb1', b2: 'testb2'}});
     let result2 = config.get('test:b');
-    expect(result2).toEqual({b1: "testb1", b2: "testb2"});
+    expect(result2).toEqual({b1: 'testb1', b2: 'testb2'});
     let result3 = config.get('test:b:b1');
-    expect(result3).toBe("testb1");
+    expect(result3).toBe('testb1');
     config.set('test:b:b1', 'new');
     let result4 = config.get('test');
-    expect(result4).toEqual({a: "testa", b:  {b1: "new", b2: "testb2"}});
+    expect(result4).toEqual({a: 'testa', b:  {b1: 'new', b2: 'testb2'}});
 
     // Check content
     let content = JSON.parse(fs.readFileSync('/tmp/.usdocker/mymodule/environment.json').toString());
-    expect(content).toEqual({test:{a: "testa", b: {b1: "new", b2: "testb2"}}});
+    expect(content).toEqual({test:{a: 'testa', b: {b1: 'new', b2: 'testb2'}}});
 });
 
 
 
 test('Check error treatment for user dir inexistant', () => {
     expect(() => {
-        config.copyToUserDir(__dirname + '/does-not-exists')
+        config.copyToUserDir(__dirname + '/does-not-exists');
     }).toThrow();
 });

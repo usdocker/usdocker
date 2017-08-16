@@ -5,7 +5,7 @@
 const program = require('commander');
 const ScriptContainer = require('./include/scriptcontainer');
 const Config = require('./include/config');
-const usdockerhelper = require('./include/usdockerhelper');
+const usdockerhelper = require('./include/usdocker');
 const Output = require('./include/output');
 const shell = require('shelljs');
 

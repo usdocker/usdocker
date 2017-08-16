@@ -2,7 +2,7 @@
   "name": "usdocker",
   "version": "0.0.1",
   "description": "A collection of Useful Scripts for Docker http://usdocker.com",
-  "main": "./include/usdockerhelper.js",
+  "main": "./include/usdocker.js",
   "scripts": {
     "test": "./node_modules/.bin/eslint include/* *.js && ./node_modules/.bin/jest",
     "docs": "./node_modules/.bin/jsdoc2md include/* > docs/api.md",

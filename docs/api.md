@@ -1,7 +1,7 @@
 ## Modules
 
 <dl>
-<dt><a href="#module_usdockerhelper">usdockerhelper</a></dt>
+<dt><a href="#module_usdocker">usdocker</a></dt>
 <dd><p>Helper class to run docker commands/action</p>
 </dd>
 </dl>
@@ -29,82 +29,82 @@
 </dd>
 </dl>
 
-<a name="module_usdockerhelper"></a>
+<a name="module_usdocker"></a>
 
-## usdockerhelper
+## usdocker
 Helper class to run docker commands/action
 
 
-* [usdockerhelper](#module_usdockerhelper)
-    * [.pull(image, callback)](#module_usdockerhelper.pull)
-    * [.up(dockerRunWrapper)](#module_usdockerhelper.up)
-    * [.down(instance, callback)](#module_usdockerhelper.down)
-    * [.outputRaw(option, dockerrunwrapper)](#module_usdockerhelper.outputRaw) ⇒ <code>\*</code>
-    * [.restart(instance, dockerRunWrapper, callback)](#module_usdockerhelper.restart)
-    * [.status(instance, callback)](#module_usdockerhelper.status)
-    * [.run(sc, script, command, setup)](#module_usdockerhelper.run)
-    * [.getConfig(sc, script, output)](#module_usdockerhelper.getConfig) ⇒ [<code>Config</code>](#Config)
-    * [.runUsingApi(dockerrunwrapper)](#module_usdockerhelper.runUsingApi)
-    * [.runUsingCli(dockerrunwrapper)](#module_usdockerhelper.runUsingCli)
-    * [.exec(instance, cmd, callback)](#module_usdockerhelper.exec)
-    * [.ask(question, defaultValue, optYes, optNo, yesFn, noFn)](#module_usdockerhelper.ask)
-    * [.config(script)](#module_usdockerhelper.config) ⇒ [<code>Config</code>](#Config)
-    * [.configGlobal()](#module_usdockerhelper.configGlobal) ⇒ [<code>Config</code>](#Config)
-    * [.dockerRunWrapper(configGlobal)](#module_usdockerhelper.dockerRunWrapper) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+* [usdocker](#module_usdocker)
+    * [.pull(image, callback)](#module_usdocker.pull)
+    * [.up(dockerRunWrapper)](#module_usdocker.up)
+    * [.down(instance, callback)](#module_usdocker.down)
+    * [.outputRaw(option, dockerrunwrapper)](#module_usdocker.outputRaw) ⇒ <code>\*</code>
+    * [.restart(instance, dockerRunWrapper, callback)](#module_usdocker.restart)
+    * [.status(instance, callback)](#module_usdocker.status)
+    * [.run(sc, script, command, setup)](#module_usdocker.run)
+    * [.getConfig(sc, script, output)](#module_usdocker.getConfig) ⇒ [<code>Config</code>](#Config)
+    * [.runUsingApi(dockerrunwrapper)](#module_usdocker.runUsingApi)
+    * [.runUsingCli(dockerrunwrapper)](#module_usdocker.runUsingCli)
+    * [.exec(instance, cmd, callback)](#module_usdocker.exec)
+    * [.ask(question, defaultValue, optYes, optNo, yesFn, noFn)](#module_usdocker.ask)
+    * [.config(script)](#module_usdocker.config) ⇒ [<code>Config</code>](#Config)
+    * [.configGlobal()](#module_usdocker.configGlobal) ⇒ [<code>Config</code>](#Config)
+    * [.dockerRunWrapper(configGlobal)](#module_usdocker.dockerRunWrapper) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 
-<a name="module_usdockerhelper.pull"></a>
+<a name="module_usdocker.pull"></a>
 
-### usdockerhelper.pull(image, callback)
+### usdocker.pull(image, callback)
 Pull an docker image
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | image | <code>string</code> | The image name |
 | callback |  | The callback function |
 
-<a name="module_usdockerhelper.up"></a>
+<a name="module_usdocker.up"></a>
 
-### usdockerhelper.up(dockerRunWrapper)
+### usdocker.up(dockerRunWrapper)
 Create and run a container based on the DockerRunWrapper parameter.
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
 | dockerRunWrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
 
-<a name="module_usdockerhelper.down"></a>
+<a name="module_usdocker.down"></a>
 
-### usdockerhelper.down(instance, callback)
+### usdocker.down(instance, callback)
 Shutdown a container defined by the name. The container suffix will be added automatically
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
 | instance | <code>string</code> | 
 | callback |  | 
 
-<a name="module_usdockerhelper.outputRaw"></a>
+<a name="module_usdocker.outputRaw"></a>
 
-### usdockerhelper.outputRaw(option, dockerrunwrapper) ⇒ <code>\*</code>
+### usdocker.outputRaw(option, dockerrunwrapper) ⇒ <code>\*</code>
 Return the RAW docker wrapper command.
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | option | <code>string</code> | Can be "api" to return the json for the docker API or CLI to return the document command. |
 | dockerrunwrapper |  |  |
 
-<a name="module_usdockerhelper.restart"></a>
+<a name="module_usdocker.restart"></a>
 
-### usdockerhelper.restart(instance, dockerRunWrapper, callback)
+### usdocker.restart(instance, dockerRunWrapper, callback)
 Restart a container defined by the name. The container suffix will be added automatically
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
@@ -112,24 +112,24 @@ Restart a container defined by the name. The container suffix will be added auto
 | dockerRunWrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
 | callback |  | 
 
-<a name="module_usdockerhelper.status"></a>
+<a name="module_usdocker.status"></a>
 
-### usdockerhelper.status(instance, callback)
+### usdocker.status(instance, callback)
 Get the container running status. The container suffix will be added automatically
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
 | instance | <code>string</code> | 
 | callback |  | 
 
-<a name="module_usdockerhelper.run"></a>
+<a name="module_usdocker.run"></a>
 
-### usdockerhelper.run(sc, script, command, setup)
+### usdocker.run(sc, script, command, setup)
 Run a method of the script.
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
@@ -138,12 +138,12 @@ Run a method of the script.
 | command | <code>string</code> | 
 | setup | <code>boolean</code> | 
 
-<a name="module_usdockerhelper.getConfig"></a>
+<a name="module_usdocker.getConfig"></a>
 
-### usdockerhelper.getConfig(sc, script, output) ⇒ [<code>Config</code>](#Config)
+### usdocker.getConfig(sc, script, output) ⇒ [<code>Config</code>](#Config)
 Get the proper configuration for the script
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
@@ -151,34 +151,34 @@ Get the proper configuration for the script
 | script | <code>string</code> | 
 | output | [<code>Output</code>](#Output) | 
 
-<a name="module_usdockerhelper.runUsingApi"></a>
+<a name="module_usdocker.runUsingApi"></a>
 
-### usdockerhelper.runUsingApi(dockerrunwrapper)
+### usdocker.runUsingApi(dockerrunwrapper)
 Run a container based on the DockerRunWrapper definition
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
 | dockerrunwrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
 
-<a name="module_usdockerhelper.runUsingCli"></a>
+<a name="module_usdocker.runUsingCli"></a>
 
-### usdockerhelper.runUsingCli(dockerrunwrapper)
+### usdocker.runUsingCli(dockerrunwrapper)
 Run a container based on the DockerRunWrapper definition
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
 | dockerrunwrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
 
-<a name="module_usdockerhelper.exec"></a>
+<a name="module_usdocker.exec"></a>
 
-### usdockerhelper.exec(instance, cmd, callback)
+### usdocker.exec(instance, cmd, callback)
 Exec a container and attach a terminal
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
@@ -186,12 +186,12 @@ Exec a container and attach a terminal
 | cmd | <code>Array</code> | 
 | callback |  | 
 
-<a name="module_usdockerhelper.ask"></a>
+<a name="module_usdocker.ask"></a>
 
-### usdockerhelper.ask(question, defaultValue, optYes, optNo, yesFn, noFn)
+### usdocker.ask(question, defaultValue, optYes, optNo, yesFn, noFn)
 Helper for ask a question
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -202,29 +202,29 @@ Helper for ask a question
 | yesFn |  | Callback for the result in case of success |
 | noFn |  | Callback for the result in case of success |
 
-<a name="module_usdockerhelper.config"></a>
+<a name="module_usdocker.config"></a>
 
-### usdockerhelper.config(script) ⇒ [<code>Config</code>](#Config)
+### usdocker.config(script) ⇒ [<code>Config</code>](#Config)
 Return a new Config object
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param |
 | --- |
 | script | 
 
-<a name="module_usdockerhelper.configGlobal"></a>
+<a name="module_usdocker.configGlobal"></a>
 
-### usdockerhelper.configGlobal() ⇒ [<code>Config</code>](#Config)
+### usdocker.configGlobal() ⇒ [<code>Config</code>](#Config)
 Return a new Config object with Global setup
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
-<a name="module_usdockerhelper.dockerRunWrapper"></a>
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
+<a name="module_usdocker.dockerRunWrapper"></a>
 
-### usdockerhelper.dockerRunWrapper(configGlobal) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+### usdocker.dockerRunWrapper(configGlobal) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Return a new DockerRunWrapper
 
-**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param |
 | --- |

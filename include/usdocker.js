@@ -9,7 +9,7 @@ const yesno = require('yesno');
 
 /**
  * Helper class to run docker commands/action
- * @module usdockerhelper
+ * @module usdocker
  */
 
 module.exports = {

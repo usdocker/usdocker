@@ -39,8 +39,8 @@ class Config {
         if (!script) {
             script = '';
         }
-        this._configPath = path.join(alternateHome, '.usdocker', script);
-        this._configDataPath = path.join(alternateHome, '.usdocker_data', script);
+        this._configPath = path.join(alternateHome, '.usdocker', 'setup', script);
+        this._configDataPath = path.join(alternateHome, '.usdocker', 'data', script);
         this._configJson = path.join(this._configPath, 'environment.json');
         shell.mkdir('-p', this._configPath);
         shell.mkdir('-p', this._configDataPath);

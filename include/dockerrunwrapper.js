@@ -45,12 +45,13 @@ function pushLinkContainer(source) {
     }
 }
 
-
-
+/**
+ * Wrapper for the "docker run" command line
+ */
 class DockerRunWrapper extends DockerWrapper {
 
     /**
-     *
+     * Construtor
      * @param {Config} configGlobal
      */
     constructor(configGlobal) {
@@ -68,6 +69,12 @@ class DockerRunWrapper extends DockerWrapper {
         this.name = "rename-container";
     };
 
+    /**
+     * Map the port. Equals to -p parameter
+     * @param {int} host Port on host (if empty returns the string "host:container"
+     * @param {int} container Port on container
+     * @returns {string}
+     */
     port(host, container) {
         if (!host) {
             return this.ports;
@@ -76,6 +83,12 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Map the volume. Equals to -v parameter
+     * @param {string} host Path on the host (if empty returns the string "host:container")
+     * @param {string} container Path on container
+     * @returns {*}
+     */
     volume(host, container) {
         if (!host) {
             return this.volumes;
@@ -84,11 +97,23 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Create a link to an existing docker container. Equals to --link parameter
+     * @param {string} source Container name
+     * @param {string} target Link name
+     * @returns {DockerRunWrapper}
+     */
     link(source, target) {
         this.links.push(source + ':' + target);
         return this;
     };
 
+    /**
+     * Set an environment variable on the container. Equals to --env parameter
+     * @param {string} variable (if empty returns the string "variable=value")
+     * @param {string} value
+     * @returns {*}
+     */
     env(variable, value) {
         if (!variable) {
             return this.environment;
@@ -97,6 +122,11 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     *
+     * @param param
+     * @returns {*}
+     */
     dockerParam(param) {
         if (!param) {
             return this.params;
@@ -105,6 +135,11 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Defines if the container will be detached. Equals to -d
+     * @param {boolean} value (if empty returns true or false)
+     * @returns {*}
+     */
     isDetached(value) {
         if (value === undefined) {
             return this.detached;
@@ -116,6 +151,11 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Defines if the container will be a terminal interactive. Equals to -it parameter.
+     * @param {boolean} value (if empty returns true or false)
+     * @returns {*}
+     */
     isInteractive(value) {
         if (value === undefined) {
             return this.it;
@@ -127,6 +167,11 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Defines if the container removed on the end. Equals to --rm parameter.
+     * @param {boolean} value (if empty returns true or false)
+     * @returns {*}
+     */
     isRemove(value) {
         if (value === undefined) {
             return this.remove;
@@ -135,6 +180,11 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Defines the container name. Equals to --name parameter.
+     * @param {string} value (if empty returns the container name)
+     * @returns {*}
+     */
     containerName(value) {
         if (value === undefined) {
             return this.name;
@@ -143,6 +193,11 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Defines the image name.
+     * @param {string} value (if empty returns the image name)
+     * @returns {*}
+     */
     imageName(value) {
         if (value === undefined) {
             return this.image;
@@ -151,6 +206,11 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Defines the command paramters.
+     * @param {string} param (if empty returns the array of parameters)
+     * @returns {*}
+     */
     commandParam(param) {
         if (param === undefined) {
             return this.cmdParam;
@@ -159,6 +219,11 @@ class DockerRunWrapper extends DockerWrapper {
         return this;
     };
 
+    /**
+     * Return the full command line
+     * @param {boolean} addLinks if true automatically add the links of running container to the script.
+     * @returns {Array}
+     */
     buildConsole(addLinks) {
 
         if (this.image === "") {
@@ -191,6 +256,10 @@ class DockerRunWrapper extends DockerWrapper {
         return dockerCmd;
     };
 
+    /**
+     * Returns the object to be used in the docker API.
+     * @returns {Array}
+     */
     buildApi() {
 
         let portsBindings = {};

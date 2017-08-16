@@ -2,10 +2,13 @@
 
 const Docker = require('dockerode');
 
+/**
+ * Abstract class for implement docker wrapper class
+ */
 class DockerWrapper {
 
     /**
-     *
+     * Constructor
      * @param {Config} configGlobal
      */
     constructor(configGlobal) {
@@ -13,6 +16,11 @@ class DockerWrapper {
         this.connection = configGlobal.get('docker-host');
     };
 
+    /**
+     * Defines the docker host. Equals to -H parameter.
+     * @param {string} hostName (if empty return the host name)
+     * @returns {*}
+     */
     host(hostName) {
         if (!hostName) {
             return this.connection;
@@ -22,7 +30,7 @@ class DockerWrapper {
     };
 
     /**
-     *
+     * Static method to return an instance of a DockerWrapper
      * @returns {Docker}
      */
     getInstance() {

@@ -4,7 +4,8 @@
   "description": "A collection of Useful Scripts for Docker http://usdocker.com",
   "main": "usdocker.js",
   "scripts": {
-    "test": "./node_modules/.bin/jest"
+    "test": "./node_modules/.bin/jest",
+    "docs": "jsdoc2md include/* > docs/api.md"
   },
   "author": "Joao Gilberto Magalhães",
   "bin": {

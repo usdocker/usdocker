@@ -5,8 +5,18 @@ const DockerListWrapper = require('./dockerlistwrapper');
 const Config = require('./config');
 const yesno = require('yesno');
 
+/**
+ * Helper class to run docker commands/action
+ * @module usdockerhelper
+ */
+
 module.exports = {
 
+    /**
+     * Pull an docker image
+     * @param {string} image The image name
+     * @param callback The callback function
+     */
     pull(image, callback) {
         let docker = new Docker();
 
@@ -41,7 +51,7 @@ module.exports = {
     },
 
     /**
-     *
+     * Create and run a container based on the DockerRunWrapper parameter.
      * @param {DockerRunWrapper} dockerRunWrapper
      */
     up(instance, dockerRunWrapper, callback) {
@@ -58,6 +68,11 @@ module.exports = {
         });
     },
 
+    /**
+     * Shutdown a container defined by the name. The container suffix will be added automatically
+     * @param {string} instance
+     * @param callback
+     */
     down(instance, callback) {
         let docker = new Docker();
         let container = docker.getContainer(instance + '-container');
@@ -82,6 +97,12 @@ module.exports = {
         });
     },
 
+    /**
+     * Return the RAW docker wrapper command.
+     * @param {string} option Can be "api" to return the json for the docker API or CLI to return the document command.
+     * @param dockerrunwrapper
+     * @returns {*}
+     */
     outputRaw(option, dockerrunwrapper) {
         if (option === 'api') {
             return dockerrunwrapper.buildApi();
@@ -90,6 +111,12 @@ module.exports = {
         }
     },
 
+    /**
+     * Restart a container defined by the name. The container suffix will be added automatically
+     * @param {string} instance
+     * @param {DockerRunWrapper} dockerRunWrapper
+     * @param callback
+     */
     restart(instance, dockerRunWrapper, callback) {
         var me = this;
         this.down(instance, function (data, dataverb) {
@@ -103,6 +130,11 @@ module.exports = {
         });
     },
 
+    /**
+     * Get the container running status. The container suffix will be added automatically
+     * @param {string} instance
+     * @param callback
+     */
     status(instance, callback) {
         let docker = new Docker();
         let container = docker.getContainer(instance + '-container');
@@ -120,7 +152,7 @@ module.exports = {
     },
 
     /**
-     *
+     * Run a method of the script.
      * @param {ScriptContainer} sc
      * @param {Config} script
      * @param {string} command
@@ -154,6 +186,13 @@ module.exports = {
         }, extraArgs);
     },
 
+    /**
+     * Get the proper configuration for the script
+     * @param {ScriptContainer} sc
+     * @param {string} script
+     * @param {Output} output
+     * @returns {Config}
+     */
     getConfig(sc, script, output) {
         this.run(sc, script, 'setup', false, output);
         return new Config(script, '/tmp/ustemp');
@@ -224,7 +263,7 @@ module.exports = {
     },
 
     /**
-     *
+     * Run a container based on the DockerRunWrapper definition
      * @param {DockerRunWrapper} dockerrunwrapper
      */
     runUsingApi(dockerrunwrapper, callback) {
@@ -249,7 +288,7 @@ module.exports = {
     },
 
     /**
-     *
+     * Run a container based on the DockerRunWrapper definition
      * @param {DockerRunWrapper} dockerrunwrapper
      */
     runUsingCli(dockerrunwrapper, callback) {
@@ -282,6 +321,12 @@ module.exports = {
         }
     },
 
+    /**
+     * Exec a container and attach a terminal
+     * @param {string} instance
+     * @param {Array} cmd
+     * @param callback
+     */
     exec(instance, cmd, callback) {
         var me = this;
 
@@ -299,7 +344,15 @@ module.exports = {
         });
     },
 
-
+    /**
+     * Helper for ask a question
+     * @param {string} question
+     * @param {boolean} defaultValue
+     * @param {boolean} optYes
+     * @param {boolean} optNo
+     * @param yesFn Callback for the result in case of success
+     * @param noFn Callback for the result in case of success
+     */
     ask(question, defaultValue, optYes, optNo, yesFn, noFn) {
         let fn = function(ok) {
             if(ok) {

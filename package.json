@@ -21,7 +21,7 @@
     "moment-timezone": "^0.5.13",
     "nconf": "^0.8.4",
     "preferences": "^0.2.1",
-    "require-new": "^1.1.1",
+    "require-uncached": "^1.0.3",
     "shelljs": "^0.7.8",
     "targz": "^1.0.1",
     "yesno": "0.0.1"

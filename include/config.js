@@ -4,7 +4,7 @@ const shell = require('shelljs');
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment-timezone');
-const requireNew = require('require-new');
+const requireUncached = require('require-uncached');
 
 function copyConfig(source, dest) {
     if (shell.test('-e', path.join(dest, path.basename(source)))) {
@@ -30,7 +30,7 @@ class Config {
      */
     constructor(script, alternateHome) {
 
-        this.nconf = requireNew('nconf');
+        this.nconf = requireUncached('nconf');
         
         if (alternateHome === undefined) {
             alternateHome = shell.config.HOME;

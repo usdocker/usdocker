@@ -9,9 +9,9 @@ const usdockerhelper = require('./include/usdocker');
 const Output = require('./include/output');
 const shell = require('shelljs');
 
-let configGlobal = new Config(null, '/tmp');
+let configGlobal = new Config(null, '/tmp/ustemp');
 
-let sc = new ScriptContainer(configGlobal, [__dirname]);
+let sc = new ScriptContainer(configGlobal);
 
 let version = require(__dirname + '/package.json').version;
 let output = new Output(false);

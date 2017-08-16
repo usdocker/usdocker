@@ -25,10 +25,13 @@ class ScriptContainer {
         }
         this._searchDir = search;
         if (search === undefined) {
-            this._searchDir = [
-                path.join(__dirname, '..', 'scripts'),
-                path.join(__dirname, '..', '..'),
-            ];
+            this._searchDir = [];
+            if (fs.existsSync(path.join(__dirname, '..', '..', '..', 'node_modules'))) {
+                this._searchDir.push(path.join(__dirname, '..', '..', '..'));
+            }
+            if (fs.existsSync(path.join(__dirname, '..', 'node_modules'))) {
+                this._searchDir.push(path.join(__dirname, '..'));
+            }
         }
     }
 

@@ -66,7 +66,7 @@ class Config {
     };
 
     getUserDir(name) {
-        return path.join(this._configPath, name);
+        return path.join(this._configPath, name ? name : '');
     }
 
     getDataDir() {

@@ -3,6 +3,7 @@
 const Docker = require('dockerode');
 const DockerListWrapper = require('./dockerlistwrapper');
 const Config = require('./config');
+const yesno = require('yesno');
 
 module.exports = {
 
@@ -297,4 +298,24 @@ module.exports = {
             });
         });
     },
+
+
+    ask(question, defaultValue, optYes, optNo, yesFn, noFn) {
+        let fn = function(ok) {
+            if(ok) {
+                yesFn();
+            } else {
+                noFn('Canceled!');
+            }
+            process.exit(0);
+        };
+
+        if (optYes) {
+            fn(true);
+        } else if (optNo) {
+            fn(false);
+        } else {
+            yesno.ask(question + ' (yes/no)?', defaultValue, fn);
+        }
+    }
 };

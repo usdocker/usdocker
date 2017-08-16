@@ -5,6 +5,7 @@ const ScriptContainer = require('./include/scriptcontainer');
 const Config = require('./include/config');
 const usdockerhelper = require('./include/usdockerhelper');
 const Output = require('./include/output');
+const shell = require('shelljs');
 
 let configGlobal = new Config(null, '/tmp');
 
@@ -26,15 +27,17 @@ program
     .description('USDocker is a colletion of useful scripts to make easier brings a service up or down, ' +
         'check status and a lot of other features.'
     )
-    .option('-r, --refresh','refresh the list of available scripts')
-    .option('--yes', 'answer YES to question')
-    .option('--no', 'answer NO to question')
-    .option('-v, --verbose','Print extra information')
     .option('-d, --dump','Dump the scripts options')
     .option('--dump-global','Dump the global options')
-    .option('--global <key-pair>','Set a global configuration for usdocker. Key-pair is key=value', collect, [])
     .option('-s, --set <key-pair>','Set a script configuration. Key-pair is key=value', collect, [])
     .option('-g, --get <key>','Get a script option', collect, [])
+    .option('--global <key-pair>','Set a global configuration for usdocker. Key-pair is key=value', collect, [])
+    .option('-r, --refresh','refresh the list of available scripts')
+    .option('-v, --verbose','Print extra information')
+    .option('--yes', 'answer YES to any question')
+    .option('--no', 'answer NO to any question')
+    .option('--reset-datadir', 'reset all user data. Be careful because this operation is not reversible!')
+    .option('--reset-userdir', 'reset all config user data. Be careful because this operation is not reversible!')
         .on('--help', function(){
             console.log('');
             if (!script) {
@@ -73,6 +76,46 @@ try {
             throw new Error('Script "' + script + '" does not exists.');
         }
         config = usdockerhelper.getConfig(sc, script, output);
+    }
+
+    if (program.resetDatadir) {
+        if (!script) {
+            throw new Error('You have to specify the script in order to use --reset-datadir');
+        }
+        found = true;
+        usdockerhelper.ask(
+            'Are you sure you want to reset the "data" dir (operation is not reversible)?',
+            false,
+            program.yes,
+            program.no,
+            function() {
+                shell.rm('-rf', config.getDataDir());
+                output.print('Data dir was deleted!')
+            },
+            function() {
+                output.print('Cancelled!')
+            }
+        );
+    }
+
+    if (program.resetUserdir) {
+        if (!script) {
+            throw new Error('You have to specify the script in order to use --reset-userdir');
+        }
+        found = true;
+        usdockerhelper.ask(
+            'Are you sure you want to reset the "user" dir (operation is not reversible)?',
+            false,
+            program.yes,
+            program.no,
+            function() {
+                shell.rm('-rf', config.getUserDir());
+                output.print('User dir was deleted!')
+            },
+            function() {
+                output.print('Cancelled!')
+            }
+        );
     }
 
     if (program.refresh) {

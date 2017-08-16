@@ -7,7 +7,6 @@ const showdocs = require('../include/showdocs');
 const shell = require('shelljs');
 const path = require('path');
 const targz = require('targz');
-const yesno = require('yesno');
 
 const SCRIPTNAME = 'lemp';
 
@@ -93,23 +92,17 @@ module.exports = {
             throw new Error('Domain "' + extraArgs[0] + '" does not exists');
         }
 
-        let fn = function(ok) {
-            if(ok) {
+        usdockerhelper.ask(
+            'Are you sure you want to continue',
+            false,
+            this.options.yes,
+            this.options.no,
+            function() {
                 shell.rm('-rf', destFolder);
                 callback(null, 'Domain removed!');
-            } else {
-                callback('Canceled!');
-            }
-            process.exit(0);
-        };
-
-        if (this.options.yes) {
-            fn(true);
-        } else if (this.options.no) {
-            fn(false);
-        } else {
-            yesno.ask('Are you sure you want to continue (yes/no)?', false, fn);
-        }
+            },
+            callback
+        );
     },
 
     domainList(callback) {

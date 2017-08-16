@@ -48,6 +48,9 @@ Helper class to run docker commands/action
     * [.runUsingCli(dockerrunwrapper)](#module_usdockerhelper.runUsingCli)
     * [.exec(instance, cmd, callback)](#module_usdockerhelper.exec)
     * [.ask(question, defaultValue, optYes, optNo, yesFn, noFn)](#module_usdockerhelper.ask)
+    * [.config(script)](#module_usdockerhelper.config) ⇒ [<code>Config</code>](#Config)
+    * [.configGlobal()](#module_usdockerhelper.configGlobal) ⇒ [<code>Config</code>](#Config)
+    * [.dockerRunWrapper(configGlobal)](#module_usdockerhelper.dockerRunWrapper) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 
 <a name="module_usdockerhelper.pull"></a>
 
@@ -198,6 +201,34 @@ Helper for ask a question
 | optNo | <code>boolean</code> |  |
 | yesFn |  | Callback for the result in case of success |
 | noFn |  | Callback for the result in case of success |
+
+<a name="module_usdockerhelper.config"></a>
+
+### usdockerhelper.config(script) ⇒ [<code>Config</code>](#Config)
+Return a new Config object
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param |
+| --- |
+| script | 
+
+<a name="module_usdockerhelper.configGlobal"></a>
+
+### usdockerhelper.configGlobal() ⇒ [<code>Config</code>](#Config)
+Return a new Config object with Global setup
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+<a name="module_usdockerhelper.dockerRunWrapper"></a>
+
+### usdockerhelper.dockerRunWrapper(configGlobal) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+Return a new DockerRunWrapper
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param |
+| --- |
+| configGlobal | 
 
 <a name="Config"></a>
 

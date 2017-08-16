@@ -1,8 +1,10 @@
 'use strict';
 
+const requireUncached = require('require-uncached');
 const Docker = require('dockerode');
 const DockerListWrapper = require('./dockerlistwrapper');
-const Config = require('./config');
+const DockerRunWrapper = require('./dockerrunwrapper');
+const Config = requireUncached('./config');
 const yesno = require('yesno');
 
 /**
@@ -370,5 +372,31 @@ module.exports = {
         } else {
             yesno.ask(question + ' (yes/no)?', defaultValue, fn);
         }
+    },
+
+    /**
+     * Return a new Config object
+     * @param script
+     * @returns {Config}
+     */
+    config(script) {
+        return new Config(script, '/tmp/ustemp');
+    },
+
+    /**
+     * Return a new Config object with Global setup
+     * @returns {Config}
+     */
+    configGlobal() {
+        return new Config(null, '/tmp/ustemp');
+    },
+
+    /**
+     * Return a new DockerRunWrapper
+     * @param configGlobal
+     * @returns {DockerRunWrapper}
+     */
+    dockerRunWrapper(configGlobal) {
+        return new DockerRunWrapper(configGlobal);
     }
 };

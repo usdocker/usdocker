@@ -21,13 +21,13 @@ afterEach(() => {
 
 test('Check availableScripts', () => {
     let result = scriptcontainer.availableScripts();
-    expect(result).toEqual(['main', 'another']);
+    expect(result).toEqual(['testcase1', 'testcase2']);
 });
 
 test('Check availableCommands', () => {
-    let result = scriptcontainer.availableCommands('main');
+    let result = scriptcontainer.availableCommands('testcase1');
     expect(result).toEqual(['setup', 'up', 'down', 'expose']);
-    let result2 = scriptcontainer.availableCommands('another');
+    let result2 = scriptcontainer.availableCommands('testcase2');
     expect(result2).toEqual(['index', 'close', 'two-words']);
 });
 
@@ -37,11 +37,11 @@ test('Mapping from Hyphen to camel case', () => {
 });
 
 test('Get and Execute a script', () => {
-    let result = scriptcontainer.getScript('main');
+    let result = scriptcontainer.getScript('testcase1');
     expect(result['setup']()).toBe('setup command');
     expect(result['up']()).toBe('up command');
     expect(result['down']()).toBe('down command');
-    let result2 = scriptcontainer.getScript('another');
+    let result2 = scriptcontainer.getScript('testcase2');
     expect(result2['index']()).toBe('index command');
     expect(result2['close']()).toBe('close command');
     expect(result2[scriptcontainer.cc('two-words')]()).toBe('two-words command');
@@ -56,12 +56,12 @@ test('ScriptContainer with a config object for cache', () => {
     let result2 = scriptcontainer.load();  // Already Readed!!
     expect(result2).toBe(false);
     expect(config.get('cachescripts')).toEqual({
-        'another': {
-            'file': __dirname + '/mockdir/script2/usdocker_another.js',
+        'testcase2': {
+            'file': __dirname + '/mockdir/script2/usdocker_testcase2.js',
             'commands': ['index', 'close', 'two-words']
         },
-        'main': {
-            'file': __dirname + '/mockdir/script1/usdocker_main.js',
+        'testcase1': {
+            'file': __dirname + '/mockdir/script1/usdocker_testcase1.js',
             'commands': ['setup', 'up', 'down', 'expose']
         }
     });

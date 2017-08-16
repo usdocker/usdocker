@@ -1,9 +1,0 @@
-# Custom MySQL.ini
-
-[mysqld]
-bind-address = 0.0.0.0
-
-[mysqldump]
-quick
-quote-names
-max_allowed_packet      = 16M

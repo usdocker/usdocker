@@ -38,9 +38,16 @@ Helper class to run docker commands/action
 * [usdockerhelper](#module_usdockerhelper)
     * [.pull(image, callback)](#module_usdockerhelper.pull)
     * [.up(dockerRunWrapper)](#module_usdockerhelper.up)
+    * [.down(instance, callback)](#module_usdockerhelper.down)
+    * [.outputRaw(option, dockerrunwrapper)](#module_usdockerhelper.outputRaw) ⇒ <code>\*</code>
+    * [.restart(instance, dockerRunWrapper, callback)](#module_usdockerhelper.restart)
+    * [.status(instance, callback)](#module_usdockerhelper.status)
     * [.run(sc, script, command, setup)](#module_usdockerhelper.run)
+    * [.getConfig(sc, script, output)](#module_usdockerhelper.getConfig) ⇒ [<code>Config</code>](#Config)
     * [.runUsingApi(dockerrunwrapper)](#module_usdockerhelper.runUsingApi)
     * [.runUsingCli(dockerrunwrapper)](#module_usdockerhelper.runUsingCli)
+    * [.exec(instance, cmd, callback)](#module_usdockerhelper.exec)
+    * [.ask(question, defaultValue, optYes, optNo, yesFn, noFn)](#module_usdockerhelper.ask)
 
 <a name="module_usdockerhelper.pull"></a>
 
@@ -57,15 +64,68 @@ Pull an docker image
 <a name="module_usdockerhelper.up"></a>
 
 ### usdockerhelper.up(dockerRunWrapper)
+Create and run a container based on the DockerRunWrapper parameter.
+
 **Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
 
 | Param | Type |
 | --- | --- |
 | dockerRunWrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
 
+<a name="module_usdockerhelper.down"></a>
+
+### usdockerhelper.down(instance, callback)
+Shutdown a container defined by the name. The container suffix will be added automatically
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param | Type |
+| --- | --- |
+| instance | <code>string</code> | 
+| callback |  | 
+
+<a name="module_usdockerhelper.outputRaw"></a>
+
+### usdockerhelper.outputRaw(option, dockerrunwrapper) ⇒ <code>\*</code>
+Return the RAW docker wrapper command.
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| option | <code>string</code> | Can be "api" to return the json for the docker API or CLI to return the document command. |
+| dockerrunwrapper |  |  |
+
+<a name="module_usdockerhelper.restart"></a>
+
+### usdockerhelper.restart(instance, dockerRunWrapper, callback)
+Restart a container defined by the name. The container suffix will be added automatically
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param | Type |
+| --- | --- |
+| instance | <code>string</code> | 
+| dockerRunWrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
+| callback |  | 
+
+<a name="module_usdockerhelper.status"></a>
+
+### usdockerhelper.status(instance, callback)
+Get the container running status. The container suffix will be added automatically
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param | Type |
+| --- | --- |
+| instance | <code>string</code> | 
+| callback |  | 
+
 <a name="module_usdockerhelper.run"></a>
 
 ### usdockerhelper.run(sc, script, command, setup)
+Run a method of the script.
+
 **Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
 
 | Param | Type |
@@ -75,9 +135,24 @@ Pull an docker image
 | command | <code>string</code> | 
 | setup | <code>boolean</code> | 
 
+<a name="module_usdockerhelper.getConfig"></a>
+
+### usdockerhelper.getConfig(sc, script, output) ⇒ [<code>Config</code>](#Config)
+Get the proper configuration for the script
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param | Type |
+| --- | --- |
+| sc | [<code>ScriptContainer</code>](#ScriptContainer) | 
+| script | <code>string</code> | 
+| output | [<code>Output</code>](#Output) | 
+
 <a name="module_usdockerhelper.runUsingApi"></a>
 
 ### usdockerhelper.runUsingApi(dockerrunwrapper)
+Run a container based on the DockerRunWrapper definition
+
 **Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
 
 | Param | Type |
@@ -87,11 +162,42 @@ Pull an docker image
 <a name="module_usdockerhelper.runUsingCli"></a>
 
 ### usdockerhelper.runUsingCli(dockerrunwrapper)
+Run a container based on the DockerRunWrapper definition
+
 **Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
 
 | Param | Type |
 | --- | --- |
 | dockerrunwrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
+
+<a name="module_usdockerhelper.exec"></a>
+
+### usdockerhelper.exec(instance, cmd, callback)
+Exec a container and attach a terminal
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param | Type |
+| --- | --- |
+| instance | <code>string</code> | 
+| cmd | <code>Array</code> | 
+| callback |  | 
+
+<a name="module_usdockerhelper.ask"></a>
+
+### usdockerhelper.ask(question, defaultValue, optYes, optNo, yesFn, noFn)
+Helper for ask a question
+
+**Kind**: static method of [<code>usdockerhelper</code>](#module_usdockerhelper)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| question | <code>string</code> |  |
+| defaultValue | <code>boolean</code> |  |
+| optYes | <code>boolean</code> |  |
+| optNo | <code>boolean</code> |  |
+| yesFn |  | Callback for the result in case of success |
+| noFn |  | Callback for the result in case of success |
 
 <a name="Config"></a>
 
@@ -303,17 +409,17 @@ Wrapper for the "docker run" command line
 
 * [DockerRunWrapper](#DockerRunWrapper)
     * [new DockerRunWrapper(configGlobal)](#new_DockerRunWrapper_new)
-    * [.port(host, container)](#DockerRunWrapper+port) ⇒ <code>string</code>
-    * [.volume(host, container)](#DockerRunWrapper+volume) ⇒ <code>\*</code>
+    * [.port(host, container)](#DockerRunWrapper+port) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.volume(host, container)](#DockerRunWrapper+volume) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.link(source, target)](#DockerRunWrapper+link) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
-    * [.env(variable, value)](#DockerRunWrapper+env) ⇒ <code>\*</code>
-    * [.dockerParam(param)](#DockerRunWrapper+dockerParam) ⇒ <code>\*</code>
-    * [.isDetached(value)](#DockerRunWrapper+isDetached) ⇒ <code>\*</code>
-    * [.isInteractive(value)](#DockerRunWrapper+isInteractive) ⇒ <code>\*</code>
-    * [.isRemove(value)](#DockerRunWrapper+isRemove) ⇒ <code>\*</code>
-    * [.containerName(value)](#DockerRunWrapper+containerName) ⇒ <code>\*</code>
-    * [.imageName(value)](#DockerRunWrapper+imageName) ⇒ <code>\*</code>
-    * [.commandParam(param)](#DockerRunWrapper+commandParam) ⇒ <code>\*</code>
+    * [.env(variable, value)](#DockerRunWrapper+env) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.dockerParam(param)](#DockerRunWrapper+dockerParam) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.isDetached(value)](#DockerRunWrapper+isDetached) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.isInteractive(value)](#DockerRunWrapper+isInteractive) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.isRemove(value)](#DockerRunWrapper+isRemove) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.containerName(value)](#DockerRunWrapper+containerName) ⇒ <code>string</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.imageName(value)](#DockerRunWrapper+imageName) ⇒ <code>string</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.commandParam(param)](#DockerRunWrapper+commandParam) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.buildConsole(addLinks)](#DockerRunWrapper+buildConsole) ⇒ <code>Array</code>
     * [.buildApi()](#DockerRunWrapper+buildApi) ⇒ <code>Array</code>
 
@@ -329,7 +435,7 @@ Construtor
 
 <a name="DockerRunWrapper+port"></a>
 
-### dockerRunWrapper.port(host, container) ⇒ <code>string</code>
+### dockerRunWrapper.port(host, container) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Map the port. Equals to -p parameter
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -341,7 +447,7 @@ Map the port. Equals to -p parameter
 
 <a name="DockerRunWrapper+volume"></a>
 
-### dockerRunWrapper.volume(host, container) ⇒ <code>\*</code>
+### dockerRunWrapper.volume(host, container) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Map the volume. Equals to -v parameter
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -365,7 +471,7 @@ Create a link to an existing docker container. Equals to --link parameter
 
 <a name="DockerRunWrapper+env"></a>
 
-### dockerRunWrapper.env(variable, value) ⇒ <code>\*</code>
+### dockerRunWrapper.env(variable, value) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Set an environment variable on the container. Equals to --env parameter
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -377,7 +483,7 @@ Set an environment variable on the container. Equals to --env parameter
 
 <a name="DockerRunWrapper+dockerParam"></a>
 
-### dockerRunWrapper.dockerParam(param) ⇒ <code>\*</code>
+### dockerRunWrapper.dockerParam(param) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
 
 | Param |
@@ -386,7 +492,7 @@ Set an environment variable on the container. Equals to --env parameter
 
 <a name="DockerRunWrapper+isDetached"></a>
 
-### dockerRunWrapper.isDetached(value) ⇒ <code>\*</code>
+### dockerRunWrapper.isDetached(value) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Defines if the container will be detached. Equals to -d
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -397,7 +503,7 @@ Defines if the container will be detached. Equals to -d
 
 <a name="DockerRunWrapper+isInteractive"></a>
 
-### dockerRunWrapper.isInteractive(value) ⇒ <code>\*</code>
+### dockerRunWrapper.isInteractive(value) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Defines if the container will be a terminal interactive. Equals to -it parameter.
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -408,7 +514,7 @@ Defines if the container will be a terminal interactive. Equals to -it parameter
 
 <a name="DockerRunWrapper+isRemove"></a>
 
-### dockerRunWrapper.isRemove(value) ⇒ <code>\*</code>
+### dockerRunWrapper.isRemove(value) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Defines if the container removed on the end. Equals to --rm parameter.
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -419,7 +525,7 @@ Defines if the container removed on the end. Equals to --rm parameter.
 
 <a name="DockerRunWrapper+containerName"></a>
 
-### dockerRunWrapper.containerName(value) ⇒ <code>\*</code>
+### dockerRunWrapper.containerName(value) ⇒ <code>string</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Defines the container name. Equals to --name parameter.
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -430,7 +536,7 @@ Defines the container name. Equals to --name parameter.
 
 <a name="DockerRunWrapper+imageName"></a>
 
-### dockerRunWrapper.imageName(value) ⇒ <code>\*</code>
+### dockerRunWrapper.imageName(value) ⇒ <code>string</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Defines the image name.
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -441,7 +547,7 @@ Defines the image name.
 
 <a name="DockerRunWrapper+commandParam"></a>
 
-### dockerRunWrapper.commandParam(param) ⇒ <code>\*</code>
+### dockerRunWrapper.commandParam(param) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Defines the command paramters.
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  

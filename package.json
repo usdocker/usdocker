@@ -5,7 +5,8 @@
   "main": "usdocker.js",
   "scripts": {
     "test": "./node_modules/.bin/eslint include/* *.js && ./node_modules/.bin/jest",
-    "docs": "./node_modules/.bin/jsdoc2md include/* > docs/api.md"
+    "docs": "./node_modules/.bin/jsdoc2md include/* > docs/api.md",
+    "publish-patch": "npm version patch && git push && git push --tags && npm publish"
   },
   "author": "Joao Gilberto Magalhães",
   "bin": {
@@ -23,7 +24,6 @@
     "preferences": "^0.2.1",
     "require-uncached": "^1.0.3",
     "shelljs": "^0.7.8",
-    "targz": "^1.0.1",
     "yesno": "0.0.1"
   },
   "devDependencies": {

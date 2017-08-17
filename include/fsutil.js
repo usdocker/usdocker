@@ -55,10 +55,11 @@ let fsutil = {
         let files = [];
 
         //check if folder needs to be created or integrated
-        let targetFolder = path.join(target, path.basename(source));
-        if (!fs.existsSync(targetFolder)) {
-            fs.mkdirSync(targetFolder);
+        let targetFolder = path.resolve(target);
+        if (fs.existsSync(targetFolder)) {
+            targetFolder = path.join(target, path.basename(source));
         }
+        fsutil.makeDirectory(targetFolder);
 
         //copy
         if (fs.lstatSync(source).isDirectory()) {
@@ -90,6 +91,18 @@ let fsutil = {
             });
             fs.rmdirSync(dirPath);
         }
+    },
+
+    getDirectories: function(srcPath) {
+        return fs.readdirSync(srcPath).filter(
+            file => fs.statSync(path.join(srcPath, file)).isDirectory()
+        );
+    },
+
+    getFiles: function(srcPath) {
+        return fs.readdirSync(srcPath).filter(
+            file => fs.statSync(path.join(srcPath, file)).isFile()
+        );
     }
 };
 

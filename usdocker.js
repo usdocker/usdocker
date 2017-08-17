@@ -123,7 +123,7 @@ try {
     if (program.refresh) {
         found = true;
         sc.load(true);
-        output.print(null, 'refreshed');
+        output.print(null, 'usdocker database refreshed');
     }
 
     if (program.global.length !== 0) {

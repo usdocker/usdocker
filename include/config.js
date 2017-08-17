@@ -1,22 +1,22 @@
 'use strict';
 
-const shell = require('shelljs');
 const path = require('path');
 const fs = require('fs');
+const fsutil = require('./fsutil');
 const moment = require('moment-timezone');
 const requireUncached = require('require-uncached');
 
 function copyConfig(source, dest) {
-    if (shell.test('-e', path.join(dest, path.basename(source)))) {
+    if (fs.existsSync(path.join(dest, path.basename(source)))) {
         return true;
     }
 
-    if (!shell.test('-e', source)) {
+    if (!fs.existsSync(source)) {
         throw new Error('Source path "' + source + '"does not exists');
     }
 
-    shell.mkdir('-p', dest);
-    shell.cp('-R', source, dest);
+    fsutil.makeDirectory(dest);
+    fsutil.copyFolderRecursiveSync(source, dest);
 }
 
 /**
@@ -43,8 +43,8 @@ class Config {
         this._configPath = path.join(alternateHome, '.usdocker', 'setup', script);
         this._configDataPath = path.join(alternateHome, '.usdocker', 'data', script);
         this._configJson = path.join(this._configPath, 'environment.json');
-        shell.mkdir('-p', this._configPath);
-        shell.mkdir('-p', this._configDataPath);
+        fsutil.makeDirectory(this._configPath);
+        fsutil.makeDirectory(this._configDataPath);
 
         this.nconf.use('file', { file: this._configJson });
         this.reload();

@@ -291,9 +291,6 @@ module.exports = {
             options = {stdio: 'inherit'};
         }
 
-        // const shell = require('shelljs');
-        // shell.exec('docker ' + dockerParams.join(' '));
-
         let docker = spawn('docker', dockerParams, options);
 
         // Show the proper result.

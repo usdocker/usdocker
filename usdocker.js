@@ -6,7 +6,7 @@ const program = require('commander');
 const ScriptContainer = require('./include/scriptcontainer');
 const usdockerhelper = require('./include/usdocker');
 const Output = require('./include/output');
-const shell = require('shelljs');
+const fsutil = require('./include/fsutil');
 
 let configGlobal = usdockerhelper.configGlobal();
 
@@ -91,7 +91,7 @@ try {
             program.yes,
             program.no,
             function() {
-                shell.rm('-rf', config.getDataDir());
+                fsutil.removeDirectoryRecursive(config.getDataDir());
                 output.print('Data dir was deleted!');
             },
             function() {
@@ -111,7 +111,7 @@ try {
             program.yes,
             program.no,
             function() {
-                shell.rm('-rf', config.getUserDir());
+                fsutil.removeDirectoryRecursive(config.getUserDir());
                 output.print('User dir was deleted!');
             },
             function() {

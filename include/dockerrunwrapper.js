@@ -1,6 +1,7 @@
 'use strict';
 
 const DockerWrapper = require('./dockerwrapper');
+const DockerListWrapper = require('./dockerlistwrapper');
 
 function pushArray(source, array, prefix) {
     for(let i=0; i<array.length; i++) {
@@ -28,19 +29,14 @@ function pushStringCond(source, cond, str, prefix) {
     }
 }
 
-function pushLinkContainer(source) {
+function pushLinkContainer(configGlobal, source) {
 
-    const shell = require('shelljs');
-    let result = shell.exec('docker ps', {silent: true}).split('\n');
-
-    let iName = result[0].indexOf('NAMES');
-
-    for (let i=1; i<result.length; i++) {
-        if (iName > result[i].length) {
-            continue;
+    let dockerList = new DockerListWrapper(configGlobal);
+    dockerList.getRunning(function (data) {
+        for (let i=0; i<data.length; i++) {
+            pushString(source, '--link ' + data[i].Names[0] + ':' + data[i].Names[0]);
         }
-        pushString(source, '--link ' + result[i].substring(iName).trim() + ':' + result[i].substring(iName).trim());
-    }
+    });
 }
 
 /**
@@ -237,7 +233,7 @@ class DockerRunWrapper extends DockerWrapper {
         pushStringCond(dockerCmd, this.remove, '--rm');
 
         if (addLinks === true) {
-            pushLinkContainer(dockerCmd);
+            pushLinkContainer(this.configGlobal, dockerCmd);
         }
 
         pushArray(dockerCmd, this.params);

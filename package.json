@@ -23,7 +23,6 @@
     "nconf": "^0.8.4",
     "preferences": "^0.2.1",
     "require-uncached": "^1.0.3",
-    "shelljs": "^0.7.8",
     "yesno": "0.0.1"
   },
   "devDependencies": {

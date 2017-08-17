@@ -46,6 +46,10 @@ class Config {
         fsutil.makeDirectory(this._configPath);
         fsutil.makeDirectory(this._configDataPath);
 
+        if (fs.existsSync(this._configJson)) {
+            fs.writeFileSync(this._configJson, '{}');
+        }
+
         this.nconf.use('file', { file: this._configJson });
         this.reload();
 

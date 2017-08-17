@@ -383,5 +383,13 @@ module.exports = {
      */
     dockerRunWrapper(configGlobal) {
         return new DockerRunWrapper(configGlobal);
+    },
+
+    /**
+     * Get an fsutil module
+     * @returns {fsutil}
+     */
+    fsutil: function() {
+        return require('./fsutil');
     }
 };

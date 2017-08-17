@@ -1,6 +1,9 @@
 ## Modules
 
 <dl>
+<dt><a href="#module_fsutil">fsutil</a></dt>
+<dd><p>Some synchronous utilities functions for manipulate the file system.</p>
+</dd>
 <dt><a href="#module_usdocker">usdocker</a></dt>
 <dd><p>Helper class to run docker commands/action</p>
 </dd>
@@ -29,6 +32,11 @@
 </dd>
 </dl>
 
+<a name="module_fsutil"></a>
+
+## fsutil
+Some synchronous utilities functions for manipulate the file system.
+
 <a name="module_usdocker"></a>
 
 ## usdocker
@@ -50,6 +58,7 @@ Helper class to run docker commands/action
     * [.config(script)](#module_usdocker.config) ⇒ [<code>Config</code>](#Config)
     * [.configGlobal()](#module_usdocker.configGlobal) ⇒ [<code>Config</code>](#Config)
     * [.dockerRunWrapper(configGlobal)](#module_usdocker.dockerRunWrapper) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.fsutil()](#module_usdocker.fsutil) ⇒ <code>fsutil</code>
 
 <a name="module_usdocker.pull"></a>
 
@@ -216,6 +225,12 @@ Return a new DockerRunWrapper
 | --- |
 | configGlobal | 
 
+<a name="module_usdocker.fsutil"></a>
+
+### usdocker.fsutil() ⇒ <code>fsutil</code>
+Get an fsutil module
+
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 <a name="Config"></a>
 
 ## Config

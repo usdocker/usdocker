@@ -3,7 +3,17 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * Some synchronous utilities functions for manipulate the file system.
+ * @module fsutil
+ */
+
 let fsutil = {
+
+    /**
+     * Create a directory recursively
+     * @param {string} targetDir
+     */
     makeDirectory: function (targetDir) {
         const sep = path.sep;
         const initDir = path.isAbsolute(targetDir) ? sep : '';
@@ -17,6 +27,11 @@ let fsutil = {
         }, initDir);
     },
 
+    /**
+     * Copy the file source to target
+     * @param {string} source
+     * @param {string} target
+     */
     copyFileSync: function (source, target) {
 
         let targetFile = target;
@@ -31,6 +46,11 @@ let fsutil = {
         fs.writeFileSync(targetFile, fs.readFileSync(source));
     },
 
+    /**
+     * Copy the folder source to the folder target recursively
+     * @param {string} source
+     * @param {string} target
+     */
     copyFolderRecursiveSync: function (source, target) {
         let files = [];
 
@@ -54,6 +74,10 @@ let fsutil = {
         }
     },
 
+    /**
+     * Remove the directory recursively
+     * @param dirPath
+     */
     removeDirectoryRecursive: function(dirPath) {
         if (fs.existsSync(dirPath)) {
             fs.readdirSync(dirPath).forEach(function(entry) {

@@ -1,6 +1,6 @@
 const ConfigObject = require('../../include/config');
 const fs = require('fs');
-const shell = require('shelljs');
+const fsutil = require('../../include/fsutil');
 
 let config;
 
@@ -10,7 +10,7 @@ beforeEach(() => {
 
 afterEach(() => {
     config = null;
-    shell.rm('-rf', '/tmp/.usdocker');
+    fsutil.removeDirectoryRecursive('/tmp/.usdocker');
 });
 
 test('Check directories name', () => {

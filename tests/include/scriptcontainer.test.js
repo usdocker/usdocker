@@ -2,9 +2,9 @@
 
 const ScriptContainerObject = require('../../include/scriptcontainer');
 const ConfigObject = require('../../include/config');
+const fsutil = require('../../include/fsutil');
 
 const path = require('path');
-const shell = require('shelljs');
 
 let scriptcontainer;
 
@@ -15,8 +15,7 @@ beforeEach(() => {
 
 afterEach(() => {
     scriptcontainer = null;
-    shell.rm('-rf', '/tmp/.usdocker');
-    shell.rm('-rf', '/tmp/.usdocker_data');
+    fsutil.removeDirectoryRecursive('/tmp/.usdocker');
 });
 
 test('Check availableScripts', () => {

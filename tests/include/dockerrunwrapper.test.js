@@ -1,21 +1,17 @@
 const DockerRunWrapper = require('../../include/dockerrunwrapper');
 const Config = require('../../include/config');
-const shell = require('shelljs');
+const fsutil = require('../../include/fsutil');
 
 let docker;
 let configGlobal;
 
 beforeEach(() => {
     configGlobal = new Config(null, '/tmp');
-
-
-
     docker = new DockerRunWrapper(configGlobal);
 });
 
 afterEach(() => {
-    shell.rm('-rf', '/tmp/.usdocker');
-    shell.rm('-rf', '/tmp/.usdocker_data');
+    fsutil.removeDirectoryRecursive('/tmp/.usdocker');
     docker = null;
     configGlobal = null;
 });

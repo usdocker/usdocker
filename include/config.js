@@ -15,6 +15,7 @@ function copyConfig(source, dest) {
         throw new Error('Source path "' + source + '"does not exists');
     }
 
+    shell.mkdir('-p', dest);
     shell.cp('-R', source, dest);
 }
 
@@ -33,7 +34,7 @@ class Config {
         this.nconf = requireUncached('nconf');
         
         if (alternateHome === undefined) {
-            alternateHome = shell.config.HOME;
+            alternateHome = process.env.HOME;
         }
 
         if (!script) {

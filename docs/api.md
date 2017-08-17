@@ -43,7 +43,6 @@ Helper class to run docker commands/action
     * [.restart(instance, dockerRunWrapper, callback)](#module_usdocker.restart)
     * [.status(instance, callback)](#module_usdocker.status)
     * [.run(sc, script, command, setup)](#module_usdocker.run)
-    * [.getConfig(sc, script, output)](#module_usdocker.getConfig) ⇒ [<code>Config</code>](#Config)
     * [.runUsingApi(dockerrunwrapper)](#module_usdocker.runUsingApi)
     * [.runUsingCli(dockerrunwrapper)](#module_usdocker.runUsingCli)
     * [.exec(instance, cmd, callback)](#module_usdocker.exec)
@@ -137,19 +136,6 @@ Run a method of the script.
 | script | [<code>Config</code>](#Config) | 
 | command | <code>string</code> | 
 | setup | <code>boolean</code> | 
-
-<a name="module_usdocker.getConfig"></a>
-
-### usdocker.getConfig(sc, script, output) ⇒ [<code>Config</code>](#Config)
-Get the proper configuration for the script
-
-**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
-
-| Param | Type |
-| --- | --- |
-| sc | [<code>ScriptContainer</code>](#ScriptContainer) | 
-| script | <code>string</code> | 
-| output | [<code>Output</code>](#Output) | 
 
 <a name="module_usdocker.runUsingApi"></a>
 

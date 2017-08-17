@@ -188,18 +188,6 @@ module.exports = {
         }, extraArgs);
     },
 
-    /**
-     * Get the proper configuration for the script
-     * @param {ScriptContainer} sc
-     * @param {string} script
-     * @param {Output} output
-     * @returns {Config}
-     */
-    getConfig(sc, script, output) {
-        this.run(sc, script, 'setup', false, output);
-        return new Config(script, '/tmp/ustemp');
-    },
-
     handleTerminal: function(err, stream, container, hasTerminal) {
 
         let previousKey,
@@ -380,7 +368,7 @@ module.exports = {
      * @returns {Config}
      */
     config(script) {
-        return new Config(script, '/tmp/ustemp');
+        return new Config(script);
     },
 
     /**
@@ -388,7 +376,7 @@ module.exports = {
      * @returns {Config}
      */
     configGlobal() {
-        return new Config(null, '/tmp/ustemp');
+        return new Config();
     },
 
     /**

@@ -4,12 +4,11 @@
 
 const program = require('commander');
 const ScriptContainer = require('./include/scriptcontainer');
-const Config = require('./include/config');
 const usdockerhelper = require('./include/usdocker');
 const Output = require('./include/output');
 const shell = require('shelljs');
 
-let configGlobal = new Config(null, '/tmp/ustemp');
+let configGlobal = usdockerhelper.configGlobal();
 
 let sc = new ScriptContainer(configGlobal);
 
@@ -77,7 +76,8 @@ try {
         if (!sc.existsScript(script)) {
             throw new Error('Script "' + script + '" does not exists.');
         }
-        config = usdockerhelper.getConfig(sc, script, output);
+        usdockerhelper.run(sc, script, 'setup', false, output);
+        config = usdockerhelper.config(script);
     }
 
     if (program.resetDatadir) {

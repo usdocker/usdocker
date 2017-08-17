@@ -11,7 +11,6 @@ beforeEach(() => {
 afterEach(() => {
     config = null;
     shell.rm('-rf', '/tmp/.usdocker');
-    shell.rm('-rf', '/tmp/.usdocker_data');
 });
 
 test('Check directories name', () => {

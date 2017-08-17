@@ -4,14 +4,14 @@
 
 > A collection of Useful Scripts for Docker http://usdocker.com
 
-## Installation
+## Description
 
-USDocker is a npm package. See [here](docs/index) a list of packages
-are using usdocker. 
+USDocker is a npm package that provides functionallity for other scripts use docker images
+as instant applicances. 
 
-## Usage
+You can start a mysql server as easy as `usdocker mysql up`.
 
-Click [here](docs/index) to read more about USDocker and how to use. 
+[Click here](docs/index) to learn how to create your scripts, install and the list of packages using USDocker.
 
 ## License
 

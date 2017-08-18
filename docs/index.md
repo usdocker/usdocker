@@ -2,8 +2,8 @@
 [![NPM version](https://badge.fury.io/js/usdocker.svg)](https://npmjs.org/package/usdocker) 
 [![Build Status](https://travis-ci.org/usdocker/usdocker.svg?branch=master)](https://travis-ci.org/usdocker/usdocker)
 
-This is a colletion of useful scripts to make easier brings a service up, down the service, check status
-and a lot of other features.
+USDocker is a colletion of useful scripts to make easier brings a service up, down the service, check status
+and a lot of other features. It turns a docker image as an appliance.
  
 Usdocker is highly customizable.
 
@@ -30,7 +30,7 @@ but a usefull script running on top of USDocker library.
 The install will be:
 
 ```bash
-npm install global usdocker_<SCRIPT>
+npm install global usdocker_<SCRIPT\>
 ``` 
 
 See below the list of official scripts available:

@@ -6,6 +6,8 @@ const DockerListWrapper = require('./dockerlistwrapper');
 const DockerRunWrapper = require('./dockerrunwrapper');
 const Config = requireUncached('./config');
 const yesno = require('yesno');
+const os = require('os');
+
 
 /**
  * Helper class to run docker commands/action
@@ -391,5 +393,39 @@ module.exports = {
      */
     fsutil: function() {
         return require('./fsutil');
+    },
+
+    /**
+     * Get the IPAddress on the host system.
+     * @return {Array}
+     */
+    getHostIpAddress: function() {
+        let ifaces = os.networkInterfaces();
+
+        let ipAddress = [];
+
+        Object.keys(ifaces).forEach(function (ifname) {
+            let alias = 0;
+
+            ifaces[ifname].forEach(function (iface) {
+                if ('IPv4' !== iface.family || iface.internal !== false) {
+                    // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+                    return;
+                }
+
+                let aliasName = ifname;
+
+                if (alias >= 1) {
+                    // this single interface has multiple ipv4 addresses
+                    aliasName += ':' + alias;
+                }
+                ++alias;
+
+                ipAddress.push({'ifname': aliasName, 'address': iface.address});
+            });
+        });
+
+        return ipAddress;
     }
+
 };

@@ -17,11 +17,8 @@
     "chalk": "^2.1.0",
     "commander": "^2.11.0",
     "dockerode": "^2.5.0",
-    "marked": "^0.3.6",
-    "marked-terminal": "^2.0.0",
     "moment-timezone": "^0.5.13",
     "nconf": "^0.8.4",
-    "preferences": "^0.2.1",
     "require-uncached": "^1.0.3",
     "yesno": "0.0.1"
   },

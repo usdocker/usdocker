@@ -4,7 +4,7 @@
   "description": "A collection of Useful Scripts for Docker http://usdocker.com",
   "main": "./include/usdocker.js",
   "scripts": {
-    "test": "./node_modules/.bin/eslint include/* *.js && ./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/eslint include/* *.js && ./node_modules/.bin/jest --runInBand",
     "docs": "./node_modules/.bin/jsdoc2md include/* > docs/api.md",
     "publish-patch": "npm version patch && git push && git push --tags && npm publish"
   },

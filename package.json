@@ -12,6 +12,10 @@
   "bin": {
     "usdocker": "./usdocker.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/usdocker/usdocker.git"
+  },
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.1.0",

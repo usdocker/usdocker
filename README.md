@@ -6,12 +6,21 @@
 
 ## Description
 
-USDocker is a npm package that provides functionallity for other scripts use docker images
-as instant applicances. 
+USDocker is a npm package that enables you to run services from Docker Images but you dont need
+know docker. You'll have instant appliciances.
 
-You can start a mysql server as easy as `usdocker mysql up`.
+This package is base from the packages services. There are so many services created. 
 
-[Click here](docs/index) to learn how to create your scripts, install and the list of packages using USDocker.
+[Click here](https://github.com/usdocker/usdocker/docs/indexhttps://github.com/usdocker/usdocker/blob/master/docs/index.md) 
+to learn how to create your scripts, install and the list of packages using USDocker.
+
+## Example
+
+Once you installed a package service you just have to 'start it' as easy as:
+
+```bash
+usdocker mysql up
+```
 
 ## License
 

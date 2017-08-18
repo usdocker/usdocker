@@ -11,7 +11,7 @@ know docker. You'll have instant appliciances.
 
 This package is base from the packages services. There are so many services created. 
 
-[Click here](https://github.com/usdocker/usdocker/docs/indexhttps://github.com/usdocker/usdocker/blob/master/docs/index.md) 
+[Click here](https://github.com/usdocker/usdocker/blob/master/docs/index.md) 
 to learn how to create your scripts, install and the list of packages using USDocker.
 
 ## Example

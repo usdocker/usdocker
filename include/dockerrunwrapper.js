@@ -2,12 +2,21 @@
 
 const DockerWrapper = require('./dockerwrapper');
 const DockerListWrapper = require('./dockerlistwrapper');
+const util = require('util');
 
 function pushArray(source, array, prefix) {
     for(let i=0; i<array.length; i++) {
         pushString(source, array[i], prefix);
     }
 }
+
+let hostConfigMapping = {
+    'AutoRemove': {'cmdLine': '--rm', 'type': 'boolean'},
+    'Binds': {'cmdLine': '-v', 'type': 'string'},
+    'Links': {'cmdLine': '--link', 'type': 'string'},
+    'CapAdd': {'cmdLine': '--cap-add', 'type': 'string'},
+    'Ulimits': {'cmdLine': '--ulimit', 'type': 'string', 'format': '%Name%=%Soft%:%Hard%'}
+};
 
 function pushString(source, str, prefix) {
     if (str.toString().trim() !== '') {
@@ -50,16 +59,17 @@ class DockerRunWrapper extends DockerWrapper {
      */
     constructor(configGlobal) {
         super(configGlobal);
+        this.hostConfig = {
+            'AutoRemove': false,
+            'Binds': [],
+            'Links': []
+        };
         this.ports = [];
-        this.volumes = [];
         this.environment = [];
         this.detached = false;
-        this.params = [];
-        this.links = [];
         this.cmdParam = [];
         this.image = '';
         this.it = false;
-        this.remove = false;
         this.name = 'rename-container';
     }
 
@@ -85,9 +95,9 @@ class DockerRunWrapper extends DockerWrapper {
      */
     volume(host, container) {
         if (!host) {
-            return this.volumes;
+            return this.hostConfig.Binds;
         }
-        this.volumes.push(host + ':' + container);
+        this.hostConfig.Binds.push(host + ':' + container);
         return this;
     }
 
@@ -98,7 +108,7 @@ class DockerRunWrapper extends DockerWrapper {
      * @returns {DockerRunWrapper}
      */
     link(source, target) {
-        this.links.push(source + ':' + target);
+        this.hostConfig.Links.push(source + ':' + target);
         return this;
     }
 
@@ -121,11 +131,31 @@ class DockerRunWrapper extends DockerWrapper {
      * @param param
      * @returns {Array|DockerRunWrapper}
      */
-    dockerParam(param) {
-        if (!param) {
-            return this.params;
+    dockerParamSet(param, value) {
+        if (!value) {
+            return this.hostConfig[param];
         }
-        this.params.push(param);
+        this.hostConfig[param] = value;
+        return this;
+    }
+
+    /**
+     *
+     * @param param
+     * @returns {Array|DockerRunWrapper}
+     */
+    dockerParamAdd(param, value) {
+        if (!value) {
+            return this.hostConfig[param];
+        }
+        if (!this.hostConfig[param]) {
+            this.hostConfig[param] = [];
+        }
+
+        if (!util.isArray(this.hostConfig[param])) {
+            this.hostConfig[param] = [this.hostConfig[param]];
+        }
+        this.hostConfig[param].push(value);
         return this;
     }
 
@@ -168,9 +198,9 @@ class DockerRunWrapper extends DockerWrapper {
      */
     isRemove(value) {
         if (value === undefined) {
-            return this.remove;
+            return this.hostConfig.AutoRemove;
         }
-        this.remove = value;
+        this.hostConfig.AutoRemove = value;
         return this;
     }
 
@@ -230,17 +260,38 @@ class DockerRunWrapper extends DockerWrapper {
         pushString(dockerCmd, 'run');
         pushString(dockerCmd, '--name ' + this.name);
         pushStringCond(dockerCmd, this.it, '-it');
-        pushStringCond(dockerCmd, this.remove, '--rm');
+
+        let localHostConfig = this.hostConfig;
+        Object.keys(this.hostConfig).forEach(function (key) {
+            if (hostConfigMapping[key]['type'] === 'boolean') {
+                pushStringCond(dockerCmd, localHostConfig[key], hostConfigMapping[key]['cmdLine']);
+                return;
+            }
+            if (hostConfigMapping[key]['type'] === 'string') {
+                let values = localHostConfig[key];
+                if (!util.isArray(values)) {
+                    values = [values];
+                }
+
+                values.forEach(function (item) {
+                    if (hostConfigMapping[key]['format']) {
+                        let formattedItem = hostConfigMapping[key]['format'];
+                        Object.keys(item).forEach(function (keyFormat) {
+                            formattedItem = formattedItem.replace('%' + keyFormat + '%', item[keyFormat]);
+                        });
+                        item = formattedItem;
+                    }
+                    pushString(dockerCmd, hostConfigMapping[key]['cmdLine'] + ' ' + item);
+                });
+            }
+        });
 
         if (addLinks === true) {
             pushLinkContainer(this.configGlobal, dockerCmd);
         }
 
-        pushArray(dockerCmd, this.params);
         pushArray(dockerCmd, this.environment, '-e');
         pushArray(dockerCmd, this.ports, '-p');
-        pushArray(dockerCmd, this.volumes, '-v');
-        pushArray(dockerCmd, this.links, '--link');
 
         pushStringCond(dockerCmd, this.detached, '-d');
 
@@ -262,6 +313,9 @@ class DockerRunWrapper extends DockerWrapper {
             portsBindings[ports[1] + '/tcp'] = [ { 'HostPort': ports[0].toString() } ];
         }
 
+        let sendHostConfig = JSON.parse(JSON.stringify(this.hostConfig));
+        sendHostConfig.PortBindings = portsBindings;
+
         return {
             name: this.name,
             AttachStdin: this.it,
@@ -271,12 +325,7 @@ class DockerRunWrapper extends DockerWrapper {
             OpenStdin: !this.detached,
             StdinOnce: false,
             Env: this.environment,
-            HostConfig: {
-                AutoRemove: this.remove,
-                Binds: this.volumes,
-                Links: this.links,
-                PortBindings: portsBindings
-            },
+            HostConfig: sendHostConfig,
             Dns: ['8.8.8.8', '8.8.4.4'],
             Image: this.image,
             Cmd: this.cmdParam

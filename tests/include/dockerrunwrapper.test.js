@@ -216,13 +216,19 @@ test('Container creation environment', () => {
 test('Container creation with extra-param', () => {
     let result = docker
         .containerName('mycontainer')
-        .dockerParam('--ulimit memlock=-1:-1')
-        .dockerParam('--cap-add=IPC_LOCK')
+        .dockerParamAdd('Ulimits', {'Name':'memlock', 'Soft':'1000', 'Hard':'-1'})
+        .dockerParamAdd('CapAdd', 'IPC_LOCK')
         .isDetached(true)
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -d test/image');
+
+    expect(result).toBe(
+        '-H unix:///var/run/docker.sock run --name mycontainer '
+        + '--ulimit memlock=1000:-1 '
+        + '--cap-add IPC_LOCK '
+        + '-d test/image'
+    );
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
@@ -235,6 +241,8 @@ test('Container creation with extra-param', () => {
         'HostConfig': {
             'AutoRemove': false,
             'Binds': [],
+            'CapAdd': ['IPC_LOCK'],
+            'Ulimits': [{'Name':'memlock', 'Soft':'1000', 'Hard':'-1'}],
             'Links': [],
             'PortBindings': {}
         },
@@ -259,8 +267,8 @@ test('Container creation with all togheter', () => {
         .env('APPLICATION_ENV', 'test')
         .link('mysql', 'mysql')
         .link('redis', 'redis')
-        .dockerParam('--ulimit memlock=-1:-1')
-        .dockerParam('--cap-add=IPC_LOCK')
+        .dockerParamAdd('Ulimits', {'Name':'memlock', 'Soft':'1000', 'Hard':'-1'})
+        .dockerParamAdd('CapAdd', 'IPC_LOCK')
         .isDetached(true)
         .imageName('test/image')
         .commandParam('bash')
@@ -269,9 +277,11 @@ test('Container creation with all togheter', () => {
         .join(' ');
     expect(result).toBe(
         '-H unix:///var/run/docker.sock '
-        + 'run --name mycontainer --ulimit memlock=-1:-1 --cap-add=IPC_LOCK -e TZ=America/Sao_Paulo '
-        + '-e APPLICATION_ENV=test -p 3306:3306 -p 80:80 -v /home/jg:/srv/web -v /etc/test:/etc/test '
+        + 'run --name mycontainer '
+        + '-v /home/jg:/srv/web -v /etc/test:/etc/test '
         + '--link mysql:mysql --link redis:redis '
+        + '--ulimit memlock=1000:-1 --cap-add IPC_LOCK -e TZ=America/Sao_Paulo '
+        + '-e APPLICATION_ENV=test -p 3306:3306 -p 80:80 '
         + '-d test/image bash ls'
     );
 
@@ -286,6 +296,8 @@ test('Container creation with all togheter', () => {
         'HostConfig': {
             'AutoRemove': false,
             'Binds': ['/home/jg:/srv/web', '/etc/test:/etc/test'],
+            'CapAdd': ['IPC_LOCK'],
+            'Ulimits': [{'Name':'memlock', 'Soft':'1000', 'Hard':'-1'}],
             'Links': ['mysql:mysql', 'redis:redis'],
             'PortBindings': {'3306/tcp': [{'HostPort': '3306'}], '80/tcp': [{'HostPort': '80'}]}
         },

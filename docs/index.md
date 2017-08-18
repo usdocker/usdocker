@@ -30,7 +30,7 @@ but a usefull script running on top of USDocker library.
 The install will be:
 
 ```bash
-npm install global usdocker_<SCRIPT\>
+npm install -g usdocker-<SCRIPT\>
 ``` 
 
 See below the list of official scripts available:
@@ -54,53 +54,84 @@ After created your script you may want add to this list creating a pull request.
 
 ## Most common Useful Scripts commands
 
-The most of Useful Scripts have the follow commands available:
-
-### start the service
-
 ```
-usdocker SERVICE up
+Usage: usdocker <script> [options] [command] 
+
+  USDocker is a colletion of useful scripts to make easier brings a service up or down, check status and a lot of other features.
+
+
+  Options:
+
+    -V, --version         output the version number
+    -d, --dump            Dump the scripts options
+    --dump-global         Dump the global options
+    -s, --set <key-pair>  Set a script configuration. Key-pair is key=value
+    -g, --get <key>       Get a script option
+    --global <key-pair>   Set a global configuration for usdocker. Key-pair is key=value
+    -r, --refresh         refresh the list of available scripts
+    -v, --verbose         Print extra information
+    --yes                 answer YES to any question
+    --no                  answer NO to any question
+    --reset-datadir       reset all user data. Be careful because this operation is not reversible!
+    --reset-userdir       reset all config user data. Be careful because this operation is not reversible!
+    -h, --help            output usage information
 ```
 
-### stop and kill the service
+### Refreshing USDocker local database
 
-```
-usdocker SERVICE down
-```
+After install a new script you have to refresh the LIST by using:
 
-### setup local folders
-
-The follow command will create the folder with the default service parameters if it does not exists. 
-If there are previous existing parameters they are remain unchanged.
-
-```
-usdocker SERVICE setup
+```bash
+usdocker -rv
 ```
 
-If you want to reset to default parameters and 
-**ALL** user data **including** database, data produced by the user and others, just call:
+### Running with extra information
 
+Add the parameter `-v` to your command line.
+
+
+### Manipulating the script setup
+
+The USDocker script are customizable by variables. Here you can see how to
+customize your script;
+
+#### Discover what configuration are available
+
+
+```bash
+usdocker <your_script> --dump
 ```
-usdocker SERVICE setup --reset
+
+#### Get the current value
+
+
+```bash
+usdocker <your_script> --get key
 ```
+
+#### Set a new value
+
+
+```bash
+usdocker <your_script> --set key=value
+```
+
+**Caution** If you put a wrong value here you can stop the service or cause damage on your computer.  
+
+
+#### Reseting data
+
 
 Reset only the user environment
 
 ```
-usdocker SERVICE setup --reset-env
+usdocker SERVICE --reset-userdir
 ```
 
 Reset the user data including database, data produced by the user and others:
 
 ```
-usdocker SERVICE setup --reset-data
-```
-
-Set a value in the service environment. 
-**Caution** If you put a wrong value here you can stop the service or cause damage on your computer.  
-
-```
-usdocker SERVICE --set key value
+usdocker SERVICE --reset-datadir
 ```
 
 Note that this operation is irreversible.

@@ -12,6 +12,10 @@
   "bin": {
     "usdocker": "./usdocker.js"
   },
+  "keywords": [
+    "usdocker",
+    "docker"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/usdocker/usdocker.git"

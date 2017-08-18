@@ -185,11 +185,16 @@ test('Container creation environment', () => {
         .containerName('mycontainer')
         .env('TZ', 'America/Sao_Paulo')
         .env('APPLICATION_ENV', 'test')
+        .env('VAR_WITH_SPACE', 'valor 1')
         .isDetached(true)
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -e TZ=America/Sao_Paulo -e APPLICATION_ENV=test -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer '
+        + '-e TZ=America/Sao_Paulo '
+        + '-e APPLICATION_ENV=test '
+        + '-e VAR_WITH_SPACE="valor 1" '
+        + '-d test/image');
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
@@ -198,7 +203,7 @@ test('Container creation environment', () => {
         'AttachStdout': true,
         'Cmd': [],
         'Dns': ['8.8.8.8', '8.8.4.4'],
-        'Env': ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test'],
+        'Env': ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test', 'VAR_WITH_SPACE=valor 1'],
         'HostConfig': {
             'AutoRemove': false,
             'Binds': [],

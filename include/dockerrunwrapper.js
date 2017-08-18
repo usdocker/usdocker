@@ -25,7 +25,7 @@ function pushString(source, str, prefix) {
             if (prefix) {
                 source.push(prefix);
             }
-            source.push(parts[0]);
+            source.push(parts[0].replace('\\s', ' '));
         } else {
             pushArray(source, parts);
         }
@@ -290,7 +290,13 @@ class DockerRunWrapper extends DockerWrapper {
             pushLinkContainer(this.configGlobal, dockerCmd);
         }
 
-        pushArray(dockerCmd, this.environment, '-e');
+        pushArray(dockerCmd, this.environment.map(function (value) {
+            if (value.indexOf(' ') >= 0) {
+                value = value.replace(' ', '\\s');
+                value = value.replace('=', '="').replace(/$/, '"');
+            }
+            return value;
+        }), '-e');
         pushArray(dockerCmd, this.ports, '-p');
 
         pushStringCond(dockerCmd, this.detached, '-d');

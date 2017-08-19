@@ -186,6 +186,7 @@ test('Container creation environment', () => {
         .env('TZ', 'America/Sao_Paulo')
         .env('APPLICATION_ENV', 'test')
         .env('VAR_WITH_SPACE', 'valor 1')
+        .env('DISPLAY')
         .isDetached(true)
         .imageName('test/image')
         .buildConsole()
@@ -194,6 +195,7 @@ test('Container creation environment', () => {
         + '-e TZ=America/Sao_Paulo '
         + '-e APPLICATION_ENV=test '
         + '-e VAR_WITH_SPACE="valor 1" '
+        + '-e DISPLAY '
         + '-d test/image');
 
     let result2 = docker.buildApi();
@@ -203,7 +205,7 @@ test('Container creation environment', () => {
         'AttachStdout': true,
         'Cmd': [],
         'Dns': ['8.8.8.8', '8.8.4.4'],
-        'Env': ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test', 'VAR_WITH_SPACE=valor 1'],
+        'Env': ['TZ=America/Sao_Paulo', 'APPLICATION_ENV=test', 'VAR_WITH_SPACE=valor 1', 'DISPLAY'],
         'HostConfig': {
             'AutoRemove': false,
             'Binds': [],
@@ -223,6 +225,7 @@ test('Container creation with extra-param', () => {
         .containerName('mycontainer')
         .dockerParamAdd('Ulimits', {'Name':'memlock', 'Soft':'1000', 'Hard':'-1'})
         .dockerParamAdd('CapAdd', 'IPC_LOCK')
+        .dockerParamAdd('Devices', { 'PathOnHost': '/dev/deviceName', 'PathInContainer': '/dev/deviceName', 'CgroupPermissions': 'mrw'})
         .isDetached(true)
         .imageName('test/image')
         .buildConsole()
@@ -232,6 +235,7 @@ test('Container creation with extra-param', () => {
         '-H unix:///var/run/docker.sock run --name mycontainer '
         + '--ulimit memlock=1000:-1 '
         + '--cap-add IPC_LOCK '
+        + '--device /dev/deviceName:/dev/deviceName:mrw '
         + '-d test/image'
     );
 
@@ -248,6 +252,7 @@ test('Container creation with extra-param', () => {
             'Binds': [],
             'CapAdd': ['IPC_LOCK'],
             'Ulimits': [{'Name':'memlock', 'Soft':'1000', 'Hard':'-1'}],
+            'Devices': [{ 'PathOnHost': '/dev/deviceName', 'PathInContainer': '/dev/deviceName', 'CgroupPermissions': 'mrw'}],
             'Links': [],
             'PortBindings': {}
         },

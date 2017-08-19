@@ -15,7 +15,8 @@ let hostConfigMapping = {
     'Binds': {'cmdLine': '-v', 'type': 'string'},
     'Links': {'cmdLine': '--link', 'type': 'string'},
     'CapAdd': {'cmdLine': '--cap-add', 'type': 'string'},
-    'Ulimits': {'cmdLine': '--ulimit', 'type': 'string', 'format': '%Name%=%Soft%:%Hard%'}
+    'Ulimits': {'cmdLine': '--ulimit', 'type': 'string', 'format': '%Name%=%Soft%:%Hard%'},
+    'Devices': {'cmdLine': '--device', 'type': 'string', 'format': '%PathOnHost%:%PathInContainer%:%CgroupPermissions%'}
 };
 
 function pushString(source, str, prefix) {
@@ -122,7 +123,11 @@ class DockerRunWrapper extends DockerWrapper {
         if (!variable) {
             return this.environment;
         }
-        this.environment.push(variable + '=' + value);
+        let env = variable;
+        if (value !== undefined) {
+            env += '=' + value;
+        }
+        this.environment.push(env);
         return this;
     }
 
@@ -168,7 +173,7 @@ class DockerRunWrapper extends DockerWrapper {
         if (value === undefined) {
             return this.detached;
         }
-        if (this.it) {
+        if (value === true && this.it === true) {
             throw new Error('Cannot add -d parameter if -it or --rm is set');
         }
         this.detached = value;
@@ -184,7 +189,7 @@ class DockerRunWrapper extends DockerWrapper {
         if (value === undefined) {
             return this.it;
         }
-        if (this.detached) {
+        if (value === true && this.detached === true) {
             throw new Error('Cannot add -it parameter if daemon is set');
         }
         this.it = value;

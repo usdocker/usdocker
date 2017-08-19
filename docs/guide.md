@@ -11,101 +11,116 @@ Create a regular node.js project. This project *must* have:
 
 - npm install usdocker
 - at least on file with the name started with "usdocker_" followed by the name of your script.
-- This will a good practice create your project with "usdocker_" followed by the name of your script also.
+- This will a good practice create your project with "usdocker-" followed by the name of your script also.
 
 
-## Create your "usdocker_\<script\>.js"
+## Using the Script Creator
 
-USDocker will locate at your global directory all scripts named with "usdocker_*".   
+The easiest way to start creating a new usdocker script is using the Script Creator. 
 
-If the name of your script will be "myawesome" you'll have to create a file called
+Just execute: 
+
+```bash
+usdocker-create-script -s myawesomescript -o /path/to/script
+``` 
+
+This will create a node project with all necessary informations to get ready a usdocker script. 
+
+You just need to edit the file `usdocker_myawesomescript.js`
+
+## Script Works
+
+If you want to understand the whole process, read the documentation below:
+
+### The script "usdocker_\<script\>.js"
+
+USDocker will search recursively for all scripts prefixed 
+with "usdocker_*" at your 'node_modules'.    
+
+If the name of your script is "myawesome" you'll have to create a file called
 `usdocker_myawesome.js`. 
 
-The contents of your file will be:
-
+The contents of your file is looking like to:
 
 
 ```javascript
 'use strict';
 
-const Config = require('config');
-const DockerRunWrapper = require('dockerrunwrapper');
-const usdockerhelper = require('usdockerhelper');
-const showdocs = require('showdocs');
+const usdocker = require('usdocker');
+//const path = require('path');
 
-const SCRIPTNAME = 'myawesome';  // <-- PUT HERE YOUR script name
+const SCRIPTNAME = 'myawesome';
 
-let config = new Config(SCRIPTNAME);
-let configGlobal = new Config(null);
+let config = usdocker.config(SCRIPTNAME);
+let configGlobal = usdocker.configGlobal();
 
 function getContainerDef() {
-    // Will see below
+
+    let docker = usdocker.dockerRunWrapper(configGlobal);
+    return docker
+        .containerName(SCRIPTNAME + configGlobal.get('container-suffix'))
+        .port(config.get('port'), 0)                           // @todo change here
+        .volume(config.get('folder'), '...................')   // @todo change here
+        .env('TZ', configGlobal.get('timezone'))
+        .isDetached(true)
+        .isRemove(true)
+        .imageName(config.get('image'))
+    ;
 }
 
 module.exports = {
     setup: function(callback)
     {
-        // Will see below
-    },
+        config.setEmpty('image', '.................');         // @todo change here
+        config.setEmpty('folder', config.getDataDir());
+        config.setEmpty('port', 0);                            // @todo change here
 
-    client: function(callback)
-    {
-        usdockerhelper.exec(SCRIPTNAME, ['mysql'], callback);
-    },
+        //config.copyToUserDir(path.join(__dirname, 'myawesome', 'conf'));
+        //config.copyToDataDir(path.join(__dirname, 'myawesome', 'data'));
 
-    connect: function(callback)
-    {
-        usdockerhelper.exec(SCRIPTNAME, ['bash'], callback);
-    },
-
-    dump: function(callback)
-    {
-        usdockerhelper.exec(SCRIPTNAME, ['mysqldump'], callback);
+        callback(null, 'setup loaded for ' + SCRIPTNAME);
     },
 
     debugcli(callback) {
-        let result = usdockerhelper.outputRaw('cli', getContainerDef());
-        callback(result)
+        let result = usdocker.outputRaw('cli', getContainerDef());
+        callback(result);
     },
 
     debugapi(callback) {
-        let result = usdockerhelper.outputRaw('api', getContainerDef());
-        callback(result)
+        let result = usdocker.outputRaw('api', getContainerDef());
+        callback(result);
     },
 
     up: function(callback)
     {
-        usdockerhelper.up(SCRIPTNAME, getContainerDef(), callback);
+        usdocker.up(SCRIPTNAME, getContainerDef(), callback);
     },
 
     status: function(callback) {
-        usdockerhelper.status(SCRIPTNAME, callback);
+        usdocker.status(SCRIPTNAME, callback);
     },
 
     down: function(callback)
     {
-        usdockerhelper.down(SCRIPTNAME, callback);
+        usdocker.down(SCRIPTNAME, callback);
     },
 
     restart: function(callback)
     {
-        usdockerhelper.restart(SCRIPTNAME, getContainerDef(), callback);
-    },
-
-    help: function () {
-
-        showdocs.getDocumentation(__dirname + "/docs");
-    },
+        usdocker.restart(SCRIPTNAME, getContainerDef(), callback);
+    }
 };
 ```
 
 Each method exported in this script will be available externally to usdocker.
 
 For example will can call "usdocker myawesome up" and this will run the "up()" method.
+So, you can add or remove method as you need.
 
-So, you can add or remove method as you need. 
+The `callback` parameter have the syntax `function (normal, verbose) {}` and it is just for output the
+result to the usdocker. This callback can process errors all well.  
 
-## Planning your script
+### Planning your script
 
 You have to planning some things of your script:
 
@@ -113,7 +128,7 @@ You have to planning some things of your script:
 - This script have some configuration file?
 
 
-## Setup your script
+### Setup your script
 
 The first thing to do is to create variables for customize your script.
 This is good practice you setup at least "image" and "folder"
@@ -146,7 +161,7 @@ Explaining the setup:
 4. copyToUserDir: will copy config files from this script to the local directory;
 5. Call the routine for output information to the user. 
 
-## Creating the docker file definition
+### Creating the docker file definition
 
 Below an example of a docker run definition. It is important to note
 that you have to use the config to make your script customizable. 

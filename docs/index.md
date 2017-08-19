@@ -7,7 +7,7 @@ and a lot of other features. It turns a docker image as an appliance.
  
 Usdocker is highly customizable.
 
-## Basic Usage
+## Command Line Basic Usage
 
 The most common usage is:
 
@@ -34,19 +34,20 @@ npm install -g usdocker-<SCRIPT\>
 ``` 
 
 See below the list of official scripts available:
-- [elasticsearch](elasticsearch)
-- [jekyll](jekyll)
-- [kibana](kibana)
-- [memcached](memcached)
-- [mongodb](mongodb)
-- [mssql](mssql)
-- [mysql](mysql)
-- [oracle xe 11g](oracle-xe)
-- [php](php)
-- [postgres](postgres)
-- [redis](redis)
-- [redis-sentinel](redis-sentinel)
-- [wordpress](wordpress)
+- [elasticsearch](https://github.com/usdocker/usdocker-elastic)
+- [jekyll]
+- [lemp](https://github.com/usdocker/usdocker-lemp) (Linux+Nginx+MySQL+PHP)
+- [kibana](https://github.com/usdocker/usdocker-elastic)
+- [memcached](https://github.com/usdocker/usdocker-memcached)
+- [mongodb](https://github.com/usdocker/usdocker-mongodb)
+- [mssql]
+- [mysql](https://github.com/usdocker/usdocker-mysql)
+- [oracle xe 11g]
+- [php]
+- [postgres]
+- [redis](https://github.com/usdocker/usdocker-redis)
+- [redis-sentinel]
+- [wordpress](https://github.com/usdocker/usdocker-wordpress)
 
 Did not found the service you want? Feel free to create it and send to us again! 
 Follow our [guide](guide), read about the [API](api) and [directories](directories) to create your own script.
@@ -135,6 +136,31 @@ usdocker SERVICE --reset-datadir
 ```
 
 Note that this operation is irreversible.
+
+## API
+
+You can use USDocker in your node.js projects for wrap the "docker run"
+and do basic operations like PULL, RUN, STOP and others. 
+
+Here an example:
+
+```ecmascript 6
+const usdocker = require('usdocker');
+
+let docker = usdocker.dockerRunWrapper(configGlobal);
+docker
+    .image('ubuntu:16.04')
+    .isInteractive(true)
+    .isDetached(false)
+    .commandParam('bash')
+;
+
+usdocker.up('ubuntu-container', docker, function(normal, verbose) {
+    // do something
+});
+```
+
+Check for the [API](api) documentaton [clicking here](api) 
  
 ## Contributing 
 

@@ -27,7 +27,7 @@ module.exports = {
      *        return;
      *     }
      *     // Do if is OK
-     * }
+     * });
      */
     pull(image, callback) {
         let docker = new Docker();

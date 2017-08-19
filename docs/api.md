@@ -45,7 +45,7 @@ Helper class to run docker commands/action
 
 * [usdocker](#module_usdocker)
     * [.pull(image, callback)](#module_usdocker.pull)
-    * [.up(dockerRunWrapper)](#module_usdocker.up)
+    * [.up(instance, dockerRunWrapper, callback)](#module_usdocker.up)
     * [.down(instance, callback)](#module_usdocker.down)
     * [.outputRaw(option, dockerrunwrapper)](#module_usdocker.outputRaw) ⇒ <code>\*</code>
     * [.restart(instance, dockerRunWrapper, callback)](#module_usdocker.restart)
@@ -59,6 +59,7 @@ Helper class to run docker commands/action
     * [.configGlobal()](#module_usdocker.configGlobal) ⇒ [<code>Config</code>](#Config)
     * [.dockerRunWrapper(configGlobal)](#module_usdocker.dockerRunWrapper) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.fsutil()](#module_usdocker.fsutil) ⇒ <code>fsutil</code>
+    * [.getHostIpAddress()](#module_usdocker.getHostIpAddress) ⇒ <code>Array</code>
 
 <a name="module_usdocker.pull"></a>
 
@@ -72,17 +73,37 @@ Pull an docker image
 | image | <code>string</code> | The image name |
 | callback |  | The callback function |
 
+**Example**  
+```js
+usdocker.pull('ubuntu:16.04', function(err) {
+    if (err) {
+       console.log(err);
+       return;
+    }
+    // Do if is OK
+});
+```
 <a name="module_usdocker.up"></a>
 
-### usdocker.up(dockerRunWrapper)
+### usdocker.up(instance, dockerRunWrapper, callback)
 Create and run a container based on the DockerRunWrapper parameter.
 
 **Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 
 | Param | Type |
 | --- | --- |
+| instance | <code>string</code> | 
 | dockerRunWrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
+| callback |  | 
 
+**Example**  
+```js
+let docker = usdocker.dockerRunWrapper(configGlobal);
+docker.image('ubuntu:16.04').isInteractive(true).isDetached(false).commandParam('bash');
+usdocker.up('ubuntu-container', docker, function(normal, verbose) {
+   // do something
+});
+```
 <a name="module_usdocker.down"></a>
 
 ### usdocker.down(instance, callback)
@@ -95,6 +116,12 @@ Shutdown a container defined by the name. The container suffix will be added aut
 | instance | <code>string</code> | 
 | callback |  | 
 
+**Example**  
+```js
+usdocker.down('ubuntu-container', function(normal, verbose) {
+   // do something
+});
+```
 <a name="module_usdocker.outputRaw"></a>
 
 ### usdocker.outputRaw(option, dockerrunwrapper) ⇒ <code>\*</code>
@@ -120,6 +147,14 @@ Restart a container defined by the name. The container suffix will be added auto
 | dockerRunWrapper | [<code>DockerRunWrapper</code>](#DockerRunWrapper) | 
 | callback |  | 
 
+**Example**  
+```js
+let docker = usdocker.dockerRunWrapper(configGlobal);
+docker.image('ubuntu:16.04').isInteractive(true).isDetached(false).commandParam('bash');
+usdocker.down('ubuntu-container', docker, function(normal, verbose) {
+   // do something
+});
+```
 <a name="module_usdocker.status"></a>
 
 ### usdocker.status(instance, callback)
@@ -132,6 +167,12 @@ Get the container running status. The container suffix will be added automatical
 | instance | <code>string</code> | 
 | callback |  | 
 
+**Example**  
+```js
+usdocker.status('ubuntu-container', function(normal, verbose) {
+   // do something
+});
+```
 <a name="module_usdocker.run"></a>
 
 ### usdocker.run(sc, script, command, setup)
@@ -181,6 +222,13 @@ Exec a container and attach a terminal
 | cmd | <code>Array</code> | 
 | callback |  | 
 
+**Example**  
+```js
+usdocker.exec('mysql-container', ['bash'], function(err) {
+   if (err) console.log(err);
+   // do something
+});
+```
 <a name="module_usdocker.ask"></a>
 
 ### usdocker.ask(question, defaultValue, optYes, optNo, yesFn, noFn)
@@ -229,6 +277,12 @@ Return a new DockerRunWrapper
 
 ### usdocker.fsutil() ⇒ <code>fsutil</code>
 Get an fsutil module
+
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
+<a name="module_usdocker.getHostIpAddress"></a>
+
+### usdocker.getHostIpAddress() ⇒ <code>Array</code>
+Get the IPAddress on the host system.
 
 **Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 <a name="Config"></a>
@@ -445,7 +499,8 @@ Wrapper for the "docker run" command line
     * [.volume(host, container)](#DockerRunWrapper+volume) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.link(source, target)](#DockerRunWrapper+link) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.env(variable, value)](#DockerRunWrapper+env) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
-    * [.dockerParam(param)](#DockerRunWrapper+dockerParam) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.dockerParamSet(param)](#DockerRunWrapper+dockerParamSet) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.dockerParamAdd(param)](#DockerRunWrapper+dockerParamAdd) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.isDetached(value)](#DockerRunWrapper+isDetached) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.isInteractive(value)](#DockerRunWrapper+isInteractive) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.isRemove(value)](#DockerRunWrapper+isRemove) ⇒ <code>boolean</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
@@ -513,9 +568,18 @@ Set an environment variable on the container. Equals to --env parameter
 | variable | <code>string</code> | (if empty returns the string "variable=value") |
 | value | <code>string</code> |  |
 
-<a name="DockerRunWrapper+dockerParam"></a>
+<a name="DockerRunWrapper+dockerParamSet"></a>
 
-### dockerRunWrapper.dockerParam(param) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+### dockerRunWrapper.dockerParamSet(param) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+**Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
+
+| Param |
+| --- |
+| param | 
+
+<a name="DockerRunWrapper+dockerParamAdd"></a>
+
+### dockerRunWrapper.dockerParamAdd(param) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
 
 | Param |

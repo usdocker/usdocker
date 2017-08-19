@@ -5,7 +5,7 @@
   "main": "./include/usdocker.js",
   "scripts": {
     "test": "./node_modules/.bin/eslint include/* *.js && ./node_modules/.bin/jest --runInBand",
-    "docs": "./node_modules/.bin/jsdoc2md include/* > docs/api.md",
+    "gendocs": "./node_modules/.bin/jsdoc2md include/* > docs/api.md",
     "publish-patch": "npm version patch && git push && git push --tags && npm publish"
   },
   "author": "Joao Gilberto Magalhães",

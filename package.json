@@ -32,7 +32,7 @@
     "yesno": "0.0.1"
   },
   "devDependencies": {
-    "eslint": "^4.4.1",
+    "eslint": "^4.5.0",
     "jest": "^20.0.1",
     "jsdoc-to-markdown": "^3.0.0"
   }

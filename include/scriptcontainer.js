@@ -92,8 +92,7 @@ class ScriptContainer {
             if (path.extname(item) !== '.js') {
                 return;
             }
-            if (path.dirname(item).indexOf('test') >= 0
-                || path.dirname(item).indexOf('/.') >= 0
+            if (path.dirname(item).indexOf('/.') >= 0
                 || !path.basename(item).startsWith(prefix)
             ) {
                 return;

@@ -1,0 +1,26 @@
+{
+  "name": "usdocker-__SERVICE__",
+  "version": "1.0.0",
+  "description": "USDocker script for __SERVICE__ ",
+  "main": "usdocker___SERVICE__.js",
+  "scripts": {
+    "test": "./node_modules/.bin/eslint *.js",
+    "postinstall": "./node_modules/.bin/usdocker -rv"
+  },
+  "keywords": [
+    "usdocker",
+    "__SERVICE__"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/usdocker/usdocker-__SERVICE__.git"
+  },
+  "author": "joao@byjg.com.br",
+  "license": "MIT",
+  "dependencies": {
+    "usdocker": "^1.0.*"
+  },
+  "devDependencies": {
+    "eslint": "^4.4.1"
+  }
+}

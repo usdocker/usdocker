@@ -10,7 +10,8 @@
   },
   "author": "Joao Gilberto Magalhães",
   "bin": {
-    "usdocker": "./usdocker.js"
+    "usdocker": "./usdocker.js",
+    "usdocker-create-script": "./usdocker-create-script.js"
   },
   "keywords": [
     "usdocker",

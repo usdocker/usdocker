@@ -20,6 +20,14 @@ module.exports = {
      * Pull an docker image
      * @param {string} image The image name
      * @param callback The callback function
+     * @example
+     * usdocker.pull('ubuntu:16.04', function(err) {
+     *     if (err) {
+     *        console.log(err);
+     *        return;
+     *     }
+     *     // Do if is OK
+     * }
      */
     pull(image, callback) {
         let docker = new Docker();
@@ -56,7 +64,15 @@ module.exports = {
 
     /**
      * Create and run a container based on the DockerRunWrapper parameter.
+     * @param {string} instance
      * @param {DockerRunWrapper} dockerRunWrapper
+     * @param callback
+     * @example
+     * let docker = usdocker.dockerRunWrapper(configGlobal);
+     * docker.image('ubuntu:16.04').isInteractive(true).isDetached(false).commandParam('bash');
+     * usdocker.up('ubuntu-container', docker, function(normal, verbose) {
+     *    // do something
+     * });
      */
     up(instance, dockerRunWrapper, callback) {
         let me = this;
@@ -76,10 +92,14 @@ module.exports = {
      * Shutdown a container defined by the name. The container suffix will be added automatically
      * @param {string} instance
      * @param callback
+     * @example
+     * usdocker.down('ubuntu-container', function(normal, verbose) {
+     *    // do something
+     * });
      */
     down(instance, callback) {
         let docker = new Docker();
-        let container = docker.getContainer(instance + '-container');
+        let container = docker.getContainer(instance);
         container.inspect(function (err, data) {
             if (err) {
                 callback(err);
@@ -120,6 +140,12 @@ module.exports = {
      * @param {string} instance
      * @param {DockerRunWrapper} dockerRunWrapper
      * @param callback
+     * @example
+     * let docker = usdocker.dockerRunWrapper(configGlobal);
+     * docker.image('ubuntu:16.04').isInteractive(true).isDetached(false).commandParam('bash');
+     * usdocker.down('ubuntu-container', docker, function(normal, verbose) {
+     *    // do something
+     * });
      */
     restart(instance, dockerRunWrapper, callback) {
         let me = this;
@@ -138,10 +164,14 @@ module.exports = {
      * Get the container running status. The container suffix will be added automatically
      * @param {string} instance
      * @param callback
+     * @example
+     * usdocker.status('ubuntu-container', function(normal, verbose) {
+     *    // do something
+     * });
      */
     status(instance, callback) {
         let docker = new Docker();
-        let container = docker.getContainer(instance + '-container');
+        let container = docker.getContainer(instance);
 
         container.inspect(function(err, data) {
             if (err) {
@@ -315,12 +345,17 @@ module.exports = {
      * @param {string} instance
      * @param {Array} cmd
      * @param callback
+     * @example
+     * usdocker.exec('mysql-container', ['bash'], function(err) {
+     *    if (err) console.log(err);
+     *    // do something
+     * });
      */
     exec(instance, cmd, callback) {
         let me = this;
 
         let docker = new Docker();
-        let container = docker.getContainer(instance + '-container');
+        let container = docker.getContainer(instance);
         container.exec({Cmd: cmd, AttachStdin: true, AttachStdout: true, Tty: true, OpenStdin: true}, function (err, exec) {
             if (err) {
                 callback(err);

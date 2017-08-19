@@ -497,7 +497,8 @@ Wrapper for the "docker run" command line
     * [new DockerRunWrapper(configGlobal)](#new_DockerRunWrapper_new)
     * [.port(host, container)](#DockerRunWrapper+port) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.volume(host, container)](#DockerRunWrapper+volume) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
-    * [.link(source, target)](#DockerRunWrapper+link) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.link(source, target)](#DockerRunWrapper+link) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.linkRunning(cb)](#DockerRunWrapper+linkRunning)
     * [.env(variable, value)](#DockerRunWrapper+env) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.dockerParamSet(param)](#DockerRunWrapper+dockerParamSet) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.dockerParamAdd(param)](#DockerRunWrapper+dockerParamAdd) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
@@ -507,7 +508,7 @@ Wrapper for the "docker run" command line
     * [.containerName(value)](#DockerRunWrapper+containerName) ⇒ <code>string</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.imageName(value)](#DockerRunWrapper+imageName) ⇒ <code>string</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.commandParam(param)](#DockerRunWrapper+commandParam) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
-    * [.buildConsole(addLinks)](#DockerRunWrapper+buildConsole) ⇒ <code>Array</code>
+    * [.buildConsole()](#DockerRunWrapper+buildConsole) ⇒ <code>Array</code>
     * [.buildApi()](#DockerRunWrapper+buildApi) ⇒ <code>Array</code>
 
 <a name="new_DockerRunWrapper_new"></a>
@@ -546,7 +547,7 @@ Map the volume. Equals to -v parameter
 
 <a name="DockerRunWrapper+link"></a>
 
-### dockerRunWrapper.link(source, target) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+### dockerRunWrapper.link(source, target) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Create a link to an existing docker container. Equals to --link parameter
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
@@ -555,6 +556,17 @@ Create a link to an existing docker container. Equals to --link parameter
 | --- | --- | --- |
 | source | <code>string</code> | Container name |
 | target | <code>string</code> | Link name |
+
+<a name="DockerRunWrapper+linkRunning"></a>
+
+### dockerRunWrapper.linkRunning(cb)
+Create a link with all running containers. Equals to --link parameter
+
+**Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
+
+| Param | Description |
+| --- | --- |
+| cb | The callback (async method); |
 
 <a name="DockerRunWrapper+env"></a>
 
@@ -654,15 +666,10 @@ Defines the command paramters.
 
 <a name="DockerRunWrapper+buildConsole"></a>
 
-### dockerRunWrapper.buildConsole(addLinks) ⇒ <code>Array</code>
+### dockerRunWrapper.buildConsole() ⇒ <code>Array</code>
 Return the full command line
 
 **Kind**: instance method of [<code>DockerRunWrapper</code>](#DockerRunWrapper)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| addLinks | <code>boolean</code> | if true automatically add the links of running container to the script. |
-
 <a name="DockerRunWrapper+buildApi"></a>
 
 ### dockerRunWrapper.buildApi() ⇒ <code>Array</code>

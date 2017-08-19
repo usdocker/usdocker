@@ -39,16 +39,6 @@ function pushStringCond(source, cond, str, prefix) {
     }
 }
 
-function pushLinkContainer(configGlobal, source) {
-
-    let dockerList = new DockerListWrapper(configGlobal);
-    dockerList.getRunning(function (data) {
-        for (let i=0; i<data.length; i++) {
-            pushString(source, '--link ' + data[i].Names[0] + ':' + data[i].Names[0]);
-        }
-    });
-}
-
 /**
  * Wrapper for the "docker run" command line
  */
@@ -72,6 +62,7 @@ class DockerRunWrapper extends DockerWrapper {
         this.image = '';
         this.it = false;
         this.name = 'rename-container';
+        this.linked = false;
     }
 
     /**
@@ -106,11 +97,34 @@ class DockerRunWrapper extends DockerWrapper {
      * Create a link to an existing docker container. Equals to --link parameter
      * @param {string} source Container name
      * @param {string} target Link name
-     * @returns {DockerRunWrapper}
+     * @returns {Array|DockerRunWrapper}
      */
     link(source, target) {
-        this.hostConfig.Links.push(source + ':' + target);
+        if (source === undefined) {
+            return this.hostConfig.Links;
+        }
+        this.hostConfig.Links.push(source + ':' + (target === undefined ? source : target));
         return this;
+    }
+
+    /**
+     * Create a link with all running containers. Equals to --link parameter
+     * @param cb The callback (async method);
+     */
+    linkRunning(cb) {
+        if (this.linked) {
+            cb();
+            return;
+        }
+        let dockerList = new DockerListWrapper(this.configGlobal);
+        this.linked = true;
+        let me = this;
+        dockerList.getRunning(function (data) {
+            for (let i=0; i<data.length; i++) {
+                me.link(data[i].Names[0]);
+            }
+            cb();
+        });
     }
 
     /**
@@ -250,10 +264,9 @@ class DockerRunWrapper extends DockerWrapper {
 
     /**
      * Return the full command line
-     * @param {boolean} addLinks if true automatically add the links of running container to the script.
      * @returns {Array}
      */
-    buildConsole(addLinks) {
+    buildConsole() {
 
         if (this.image === '') {
             throw new Error('Image cannot be empty');
@@ -290,10 +303,6 @@ class DockerRunWrapper extends DockerWrapper {
                 });
             }
         });
-
-        if (addLinks === true) {
-            pushLinkContainer(this.configGlobal, dockerCmd);
-        }
 
         pushArray(dockerCmd, this.environment.map(function (value) {
             if (value.indexOf(' ') >= 0) {

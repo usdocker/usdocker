@@ -2,7 +2,6 @@
 
 const requireUncached = require('require-uncached');
 const Docker = require('dockerode');
-const DockerListWrapper = require('./dockerlistwrapper');
 const DockerRunWrapper = require('./dockerrunwrapper');
 const Config = requireUncached('./config');
 const yesno = require('yesno');
@@ -77,12 +76,8 @@ module.exports = {
     up(instance, dockerRunWrapper, callback) {
         let me = this;
         this.pull(dockerRunWrapper.imageName(), function () {
-            let list = new DockerListWrapper(dockerRunWrapper.configGlobal);
-            list.getRunning(function (data) {
-                for (let i=0; i<data.length; i++) {
-                    dockerRunWrapper.link(data[i].Names[0], data[i].Names[0]);
-                }
-                callback(null, 'started creation of instance ' + instance);
+            dockerRunWrapper.linkRunning(function() {
+                callback(null, 'started creation of instance ' + instance + '\nLinked with:\n - ' + dockerRunWrapper.link().join('\n - '));
                 me.runUsingApi(dockerRunWrapper, callback);
             });
         });

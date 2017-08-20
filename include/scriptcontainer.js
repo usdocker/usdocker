@@ -28,8 +28,7 @@ class ScriptContainer {
             this._searchDir = [];
             if (fs.existsSync(path.join(__dirname, '..', '..', '..', 'node_modules'))) {
                 this._searchDir.push(path.join(__dirname, '..', '..', '..'));
-            }
-            if (fs.existsSync(path.join(__dirname, '..', 'node_modules'))) {
+            } else if (fs.existsSync(path.join(__dirname, '..', 'node_modules'))) {
                 this._searchDir.push(path.join(__dirname, '..'));
             }
         }
@@ -92,7 +91,7 @@ class ScriptContainer {
             if (path.extname(item) !== '.js') {
                 return;
             }
-            if (path.dirname(item).indexOf('/.') >= 0
+            if (path.dirname(item).indexOf('/.template') >= 0
                 || !path.basename(item).startsWith(prefix)
             ) {
                 return;

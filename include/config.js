@@ -35,6 +35,9 @@ class Config {
         
         if (alternateHome === undefined) {
             alternateHome = process.env.HOME;
+            if (process.env.USDOCKER_HOME) {
+                alternateHome = process.env.USDOCKER_HOME; 
+            }
         }
 
         if (!script) {

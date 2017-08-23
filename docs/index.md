@@ -144,7 +144,7 @@ and do basic operations like PULL, RUN, STOP and others.
 
 Here an example:
 
-```ecmascript 6
+```javascript
 const usdocker = require('usdocker');
 
 let docker = usdocker.dockerRunWrapper(configGlobal);

@@ -160,12 +160,12 @@ usdocker.up('ubuntu-container', docker, function(normal, verbose) {
 });
 ```
 
-Check for the [API](api) documentaton [clicking here](api) 
+Check for the [API](api.md) documentaton [clicking here](api.md) 
  
 ## Contributing 
 
 If you wanna contributing  to our project and create your own Useful Script for Docker, 
-follow our [guide](guide), read about [API](api) and [directories](directories) to create your own.
+follow our [guide](guide.md), read about [API](api.md) and [directories](directories.md) to create your own.
 After created your script you may want add to this list creating a pull request. 
 
 

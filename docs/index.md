@@ -40,11 +40,11 @@ See below the list of official scripts available:
 - [kibana](https://github.com/usdocker/usdocker-elastic)
 - [memcached](https://github.com/usdocker/usdocker-memcached)
 - [mongodb](https://github.com/usdocker/usdocker-mongodb)
-- [mssql]
+- [mssql](https://github.com/usdocker/usdocker-mssql)
 - [mysql](https://github.com/usdocker/usdocker-mysql)
-- [oracle xe 11g]
+- [oracle xe 11g](https://github.com/usdocker/usdocker-oracle-xe)
 - [php]
-- [postgres]
+- [postgres](https://github.com/usdocker/usdocker-postgres)
 - [redis](https://github.com/usdocker/usdocker-redis)
 - [redis-sentinel]
 - [wordpress](https://github.com/usdocker/usdocker-wordpress)

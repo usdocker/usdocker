@@ -237,7 +237,9 @@ module.exports = {
         function exit (stream, isRaw) {
             process.stdout.removeListener('resize', resize);
             process.stdin.removeAllListeners();
-            process.stdin.setRawMode(isRaw);
+            if (process.stdout.isTTY === true) {
+                process.stdin.setRawMode(isRaw);
+            }
             process.stdin.resume();
             stream.end();
             process.exit();
@@ -250,7 +252,9 @@ module.exports = {
         let isRaw = process.isRaw;
         process.stdin.resume();
         process.stdin.setEncoding('utf8');
-        process.stdin.setRawMode(true);
+        if (process.stdout.isTTY === true) {
+            process.stdin.setRawMode(true);
+        }
         process.stdin.pipe(stream);
 
         process.stdin.on('data', function(key) {

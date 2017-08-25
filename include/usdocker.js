@@ -488,7 +488,7 @@ module.exports = {
 
         let opts = {};
         if (host.startsWith('http')) {
-            let parts = this.host().match(/^(https?):\/\/(.*?):(\d+)/);
+            let parts = host.match(/^(https?):\/\/(.*?):(\d+)/);
             opts.protocol = parts[1];
             opts.host = parts[2];
             opts.port = parts[3];

@@ -124,11 +124,12 @@ test('Container creation volume', () => {
         .containerName('mycontainer')
         .volume('/home/jg', '/srv/web')
         .volume('/etc/test', '/etc/test')
+        .volume('/mnt/c/data', '/folder')
         .isDetached(true)
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -v /home/jg:/srv/web -v /etc/test:/etc/test -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -v /home/jg:/srv/web -v /etc/test:/etc/test -v C:/data:/folder -d test/image');
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
@@ -140,7 +141,7 @@ test('Container creation volume', () => {
         'Env': [],
         'HostConfig': {
             'AutoRemove': false,
-            'Binds': ['/home/jg:/srv/web', '/etc/test:/etc/test'],
+            'Binds': ['/home/jg:/srv/web', '/etc/test:/etc/test', 'C:/data:/folder'],
             'Links': [],
             'PortBindings': {}
         },

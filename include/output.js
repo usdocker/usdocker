@@ -29,6 +29,21 @@ class Output
     }
 
     /**
+     * Output a warn message
+     * @param {string} normal Print this string if verbositity is false
+     * @param {string} verbose Print this string if verbositity is true. If null, return the "normal" string
+     */
+    warn(normal, verbose) {
+        if (normal) {
+            normal = chalk.yellow(normal);
+        }
+        if (verbose) {
+            verbose = chalk.yellow(verbose);
+        }
+        this.print(normal, verbose);
+    }
+
+    /**
      * Output the Error.message. If verbosity is true, return the stack trace also
      * @param {Error} err
      */

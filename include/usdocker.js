@@ -3,10 +3,14 @@
 const requireUncached = require('require-uncached');
 const Docker = require('dockerode');
 const DockerRunWrapper = require('./dockerrunwrapper');
+const DockerListWrapper = require('./dockerlistwrapper');
 const Config = requireUncached('./config');
 const yesno = require('yesno');
 const os = require('os');
+const path = require('path');
+const fs = require('fs');
 
+let _configGlobal = null;
 
 /**
  * Helper class to run docker commands/action
@@ -29,7 +33,7 @@ module.exports = {
      * });
      */
     pull(image, callback) {
-        let docker = new Docker();
+        let docker = this.getDockerInstance(this.configGlobal().get('docker-host'));
 
         let instance = docker.getImage(image);
         instance.inspect(function (err) {
@@ -93,7 +97,7 @@ module.exports = {
      * });
      */
     down(instance, callback) {
-        let docker = new Docker();
+        let docker = this.getDockerInstance(this.configGlobal().get('docker-host'));
         let container = docker.getContainer(instance);
         container.inspect(function (err, data) {
             if (err) {
@@ -165,7 +169,7 @@ module.exports = {
      * });
      */
     status(instance, callback) {
-        let docker = new Docker();
+        let docker = this.getDockerInstance(this.configGlobal().get('docker-host'));
         let container = docker.getContainer(instance);
 
         container.inspect(function(err, data) {
@@ -289,7 +293,7 @@ module.exports = {
      */
     runUsingApi(dockerrunwrapper, callback) {
 
-        let docker = dockerrunwrapper.getInstance();
+        let docker = this.getDockerInstance(dockerrunwrapper.usdocker.configGlobal().get('docker-host'));
         let optsc = dockerrunwrapper.buildApi();
 
         let me = this;
@@ -353,7 +357,7 @@ module.exports = {
     exec(instance, cmd, callback) {
         let me = this;
 
-        let docker = new Docker();
+        let docker = this.getDockerInstance(this.configGlobal().get('docker-host'));
         let container = docker.getContainer(instance);
         container.exec({Cmd: cmd, AttachStdin: true, AttachStdout: true, Tty: true, OpenStdin: true}, function (err, exec) {
             if (err) {
@@ -401,6 +405,9 @@ module.exports = {
      * @returns {Config}
      */
     config(script) {
+        if (!script) {
+            throw new Error('You need to pass the script');
+        }
         return new Config(script);
     },
 
@@ -409,16 +416,22 @@ module.exports = {
      * @returns {Config}
      */
     configGlobal() {
-        return new Config();
+        if (!_configGlobal) {
+            _configGlobal = new Config();
+        }
+        return _configGlobal;
     },
 
     /**
      * Return a new DockerRunWrapper
-     * @param configGlobal
      * @returns {DockerRunWrapper}
      */
-    dockerRunWrapper(configGlobal) {
-        return new DockerRunWrapper(configGlobal);
+    dockerRunWrapper() {
+        return new DockerRunWrapper(this);
+    },
+
+    dockerListWrapper() {
+        return new DockerListWrapper(this);
     },
 
     /**
@@ -460,6 +473,44 @@ module.exports = {
         });
 
         return ipAddress;
-    }
+    },
 
+    /**
+     * Static method to return an instance of a DockerWrapper
+     * @param {string} host
+     * @returns {Docker}
+     */
+    getDockerInstance: function(host) {
+
+        if (host === undefined) {
+            host = '/var/run/docker.sock';
+        }
+
+        let opts = {};
+        if (host.startsWith('http')) {
+            let parts = this.host().match(/^(https?):\/\/(.*?):(\d+)/);
+            opts.protocol = parts[1];
+            opts.host = parts[2];
+            opts.port = parts[3];
+        } else if (host.startsWith('machine')) {
+            let parts = host.match(/^(machine):\/\/(.*)/);
+            if (!parts[2]) {
+                throw new Error('Invalid machine definition ' + host);
+            }
+            parts[2] = path.resolve(parts[2]);
+            if (!fs.existsSync(parts[2])) {
+                throw new Error('There is no "' + parts[2] + '" docker-machine path');
+            }
+            let configJson = require(path.join(parts[2], 'config.json'));
+            opts.host = configJson.Driver.IPAddress;
+            opts.port = configJson.Driver.EnginePort;
+            opts.ca = fs.readFileSync(configJson.HostOptions.AuthOptions.CaCertPath);
+            opts.cert = fs.readFileSync(configJson.HostOptions.AuthOptions.ClientCertPath);
+            opts.key = fs.readFileSync(configJson.HostOptions.AuthOptions.ClientKeyPath);
+        } else {
+            opts.socketPath = host;
+        }
+
+        return new Docker(opts);
+    }
 };

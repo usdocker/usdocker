@@ -40,11 +40,11 @@ See below the list of official scripts available:
 - [kibana](https://github.com/usdocker/usdocker-elastic)
 - [memcached](https://github.com/usdocker/usdocker-memcached)
 - [mongodb](https://github.com/usdocker/usdocker-mongodb)
-- [mssql]
+- [mssql](https://github.com/usdocker/usdocker-mssql)
 - [mysql](https://github.com/usdocker/usdocker-mysql)
-- [oracle xe 11g]
+- [oracle xe 11g](https://github.com/usdocker/usdocker-oracle-xe)
 - [php]
-- [postgres]
+- [postgres](https://github.com/usdocker/usdocker-postgres)
 - [redis](https://github.com/usdocker/usdocker-redis)
 - [redis-sentinel]
 - [wordpress](https://github.com/usdocker/usdocker-wordpress)
@@ -137,6 +137,29 @@ usdocker SERVICE --reset-datadir
 
 Note that this operation is irreversible.
 
+## Setting the Docker Host
+
+USDocker points to the local socket by default. But you can change this by using the command:
+
+**API Not authenticated (for windows or mac)**
+
+```bash
+usdocker --global http://127.0.0.1:2736
+```
+
+**Docker  machine**
+
+```bash
+usdocker --global machine:///path/to/dockermachine/dir
+```
+
+**Linux Socket (default)**
+
+```bash
+usdocker --global /var/run/docker.sock
+```
+
+
 ## API
 
 You can use USDocker in your node.js projects for wrap the "docker run"
@@ -144,7 +167,7 @@ and do basic operations like PULL, RUN, STOP and others.
 
 Here an example:
 
-```ecmascript 6
+```javascript
 const usdocker = require('usdocker');
 
 let docker = usdocker.dockerRunWrapper(configGlobal);

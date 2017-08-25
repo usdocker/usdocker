@@ -60,6 +60,14 @@ class ScriptContainer {
             }
         }
 
+        if (force !== undefined && typeof force === 'string') {
+            force = path.resolve(force);
+            if (!fs.existsSync(force)) {
+                throw new Error('The path "' + force + '" for refresh does not exists');
+            }
+            this._searchDir = [force];
+        }
+
         this._usdockerModules = {};
         for(let i=0; i<this._searchDir.length; i++) {
             this.loadModules(this._searchDir[i]);

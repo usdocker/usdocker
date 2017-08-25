@@ -4,7 +4,7 @@ const DockerWrapper = require('./dockerwrapper');
 
 function runListContainer(me, opts, callback) {
 
-    let docker = me.getInstance();
+    let docker = me.usdocker.getDockerInstance(me.usdocker.configGlobal().get('docker-host'));
 
     docker.listContainers(opts, function(err, data) {
         if (err) {
@@ -21,11 +21,10 @@ class DockerListWrapper extends DockerWrapper {
 
     /**
      * Constructor
-     * @param {Config} configGlobal
+     * @param {usdocker} usdocker
      */
-    constructor(configGlobal) {
-        super(configGlobal);
-        this.connection = configGlobal.get('docker-host');
+    constructor(usdocker) {
+        super(usdocker);
     }
 
     /**

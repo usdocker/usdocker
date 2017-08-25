@@ -1,19 +1,24 @@
+'use strict';
+
 const DockerRunWrapper = require('../../include/dockerrunwrapper');
-const Config = require('../../include/config');
 const fsutil = require('../../include/fsutil');
+const usdocker = require('../../include/usdocker');
 
 let docker;
-let configGlobal;
 
 beforeEach(() => {
-    configGlobal = new Config(null, '/tmp');
-    docker = new DockerRunWrapper(configGlobal);
+    process.env.USDOCKER_HOME = '/tmp';
+    docker = new DockerRunWrapper(usdocker);
 });
 
 afterEach(() => {
     fsutil.removeDirectoryRecursive('/tmp/.usdocker');
     docker = null;
-    configGlobal = null;
+    process.env.USDOCKER_HOME = '';
+});
+
+test('Test config path', () => {
+    expect(docker.usdocker.configGlobal().path()).toBe('/tmp/.usdocker/setup/environment.json');
 });
 
 test('Test basic container creation', () => {

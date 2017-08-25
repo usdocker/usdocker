@@ -183,6 +183,19 @@ function getContainerDef() {
 }
 ```
 
+## Running your script locally before publish
+
+You can run your script before publish it by point the usdocker directory to your script. 
+
+To do this you have to:
+
+```bash
+usdocker --refresh /path/to/your/project
+```
+
+Now usdocker can access your project. 
+
+
 ## API Documentation
 
 You can get more information about the API [here](api).

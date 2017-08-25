@@ -7,6 +7,7 @@ const ScriptContainer = require('./include/scriptcontainer');
 const usdockerhelper = require('./include/usdocker');
 const Output = require('./include/output');
 const fsutil = require('./include/fsutil');
+const path = require('path');
 
 let configGlobal = usdockerhelper.configGlobal();
 
@@ -33,7 +34,7 @@ program
     .option('-s, --set <key-pair>','Set a script configuration. Key-pair is key=value', collect, [])
     .option('-g, --get <key>','Get a script option', collect, [])
     .option('--global <key-pair>','Set a global configuration for usdocker. Key-pair is key=value', collect, [])
-    .option('-r, --refresh','refresh the list of available scripts')
+    .option('-r, --refresh [searchFolder]','refresh the list of available scripts')
     .option('-v, --verbose','Print extra information')
     .option('--yes', 'answer YES to any question')
     .option('--no', 'answer NO to any question')
@@ -70,6 +71,10 @@ try {
 
     if (program.verbose) {
         output.verbosity = true;
+    }
+
+    if (configGlobal.get('docker-host').match(/machine:/)) {
+        output.warn('WARNING: Docker-machine environment set to ' + configGlobal.get('docker-host'));
     }
 
     if (script) {
@@ -122,7 +127,11 @@ try {
 
     if (program.refresh) {
         found = true;
-        sc.load(true);
+        if (typeof program.refresh === 'string') {
+            program.refresh = path.resolve(program.refresh);
+            output.warn('Using custom location: ' + program.refresh);
+        }
+        sc.load(program.refresh);
         output.print(null, 'usdocker database refreshed');
     }
 

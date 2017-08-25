@@ -57,9 +57,10 @@ Helper class to run docker commands/action
     * [.ask(question, defaultValue, optYes, optNo, yesFn, noFn)](#module_usdocker.ask)
     * [.config(script)](#module_usdocker.config) ⇒ [<code>Config</code>](#Config)
     * [.configGlobal()](#module_usdocker.configGlobal) ⇒ [<code>Config</code>](#Config)
-    * [.dockerRunWrapper(configGlobal)](#module_usdocker.dockerRunWrapper) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+    * [.dockerRunWrapper()](#module_usdocker.dockerRunWrapper) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.fsutil()](#module_usdocker.fsutil) ⇒ <code>fsutil</code>
     * [.getHostIpAddress()](#module_usdocker.getHostIpAddress) ⇒ <code>Array</code>
+    * [.getDockerInstance(host)](#module_usdocker.getDockerInstance) ⇒ <code>Docker</code>
 
 <a name="module_usdocker.pull"></a>
 
@@ -264,15 +265,10 @@ Return a new Config object with Global setup
 **Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
 <a name="module_usdocker.dockerRunWrapper"></a>
 
-### usdocker.dockerRunWrapper(configGlobal) ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
+### usdocker.dockerRunWrapper() ⇒ [<code>DockerRunWrapper</code>](#DockerRunWrapper)
 Return a new DockerRunWrapper
 
 **Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
-
-| Param |
-| --- |
-| configGlobal | 
-
 <a name="module_usdocker.fsutil"></a>
 
 ### usdocker.fsutil() ⇒ <code>fsutil</code>
@@ -285,6 +281,17 @@ Get an fsutil module
 Get the IPAddress on the host system.
 
 **Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
+<a name="module_usdocker.getDockerInstance"></a>
+
+### usdocker.getDockerInstance(host) ⇒ <code>Docker</code>
+Static method to return an instance of a DockerWrapper
+
+**Kind**: static method of [<code>usdocker</code>](#module_usdocker)  
+
+| Param | Type |
+| --- | --- |
+| host | <code>string</code> | 
+
 <a name="Config"></a>
 
 ## Config
@@ -436,20 +443,20 @@ Wrapper for the "docker list" command line
 **Kind**: global class  
 
 * [DockerListWrapper](#DockerListWrapper)
-    * [new DockerListWrapper(configGlobal)](#new_DockerListWrapper_new)
+    * [new DockerListWrapper(usdocker)](#new_DockerListWrapper_new)
     * [.getAll(callback)](#DockerListWrapper+getAll)
     * [.getRunning(callback)](#DockerListWrapper+getRunning)
     * [.get(limit, filters, callback)](#DockerListWrapper+get)
 
 <a name="new_DockerListWrapper_new"></a>
 
-### new DockerListWrapper(configGlobal)
+### new DockerListWrapper(usdocker)
 Constructor
 
 
 | Param | Type |
 | --- | --- |
-| configGlobal | [<code>Config</code>](#Config) | 
+| usdocker | <code>usdocker</code> | 
 
 <a name="DockerListWrapper+getAll"></a>
 
@@ -494,7 +501,7 @@ Wrapper for the "docker run" command line
 **Kind**: global class  
 
 * [DockerRunWrapper](#DockerRunWrapper)
-    * [new DockerRunWrapper(configGlobal)](#new_DockerRunWrapper_new)
+    * [new DockerRunWrapper(usdocker)](#new_DockerRunWrapper_new)
     * [.port(host, container)](#DockerRunWrapper+port) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.volume(host, container)](#DockerRunWrapper+volume) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
     * [.link(source, target)](#DockerRunWrapper+link) ⇒ <code>Array</code> \| [<code>DockerRunWrapper</code>](#DockerRunWrapper)
@@ -513,13 +520,13 @@ Wrapper for the "docker run" command line
 
 <a name="new_DockerRunWrapper_new"></a>
 
-### new DockerRunWrapper(configGlobal)
+### new DockerRunWrapper(usdocker)
 Construtor
 
 
 | Param | Type |
 | --- | --- |
-| configGlobal | [<code>Config</code>](#Config) | 
+| usdocker | <code>usdocker</code> | 
 
 <a name="DockerRunWrapper+port"></a>
 
@@ -682,39 +689,16 @@ Returns the object to be used in the docker API.
 Abstract class for implement docker wrapper class
 
 **Kind**: global class  
-
-* [DockerWrapper](#DockerWrapper)
-    * [new DockerWrapper(configGlobal)](#new_DockerWrapper_new)
-    * [.host(hostName)](#DockerWrapper+host) ⇒ <code>\*</code>
-    * [.getInstance()](#DockerWrapper+getInstance) ⇒ <code>Docker</code>
-
 <a name="new_DockerWrapper_new"></a>
 
-### new DockerWrapper(configGlobal)
+### new DockerWrapper(usdocker)
 Constructor
 
 
 | Param | Type |
 | --- | --- |
-| configGlobal | [<code>Config</code>](#Config) | 
+| usdocker | <code>usdocker</code> | 
 
-<a name="DockerWrapper+host"></a>
-
-### dockerWrapper.host(hostName) ⇒ <code>\*</code>
-Defines the docker host. Equals to -H parameter.
-
-**Kind**: instance method of [<code>DockerWrapper</code>](#DockerWrapper)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| hostName | <code>string</code> | (if empty return the host name) |
-
-<a name="DockerWrapper+getInstance"></a>
-
-### dockerWrapper.getInstance() ⇒ <code>Docker</code>
-Static method to return an instance of a DockerWrapper
-
-**Kind**: instance method of [<code>DockerWrapper</code>](#DockerWrapper)  
 <a name="Output"></a>
 
 ## Output
@@ -725,6 +709,7 @@ Handle the output of the modules instead to console.log
 * [Output](#Output)
     * [new Output(verbosity)](#new_Output_new)
     * [.print(normal, verbose)](#Output+print)
+    * [.warn(normal, verbose)](#Output+warn)
     * [.printErr(err)](#Output+printErr)
 
 <a name="new_Output_new"></a>
@@ -741,6 +726,18 @@ Constructor
 
 ### output.print(normal, verbose)
 Print a message according to the verbosity.
+
+**Kind**: instance method of [<code>Output</code>](#Output)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| normal | <code>string</code> | Print this string if verbositity is false |
+| verbose | <code>string</code> | Print this string if verbositity is true. If null, return the "normal" string |
+
+<a name="Output+warn"></a>
+
+### output.warn(normal, verbose)
+Output a warn message
 
 **Kind**: instance method of [<code>Output</code>](#Output)  
 

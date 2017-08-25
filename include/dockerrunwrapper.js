@@ -46,10 +46,10 @@ class DockerRunWrapper extends DockerWrapper {
 
     /**
      * Construtor
-     * @param {Config} configGlobal
+     * @param {usdocker} usdocker
      */
-    constructor(configGlobal) {
-        super(configGlobal);
+    constructor(usdocker) {
+        super(usdocker);
         this.hostConfig = {
             'AutoRemove': false,
             'Binds': [],
@@ -116,7 +116,7 @@ class DockerRunWrapper extends DockerWrapper {
             cb();
             return;
         }
-        let dockerList = new DockerListWrapper(this.configGlobal);
+        let dockerList = new DockerListWrapper(this.usdocker);
         this.linked = true;
         let me = this;
         dockerList.getRunning(function (data) {

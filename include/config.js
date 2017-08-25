@@ -170,6 +170,10 @@ class Config {
         return moment.tz.guess();
     }
 
+    path() {
+        return this._configJson;
+    }
+
 }
 
 module.exports = Config;

@@ -50,7 +50,7 @@ See below the list of official scripts available:
 - [wordpress](https://github.com/usdocker/usdocker-wordpress)
 
 Did not found the service you want? Feel free to create it and send to us again! 
-Follow our [guide](guide), read about the [API](api) and [directories](directories) to create your own script.
+Follow our [guide](guide.md), read about the [API](api.md) and [directories](directories.md) to create your own script.
 After created your script you may want add to this list creating a pull request. 
 
 ## Most common Useful Scripts commands
@@ -183,12 +183,12 @@ usdocker.up('ubuntu-container', docker, function(normal, verbose) {
 });
 ```
 
-Check for the [API](api) documentaton [clicking here](api) 
+Check for the [API](api.md) documentaton [clicking here](api.md) 
  
 ## Contributing 
 
 If you wanna contributing  to our project and create your own Useful Script for Docker, 
-follow our [guide](guide), read about [API](api) and [directories](directories) to create your own.
+follow our [guide](guide.md), read about [API](api.md) and [directories](directories.md) to create your own.
 After created your script you may want add to this list creating a pull request. 
 
 

@@ -89,6 +89,7 @@ class DockerRunWrapper extends DockerWrapper {
         if (!host) {
             return this.hostConfig.Binds;
         }
+        host = host.replace(this.configGlobal.get('mappingDirFrom'), this.configGlobal.get('mappingDirTo'));
         this.hostConfig.Binds.push(host + ':' + container);
         return this;
     }

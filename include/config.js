@@ -58,6 +58,8 @@ class Config {
             this.setEmpty('container-suffix', '-container');
             this.setEmpty('timezone', this.getLocalTimeZone());
             this.setEmpty('docker-host', '/var/run/docker.sock');
+            this.setEmpty('mappingDirFrom', '/mnt/c/');
+            this.setEmpty('mappingDirTo', 'C:/');
         }
     }
 

@@ -159,6 +159,16 @@ usdocker --global machine:///path/to/dockermachine/dir
 usdocker --global /var/run/docker.sock
 ```
 
+## Running on Windows or Mac
+
+If you running on Windows or Mac you probably set or the Docker Machine or the API Not Authenticated;
+
+In both cases you need to map a local directory into the host server. 
+
+```bash
+usdocker --global mappingDirFrom=/mnt/c/
+usdocker --global mappingDirTo=C:/
+```
 
 ## API
 

@@ -34,7 +34,7 @@ class Config {
         this.nconf = requireUncached('nconf');
         
         if (alternateHome === undefined) {
-            alternateHome = process.env.HOME;
+            alternateHome = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
             if (process.env.USDOCKER_HOME) {
                 alternateHome = process.env.USDOCKER_HOME; 
             }

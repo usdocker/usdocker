@@ -194,6 +194,12 @@ usdocker.up('ubuntu-container', docker, function(normal, verbose) {
 ```
 
 Check for the [API](api.md) documentaton [clicking here](api.md) 
+
+## More Information
+
+- [Installing on Windows](windows.md)
+- [Installing on Mac](mac.md)
+- [Troubleshot](troubleshot.md)
  
 ## Contributing 
 

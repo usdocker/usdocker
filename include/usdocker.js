@@ -255,9 +255,9 @@ module.exports = {
         // Connect stdin
         let isRaw = process.isRaw;
         process.stdin.resume();
-        process.stdin.setEncoding('utf8');
+        //process.stdin.setEncoding('utf8');
         if (process.stdout.isTTY === true) {
-            process.stdin.setRawMode(true);
+            process.stdin.setRawMode(isRaw);
         }
         process.stdin.pipe(stream);
 

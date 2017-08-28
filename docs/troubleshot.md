@@ -1,6 +1,6 @@
 # Troubleshoting
 
-## I am installing a script and I am getting an error
+## I am installing a script and I am getting the error 'Error: EBUSY: resource busy or locked'
 
 Try:
 

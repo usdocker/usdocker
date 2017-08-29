@@ -6,6 +6,7 @@ const program = require('commander');
 const ScriptContainer = require('./include/scriptcontainer');
 const usdockerhelper = require('./include/usdocker');
 const Output = require('./include/output');
+const fs = require('fs');
 const fsutil = require('./include/fsutil');
 const path = require('path');
 
@@ -38,6 +39,7 @@ program
     .option('-v, --verbose','Print extra information')
     .option('--yes', 'answer YES to any question')
     .option('--no', 'answer NO to any question')
+    .option('--reset-config', 'reset all config to the default values')
     .option('--reset-datadir', 'reset all user data. Be careful because this operation is not reversible!')
     .option('--reset-userdir', 'reset all config user data. Be careful because this operation is not reversible!')
     .on('--help', function(){
@@ -83,6 +85,27 @@ try {
         }
         usdockerhelper.run(sc, script, 'setup', false, output);
         config = usdockerhelper.config(script);
+    }
+
+    if (program.resetConfig) {
+        if (!script) {
+            throw new Error('You have to specify the script in order to use --reset-config');
+        }
+        found = true;
+        usdockerhelper.ask(
+            'Are you sure you want to reset the config to the default values?',
+            false,
+            program.yes,
+            program.no,
+            function() {
+                fs.unlinkSync(config.path());
+                output.print('Config reset');
+                process.exit(0);
+            },
+            function() {
+                output.print('Cancelled!');
+            }
+        );
     }
 
     if (program.resetDatadir) {

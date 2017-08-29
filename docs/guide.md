@@ -137,7 +137,7 @@ You'll use the `config` define in the code above. There are three important meth
 
 - config.setEmpty(key, value) - if "key" does not exists this will create a variable called "key" 
     with the value "value" or do nothing if exists;
-- config.copyToUserDir(__diname + "/conf") - this will copy the template config to the directory
+- config.copyToUserDir(path.join(__diname, "conf")) - this will copy the template config to the directory
     $HOME/.usdocker/myawesome/confg.  
 
 ```javascript
@@ -147,7 +147,7 @@ setup: function(callback)
     config.setEmpty('folder', config.getDataDir());
     config.setEmpty('port', 44444);
 
-    config.copyToUserDir(__dirname + '/conf');
+    config.copyToUserDir(path.join(__dirname, 'conf'));
     callback(null, 'setup loaded for ' + SCRIPTNAME);
 }
 ```

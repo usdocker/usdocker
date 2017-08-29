@@ -1,5 +1,6 @@
 const ConfigObject = require('../../include/config');
 const fs = require('fs');
+const path = require('path');
 const fsutil = require('../../include/fsutil');
 
 let config;
@@ -78,21 +79,21 @@ test('Test set and get nested keys', () => {
 
 test('Test creating config user dir', () => {
     expect(fs.existsSync('/tmp/.usdocker/setup/mymodule/mockdir')).toBe(false);
-    let result = config.copyToUserDir(__dirname + '/mockdir');
+    let result = config.copyToUserDir(path.join(__dirname, 'mockdir'));
     expect(result).toBe(undefined);
     expect(fs.existsSync('/tmp/.usdocker/setup/mymodule/mockdir')).toBe(true);
     expect(fs.existsSync('/tmp/.usdocker/setup/mymodule/mockdir/justfortest.txt')).toBe(true);
-    let result2 = config.copyToUserDir(__dirname + '/mockdir');
+    let result2 = config.copyToUserDir(path.join(__dirname, 'mockdir'));
     expect(result2).toBe(true);
 });
 
 test('Test creating config data dir', () => {
     expect(fs.existsSync('/tmp/.usdocker/data/mymodule/mockdir')).toBe(false);
-    let result = config.copyToDataDir(__dirname + '/mockdir');
+    let result = config.copyToDataDir(path.join(__dirname, 'mockdir'));
     expect(result).toBe(undefined);
     expect(fs.existsSync('/tmp/.usdocker/data/mymodule/mockdir')).toBe(true);
     expect(fs.existsSync('/tmp/.usdocker/data/mymodule/mockdir/justfortest.txt')).toBe(true);
-    let result2 = config.copyToDataDir(__dirname + '/mockdir');
+    let result2 = config.copyToDataDir(path.join(__dirname, 'mockdir'));
     expect(result2).toBe(true);
 });
 
@@ -120,6 +121,6 @@ test('Test store an object and retrieve data', () => {
 
 test('Check error treatment for user dir inexistant', () => {
     expect(() => {
-        config.copyToUserDir(__dirname + '/does-not-exists');
+        config.copyToUserDir(path.join(__dirname, 'does-not-exists'));
     }).toThrow();
 });

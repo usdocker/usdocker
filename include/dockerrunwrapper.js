@@ -12,7 +12,7 @@ function pushArray(source, array, prefix) {
 
 let hostConfigMapping = {
     'AutoRemove': {'cmdLine': '--rm', 'type': 'boolean'},
-    'Binds': {'cmdLine': '-v', 'type': 'string'},
+    'Binds': {'cmdLine': '-v', 'type': 'string', 'quoted': true},
     'Links': {'cmdLine': '--link', 'type': 'string'},
     'CapAdd': {'cmdLine': '--cap-add', 'type': 'string'},
     'Ulimits': {'cmdLine': '--ulimit', 'type': 'string', 'format': '%Name%=%Soft%:%Hard%'},
@@ -21,12 +21,12 @@ let hostConfigMapping = {
 
 function pushString(source, str, prefix) {
     if (str.toString().trim() !== '') {
-        let parts = str.toString().match(/"[^"]+"\b|\S+/g);
+        let parts = str.toString().match(/"[^"]+"|\S+/g);
         if (parts.length === 1) {
             if (prefix) {
                 source.push(prefix);
             }
-            source.push(parts[0].replace('\\s', ' '));
+            source.push(parts[0].replace('@.@', ' '));
         } else {
             pushArray(source, parts);
         }
@@ -303,6 +303,9 @@ class DockerRunWrapper extends DockerWrapper {
                         });
                         item = formattedItem;
                     }
+                    if (hostConfigMapping[key]['quoted'] === true) {
+                        item = '"' + item + '"';
+                    }
                     pushString(dockerCmd, hostConfigMapping[key]['cmdLine'] + ' ' + item);
                 });
             }
@@ -310,7 +313,7 @@ class DockerRunWrapper extends DockerWrapper {
 
         pushArray(dockerCmd, this.environment.map(function (value) {
             if (value.indexOf(' ') >= 0) {
-                value = value.replace(' ', '\\s');
+                value = value.replace(' ', '@.@');
                 value = value.replace('=', '="').replace(/$/, '"');
             }
             return value;

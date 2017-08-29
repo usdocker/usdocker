@@ -129,7 +129,7 @@ test('Container creation volume', () => {
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -v /home/jg:/srv/web -v /etc/test:/etc/test -v C:/data:/folder -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -v "/home/jg:/srv/web" -v "/etc/test:/etc/test" -v "C:/data:/folder" -d test/image');
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
@@ -142,6 +142,38 @@ test('Container creation volume', () => {
         'HostConfig': {
             'AutoRemove': false,
             'Binds': ['/home/jg:/srv/web', '/etc/test:/etc/test', 'C:/data:/folder'],
+            'Links': [],
+            'PortBindings': {}
+        },
+        'Image': 'test/image',
+        'OpenStdin': false,
+        'StdinOnce': false,
+        'Tty': false,
+        'name': 'mycontainer'
+    });
+});
+
+test('Container creation volume with spaces', () => {
+    let result = docker
+        .containerName('mycontainer')
+        .volume('C:\\Users\\User name\\.usdocker\\service', '/srv/service')
+        .isDetached(true)
+        .imageName('test/image')
+        .buildConsole()
+        .join(' ');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -v "C:\\Users\\User name\\.usdocker\\service:/srv/service" -d test/image');
+
+    let result2 = docker.buildApi();
+    expect(result2).toEqual({
+        'AttachErr': true,
+        'AttachStdin': false,
+        'AttachStdout': true,
+        'Cmd': [],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Env': [],
+        'HostConfig': {
+            'AutoRemove': false,
+            'Binds': ['C:\\Users\\User name\\.usdocker\\service:/srv/service'],
             'Links': [],
             'PortBindings': {}
         },
@@ -294,7 +326,7 @@ test('Container creation with all togheter', () => {
     expect(result).toBe(
         '-H unix:///var/run/docker.sock '
         + 'run --name mycontainer '
-        + '-v /home/jg:/srv/web -v /etc/test:/etc/test '
+        + '-v "/home/jg:/srv/web" -v "/etc/test:/etc/test" '
         + '--link mysql:mysql --link redis:redis '
         + '--ulimit memlock=1000:-1 --cap-add IPC_LOCK -e TZ=America/Sao_Paulo '
         + '-e APPLICATION_ENV=test -p 3306:3306 -p 80:80 '

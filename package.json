@@ -1,5 +1,5 @@
 {
-  "name": "usdocker",
+  "name": "@usdocker/usdocker",
   "version": "1.0.9",
   "description": "A collection of Useful Scripts for Docker http://usdocker.com",
   "main": "./include/usdocker.js",

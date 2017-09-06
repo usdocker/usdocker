@@ -5,8 +5,7 @@
   "main": "usdocker___SERVICE__.js",
   "scripts": {
     "test": "./node_modules/.bin/eslint *.js",
-    "preinstall": "npm i -g usdocker",
-    "postinstall": "./node_modules/.bin/usdocker -rv"
+    "postinstall": "usdocker -rv"
   },
   "keywords": [
     "usdocker",
@@ -16,7 +15,7 @@
     "type": "git",
     "url": "git://github.com/usdocker/usdocker-__SERVICE__.git"
   },
-  "author": "joao@byjg.com.br",
+  "author": "i@am.com",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^4.4.1"

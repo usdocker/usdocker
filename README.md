@@ -1,5 +1,5 @@
 # usdocker 
-[![NPM version](https://badge.fury.io/js/usdocker.svg)](https://npmjs.org/package/usdocker) 
+[![npm version](https://badge.fury.io/js/%40usdocker%2Fusdocker.svg)](https://badge.fury.io/js/%40usdocker%2Fusdocker)
 [![Build Status](https://travis-ci.org/usdocker/usdocker.svg?branch=master)](https://travis-ci.org/usdocker/usdocker)
 
 > A collection of Useful Scripts for Docker http://usdocker.com

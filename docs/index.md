@@ -1,5 +1,5 @@
 # USDocker - Useful Scripts for Docker
-[![NPM version](https://badge.fury.io/js/usdocker.svg)](https://npmjs.org/package/usdocker) 
+[![npm version](https://badge.fury.io/js/%40usdocker%2Fusdocker.svg)](https://badge.fury.io/js/%40usdocker%2Fusdocker)
 [![Build Status](https://travis-ci.org/usdocker/usdocker.svg?branch=master)](https://travis-ci.org/usdocker/usdocker)
 
 USDocker is a colletion of useful scripts to make easier brings a service up, down the service, check status
@@ -30,10 +30,11 @@ but a usefull script running on top of USDocker library.
 The install will be:
 
 ```bash
-npm install -g usdocker-<SCRIPT\>
+npm install -g @usdocker/usdocker  # This package is mandatory
+npm install -g usdocker-<SCRIPT\>  # Here the USDocker package.
 ``` 
 
-See below the list of official scripts available:
+See below the list of official scripts available, documentation and how to install it:
 - [elasticsearch](https://github.com/usdocker/usdocker-elastic)
 - [jekyll]
 - [lemp](https://github.com/usdocker/usdocker-lemp) (Linux+Nginx+MySQL+PHP)

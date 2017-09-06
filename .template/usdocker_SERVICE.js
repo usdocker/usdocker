@@ -1,6 +1,6 @@
 'use strict';
 
-const usdocker = require('usdocker');
+const usdocker = require('@usdocker/usdocker');
 //const path = require('path');
 
 const SCRIPTNAME = '__SERVICE__';

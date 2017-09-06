@@ -48,7 +48,7 @@ class ScriptContainer {
      * @returns {true|false|null} True if it is created; False if it is loaded; null if get from cache.
      */
     load(force) {
-        if (this.isLoaded() && force !== true) {
+        if (this.isLoaded() && force !== true && typeof force !== 'string') {
             return false;
         }
 
@@ -60,7 +60,10 @@ class ScriptContainer {
             }
         }
 
-        if (force !== undefined && typeof force === 'string') {
+        if (force === true) {
+            this._searchDir = [ path.join(__dirname, '..', '..', '..') ];
+        } 
+        else if (force !== undefined && typeof force === 'string') {
             force = path.resolve(force);
             if (!fs.existsSync(force)) {
                 throw new Error('The path "' + force + '" for refresh does not exists');

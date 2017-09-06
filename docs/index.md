@@ -178,7 +178,7 @@ and do basic operations like PULL, RUN, STOP and others.
 Here an example:
 
 ```javascript
-const usdocker = require('usdocker');
+const usdocker = require('@usdocker/usdocker');
 
 let docker = usdocker.dockerRunWrapper(configGlobal);
 docker

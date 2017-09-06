@@ -46,7 +46,7 @@ The contents of your file is looking like to:
 ```javascript
 'use strict';
 
-const usdocker = require('usdocker');
+const usdocker = require('@usdocker/usdocker');
 //const path = require('path');
 
 const SCRIPTNAME = 'myawesome';

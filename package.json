@@ -1,6 +1,6 @@
 {
   "name": "@usdocker/usdocker",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "A collection of Useful Scripts for Docker http://usdocker.com",
   "main": "./include/usdocker.js",
   "scripts": {

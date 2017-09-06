@@ -7,12 +7,19 @@
 ## Description
 
 USDocker is a npm package that enables you to run services from Docker Images but you dont need
-know docker. You'll have instant appliciances.
+know docker. You'll have instant appliances.
 
-This package is base from the packages services. There are so many services created. 
+## Installation
 
-[Click here](https://github.com/usdocker/usdocker/blob/master/docs/index.md) 
-to learn how to create your scripts, install and the list of packages using USDocker.
+This package is base from the packages services. 
+Please visit the [documentation](https://github.com/usdocker/usdocker/blob/master/docs/index.md) 
+to learn how to create your scripts, install and get the list of packages using USDocker.
+
+The main package:
+
+```bash
+npm i -g @usdocker/usdocker
+```
 
 ## Example
 

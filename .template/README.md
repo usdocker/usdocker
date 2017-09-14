@@ -8,6 +8,7 @@ You don't have know docker to use this solution.
 ```bash
 npm install -g @usdocker/usdocker  # Install it first
 npm install -g usdocker-__SERVICE__
+usdocker -r    # Update USDocker database
 ```
 
 ## Start the __SERVICE__ service

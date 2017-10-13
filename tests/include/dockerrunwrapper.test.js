@@ -90,12 +90,12 @@ test('Container creation with ports', () => {
     let result = docker
         .containerName('mycontainer')
         .port(3306, 3306)
-        .port(80, 80)
+        .port('192.168.1.170:80', 80)
         .isDetached(true)
         .imageName('test/image')
         .buildConsole()
         .join(' ');
-    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -p 3306:3306 -p 80:80 -d test/image');
+    expect(result).toBe('-H unix:///var/run/docker.sock run --name mycontainer -p 3306:3306 -p 192.168.1.170:80:80 -d test/image');
 
     let result2 = docker.buildApi();
     expect(result2).toEqual({
@@ -109,7 +109,20 @@ test('Container creation with ports', () => {
             'AutoRemove': false,
             'Binds': [],
             'Links': [],
-            'PortBindings': {'3306/tcp': [{'HostPort': '3306'}], '80/tcp': [{'HostPort': '80'}]}
+            'PortBindings': {
+                '3306/tcp': [
+                    {
+                        'HostIp': '0.0.0.0',
+                        'HostPort': '3306'
+                    }
+                ],
+                '80/tcp': [
+                    {
+                        'HostIp': '192.168.1.170',
+                        'HostPort': '80'
+                    }
+                ]
+            }
         },
         'Image': 'test/image',
         'OpenStdin': false,
@@ -308,7 +321,7 @@ test('Container creation with all togheter', () => {
     let result = docker
         .containerName('mycontainer')
         .port(3306, 3306)
-        .port(80, 80)
+        .port('192.168.1.100:80', 80)
         .volume('/home/jg', '/srv/web')
         .volume('/etc/test', '/etc/test')
         .env('TZ', 'America/Sao_Paulo')
@@ -329,7 +342,7 @@ test('Container creation with all togheter', () => {
         + '-v "/home/jg:/srv/web" -v "/etc/test:/etc/test" '
         + '--link mysql:mysql --link redis:redis '
         + '--ulimit memlock=1000:-1 --cap-add IPC_LOCK -e TZ=America/Sao_Paulo '
-        + '-e APPLICATION_ENV=test -p 3306:3306 -p 80:80 '
+        + '-e APPLICATION_ENV=test -p 3306:3306 -p 192.168.1.100:80:80 '
         + '-d test/image bash ls'
     );
 
@@ -347,7 +360,20 @@ test('Container creation with all togheter', () => {
             'CapAdd': ['IPC_LOCK'],
             'Ulimits': [{'Name':'memlock', 'Soft':'1000', 'Hard':'-1'}],
             'Links': ['mysql:mysql', 'redis:redis'],
-            'PortBindings': {'3306/tcp': [{'HostPort': '3306'}], '80/tcp': [{'HostPort': '80'}]}
+            'PortBindings': {
+                '3306/tcp': [
+                    {
+                        'HostIp': '0.0.0.0',
+                        'HostPort': '3306'
+                    }
+                ],
+                '80/tcp': [
+                    {
+                        'HostIp': '192.168.1.100',
+                        'HostPort': '80'
+                    }
+                ]
+            }
         },
         'Image': 'test/image',
         'OpenStdin': false,

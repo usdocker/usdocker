@@ -67,7 +67,7 @@ class DockerRunWrapper extends DockerWrapper {
 
     /**
      * Map the port. Equals to -p parameter
-     * @param {int} host Port on host (if empty returns the string "host:container"
+     * @param {int} Port on host. May be - port or ip:port. If empty returns an array with "host_ip:port_on_host:container"
      * @param {int} container Port on container
      * @returns {Array|DockerRunWrapper}
      */
@@ -337,7 +337,17 @@ class DockerRunWrapper extends DockerWrapper {
         let portsBindings = {};
         for(let i=0; i<this.ports.length; i++) {
             let ports = this.ports[i].split(':');
-            portsBindings[ports[1] + '/tcp'] = [ { 'HostPort': ports[0].toString() } ];
+            let binding = {
+                'HostIp': '0.0.0.0',
+                'HostPort': ports[0].toString()
+            };
+            let dockerPort = ports[1];
+            if (ports.length === 3) {
+                binding.HostIp = ports[0];
+                binding.HostPort = ports[1];
+                dockerPort = ports[2];
+            }
+            portsBindings[dockerPort + '/tcp'] = [ binding ];
         }
 
         let sendHostConfig = JSON.parse(JSON.stringify(this.hostConfig));

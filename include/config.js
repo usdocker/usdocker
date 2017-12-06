@@ -32,19 +32,19 @@ class Config {
     constructor(script, alternateHome) {
 
         this.nconf = requireUncached('nconf');
-        
-        if (alternateHome === undefined) {
-            alternateHome = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+        this._baseHome = alternateHome;
+        if (!this._baseHome) {
+            this._baseHome = process.cwd();
             if (process.env.USDOCKER_HOME) {
-                alternateHome = process.env.USDOCKER_HOME; 
+                this._baseHome = process.env.USDOCKER_HOME;
             }
         }
 
         if (!script) {
             script = '';
         }
-        this._configPath = path.join(alternateHome, '.usdocker', 'setup', script);
-        this._configDataPath = path.join(alternateHome, '.usdocker', 'data', script);
+        this._configPath = path.join(this._baseHome, '.usdocker', 'setup', script);
+        this._configDataPath = path.join(this._baseHome, '.usdocker', 'data', script);
         this._configJson = path.join(this._configPath, 'environment.json');
         fsutil.makeDirectory(this._configPath);
         fsutil.makeDirectory(this._configDataPath);
@@ -93,6 +93,10 @@ class Config {
      */
     copyToDataDir(source) {
         return copyConfig(source, this._configDataPath);
+    }
+
+    getUsdockerHome() {
+        return this._baseHome;
     }
 
     /**

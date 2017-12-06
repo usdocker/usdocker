@@ -415,9 +415,9 @@ module.exports = {
      * Return a new Config object with Global setup
      * @returns {Config}
      */
-    configGlobal() {
+    configGlobal(usdockerHome) {
         if (!_configGlobal) {
-            _configGlobal = new Config();
+            _configGlobal = new Config(null, usdockerHome);
         }
         return _configGlobal;
     },

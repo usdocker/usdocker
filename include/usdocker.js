@@ -80,6 +80,13 @@ module.exports = {
     up(instance, dockerRunWrapper, callback) {
         let me = this;
         this.pull(dockerRunWrapper.imageName(), function () {
+            // If there is no link argument, just run;
+            if (!me.configGlobal().program.link) {
+                me.runUsingApi(dockerRunWrapper, callback);
+                return;
+            }
+
+            // The the instance link with the running components;
             dockerRunWrapper.linkRunning(function() {
                 callback(null, 'started creation of instance ' + instance + '\nLinked with:\n - ' + dockerRunWrapper.link().join('\n - '));
                 me.runUsingApi(dockerRunWrapper, callback);

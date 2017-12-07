@@ -41,6 +41,7 @@ program
     .option('--yes', 'answer YES to any question')
     .option('--no', 'answer NO to any question')
     .option('--home <path>', 'The home directory for USDOCKER. May also be setting using USDOCKER_HOME environment variable')
+    .option('--no-link', 'No link the current container with the running containers')
     .option('--reset-config', 'reset all config to the default values')
     .option('--reset-datadir', 'reset all user data. Be careful because this operation is not reversible!')
     .option('--reset-userdir', 'reset all config user data. Be careful because this operation is not reversible!')
@@ -76,7 +77,7 @@ try {
         output.verbosity = true;
     }
 
-    initializeConfig(program.home);
+    initializeConfig(program);
 
     if (configGlobal.get('docker-host').match(/machine:/)) {
         output.warn('WARNING: Docker-machine environment set to ' + configGlobal.get('docker-host'));
@@ -224,8 +225,9 @@ try {
 }
 
 
-function initializeConfig(usdockerHome) {
-    configGlobal = usdockerhelper.configGlobal(usdockerHome);
+function initializeConfig(program) {
+    configGlobal = usdockerhelper.configGlobal(program.home);
+    configGlobal.program = program;
     sc = new ScriptContainer(configGlobal);
 }
 

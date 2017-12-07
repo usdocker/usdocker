@@ -32,6 +32,7 @@ class Config {
     constructor(script, alternateHome) {
 
         this.nconf = requireUncached('nconf');
+        this.program = null; // Only set in config global and contain all command line options;
         this._baseHome = alternateHome;
         if (!this._baseHome) {
             this._baseHome = process.cwd();

@@ -57,26 +57,28 @@ After created your script you may want add to this list creating a pull request.
 ## Most common Useful Scripts commands
 
 ```
-Usage: usdocker <script> [options] [command] 
+  Usage: usdocker <script> [options] [command] 
 
   USDocker is a colletion of useful scripts to make easier brings a service up or down, check status and a lot of other features.
 
-
   Options:
 
-    -V, --version         output the version number
-    -d, --dump            Dump the scripts options
-    --dump-global         Dump the global options
-    -s, --set <key-pair>  Set a script configuration. Key-pair is key=value
-    -g, --get <key>       Get a script option
-    --global <key-pair>   Set a global configuration for usdocker. Key-pair is key=value
-    -r, --refresh         refresh the list of available scripts
-    -v, --verbose         Print extra information
-    --yes                 answer YES to any question
-    --no                  answer NO to any question
-    --reset-datadir       reset all user data. Be careful because this operation is not reversible!
-    --reset-userdir       reset all config user data. Be careful because this operation is not reversible!
-    -h, --help            output usage information
+    -V, --version                 output the version number
+    -d, --dump                    Dump the scripts options
+    --dump-global                 Dump the global options
+    -s, --set <key-pair>          Set a script configuration. Key-pair is key=value (default: )
+    -g, --get <key>               Get a script option (default: )
+    --global <key-pair>           Set a global configuration for usdocker. Key-pair is key=value (default: )
+    -r, --refresh [searchFolder]  refresh the list of available scripts
+    -v, --verbose                 Print extra information
+    --yes                         answer YES to any question
+    --no                          answer NO to any question
+    --home <path>                 The home directory for USDOCKER. May also be setting using USDOCKER_HOME environment variable
+    --no-link                     No link the current container with the running containers (default: true)
+    --reset-config                reset all config to the default values
+    --reset-datadir               reset all user data. Be careful because this operation is not reversible!
+    --reset-userdir               reset all config user data. Be careful because this operation is not reversible!
+    -h, --help                    output usage information
 ```
 
 ### Refreshing USDocker local database
@@ -84,7 +86,25 @@ Usage: usdocker <script> [options] [command]
 After install a new script you have to refresh the LIST by using:
 
 ```bash
-usdocker -rv
+usdocker -rv    # based on the current usdocker installation
+usdocker -v --refresh <folder>   # based on a specific folder
+```
+
+### Link the container with running containers. 
+
+By the default a USDocker container is linked with the current running containers. 
+
+For example:
+
+```bash
+usdocker mysql up      # Will up the the MySQL container
+usdocker wordpress up  # Will up the wordpress and link with the MySQL container automatically
+```
+
+This behavior can be override using the `--no-link` argument:
+
+```bash
+usdocker wordpress --no-link up  # Will up the wordpress without link with any container. 
 ```
 
 ### Running with extra information

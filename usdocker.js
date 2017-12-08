@@ -83,6 +83,16 @@ try {
         output.warn('WARNING: Docker-machine environment set to ' + configGlobal.get('docker-host'));
     }
 
+    if (program.refresh) {
+        argParsed();
+        if (typeof program.refresh === 'string') {
+            program.refresh = path.resolve(program.refresh);
+            output.warn('Using custom location: ' + program.refresh);
+        }
+        sc.load(program.refresh);
+        output.print(null, 'usdocker database refreshed');
+    }
+
     if (script) {
         if (!sc.existsScript(script)) {
             throw new Error('Script "' + script + '" does not exists.');
@@ -150,16 +160,6 @@ try {
                 output.print('Cancelled!');
             }
         );
-    }
-
-    if (program.refresh) {
-        argParsed();
-        if (typeof program.refresh === 'string') {
-            program.refresh = path.resolve(program.refresh);
-            output.warn('Using custom location: ' + program.refresh);
-        }
-        sc.load(program.refresh);
-        output.print(null, 'usdocker database refreshed');
     }
 
     if (program.global.length !== 0) {

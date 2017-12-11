@@ -2,7 +2,7 @@
 
 'use strict';
 
-const program = require('commander');
+global.program = require('commander');
 const ScriptContainer = require('./include/scriptcontainer');
 const usdockerhelper = require('./include/usdocker');
 const Output = require('./include/output');
@@ -25,7 +25,7 @@ function collect(val, memo) {
     return memo;
 }
 
-program
+global.program
     .version(version)
     .usage('<script> [options] [command] ')
     .description('USDocker is a colletion of useful scripts to make easier brings a service up or down, ' +
@@ -67,29 +67,29 @@ program
 
 
 try {
-    program.parse(process.argv);
+    global.program.parse(process.argv);
 
-    script = program.args[0];
-    command = program.args[1];
+    script = global.program.args[0];
+    command = global.program.args[1];
     let config = null;
 
-    if (program.verbose) {
+    if (global.program.verbose) {
         output.verbosity = true;
     }
 
-    initializeConfig(program);
+    initializeConfig();
 
     if (configGlobal.get('docker-host').match(/machine:/)) {
         output.warn('WARNING: Docker-machine environment set to ' + configGlobal.get('docker-host'));
     }
 
-    if (program.refresh) {
+    if (global.program.refresh) {
         argParsed();
-        if (typeof program.refresh === 'string') {
-            program.refresh = path.resolve(program.refresh);
-            output.warn('Using custom location: ' + program.refresh);
+        if (typeof global.program.refresh === 'string') {
+            global.program.refresh = path.resolve(global.program.refresh);
+            output.warn('Using custom location: ' + global.program.refresh);
         }
-        sc.load(program.refresh);
+        sc.load(global.program.refresh);
         output.print(null, 'usdocker database refreshed');
     }
 
@@ -101,7 +101,7 @@ try {
         config = usdockerhelper.config(script);
     }
 
-    if (program.resetConfig) {
+    if (global.program.resetConfig) {
         if (!script) {
             throw new Error('You have to specify the script in order to use --reset-config');
         }
@@ -109,8 +109,8 @@ try {
         usdockerhelper.ask(
             'Are you sure you want to reset the config to the default values?',
             false,
-            program.yes,
-            program.no,
+            global.program.yes,
+            global.program.no,
             function() {
                 fs.unlinkSync(config.path());
                 output.print('Config reset');
@@ -122,7 +122,7 @@ try {
         );
     }
 
-    if (program.resetDatadir) {
+    if (global.program.resetDatadir) {
         if (!script) {
             throw new Error('You have to specify the script in order to use --reset-datadir');
         }
@@ -130,8 +130,8 @@ try {
         usdockerhelper.ask(
             'Are you sure you want to reset the "data" dir (operation is not reversible)?',
             false,
-            program.yes,
-            program.no,
+            global.program.yes,
+            global.program.no,
             function() {
                 fsutil.removeDirectoryRecursive(config.getDataDir());
                 output.print('Data dir was deleted!');
@@ -142,7 +142,7 @@ try {
         );
     }
 
-    if (program.resetUserdir) {
+    if (global.program.resetUserdir) {
         if (!script) {
             throw new Error('You have to specify the script in order to use --reset-userdir');
         }
@@ -150,8 +150,8 @@ try {
         usdockerhelper.ask(
             'Are you sure you want to reset the "user" dir (operation is not reversible)?',
             false,
-            program.yes,
-            program.no,
+            global.program.yes,
+            global.program.no,
             function() {
                 fsutil.removeDirectoryRecursive(config.getUserDir());
                 output.print('User dir was deleted!');
@@ -162,10 +162,10 @@ try {
         );
     }
 
-    if (program.global.length !== 0) {
+    if (global.program.global.length !== 0) {
         argParsed();
-        for (let i=0; i<program.global.length; i++) {
-            let setParts = program.global[i].split('=');
+        for (let i=0; i<global.program.global.length; i++) {
+            let setParts = global.program.global[i].split('=');
             if (setParts.length !== 2) throw new Error('Invalid key pair set');
             let oldValue = configGlobal.get(setParts[0]);
             configGlobal.set(setParts[0], setParts[1]);
@@ -173,17 +173,17 @@ try {
         }
     }
 
-    if (program.get.length !== 0 && script) {
+    if (global.program.get.length !== 0 && script) {
         argParsed();
-        for (let i=0; i<program.get.length; i++) {
-            output.print(program.get[i] + '=' + config.get(program.get[i]));
+        for (let i=0; i<global.program.get.length; i++) {
+            output.print(global.program.get[i] + '=' + config.get(global.program.get[i]));
         }
     }
 
-    if (program.set.length !== 0 && script) {
+    if (global.program.set.length !== 0 && script) {
         argParsed();
-        for (let i=0; i<program.set.length; i++) {
-            let setParts = program.set[i].split('=');
+        for (let i=0; i<global.program.set.length; i++) {
+            let setParts = global.program.set[i].split('=');
             if (setParts.length !== 2) throw new Error('Invalid key pair set');
             let oldValue = config.get(setParts[0]);
             config.set(setParts[0], setParts[1]);
@@ -191,12 +191,12 @@ try {
         }
     }
 
-    if (program.dumpGlobal) {
+    if (global.program.dumpGlobal) {
         argParsed();
         output.print(configGlobal.dump());
     }
 
-    if (program.dump && script) {
+    if (global.program.dump && script) {
         argParsed();
         output.print(config.dump());
     }
@@ -209,25 +209,24 @@ try {
             command,
             false,
             output,
-            program.args.slice(2),
+            global.program.args.slice(2),
             {
-                yes: program.yes,
-                no: program.no
+                yes: global.program.yes,
+                no: global.program.no
             }
         );
     }
 
     if ((!script && !isArgParsed) || (script && !command && !isArgParsed)) {
-        program.outputHelp();
+        global.program.outputHelp();
     }
 } catch (err) {
     output.printErr(err);
 }
 
 
-function initializeConfig(program) {
-    configGlobal = usdockerhelper.configGlobal(program.home);
-    configGlobal.program = program;
+function initializeConfig() {
+    configGlobal = usdockerhelper.configGlobal();
     sc = new ScriptContainer(configGlobal);
 }
 

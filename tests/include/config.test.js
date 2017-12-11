@@ -15,11 +15,14 @@ afterEach(() => {
 });
 
 test('Check directories name', () => {
-    expect(fs.statSync('/tmp/.usdocker/setup/mymodule').isDirectory()).toBe(true);
-    expect(fs.statSync('/tmp/.usdocker/data/mymodule').isDirectory()).toBe(true);
+    expect(fs.existsSync('/tmp/.usdocker/setup/mymodule')).toBe(false);
+    expect(fs.existsSync('/tmp/.usdocker/data/mymodule')).toBe(false);
 
     expect(config.getUserDir('test')).toBe('/tmp/.usdocker/setup/mymodule/test');
     expect(config.getDataDir()).toBe('/tmp/.usdocker/data/mymodule');
+
+    expect(fs.statSync('/tmp/.usdocker/setup/mymodule').isDirectory()).toBe(true);
+    expect(fs.statSync('/tmp/.usdocker/data/mymodule').isDirectory()).toBe(true);
 });
 
 test('Test set and get config', () => {

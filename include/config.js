@@ -30,52 +30,59 @@ class Config {
      * @param {string} alternateHome (optional) Setup an alternate home directory
      */
     constructor(script, alternateHome) {
-
-        this.nconf = requireUncached('nconf');
-        this.program = null; // Only set in config global and contain all command line options;
+        this.program = !global.program ? null : global.program;
         this._baseHome = alternateHome;
-        if (!this._baseHome) {
-            this._baseHome = process.cwd();
-            if (process.env.USDOCKER_HOME) {
-                this._baseHome = process.env.USDOCKER_HOME;
+        this._script = script;
+        this._configPath = null;
+        this._configJson = null;
+        this._configDataPath = null;
+        this._nconf = null;
+    }
+
+    getConf() {
+        if (!this._nconf) {
+            this._nconf = requireUncached('nconf');
+            this._nconf.use('file', { file: this.path() });
+            this.reload();
+
+            // Setting defaults for global
+            if (!this.getScript()) {
+                this.setEmpty('version', require('../package.json').version);
+                this.setEmpty('container-suffix', '-container');
+                this.setEmpty('timezone', this.getLocalTimeZone());
+                this.setEmpty('docker-host', '/var/run/docker.sock');
+                this.setEmpty('mappingDirFrom', '/mnt/c/');
+                this.setEmpty('mappingDirTo', 'C:/');
             }
         }
-
-        if (!script) {
-            script = '';
-        }
-        this._configPath = path.join(this._baseHome, '.usdocker', 'setup', script);
-        this._configDataPath = path.join(this._baseHome, '.usdocker', 'data', script);
-        this._configJson = path.join(this._configPath, 'environment.json');
-        fsutil.makeDirectory(this._configPath);
-        fsutil.makeDirectory(this._configDataPath);
-
-        this.nconf.use('file', { file: this._configJson });
-        this.reload();
-
-        // Setting defaults for global
-        if (script === '') {
-            this.setEmpty('version', require('../package.json').version);
-            this.setEmpty('container-suffix', '-container');
-            this.setEmpty('timezone', this.getLocalTimeZone());
-            this.setEmpty('docker-host', '/var/run/docker.sock');
-            this.setEmpty('mappingDirFrom', '/mnt/c/');
-            this.setEmpty('mappingDirTo', 'C:/');
-        }
+        return this._nconf;
     }
 
     /**
      * Force reload from disk
      */
     reload() {
-        this.nconf.load();
+        this.getConf().load();
     }
 
     /**
      * Save configuration to disk
      */
     save() {
-        this.nconf.save();
+        this.getConf().save();
+    }
+
+    getScript() {
+        return !this._script ? '' : this._script;
+    }
+
+    getConfigPath() {
+        if (!this._configPath) {
+            this._configPath = path.join(this.getUsdockerHome(), '.usdocker', 'setup', this.getScript());
+            this._configJson = path.join(this._configPath, 'environment.json');
+            fsutil.makeDirectory(this._configPath);
+        }
+        return this._configPath;
     }
 
     /**
@@ -84,7 +91,7 @@ class Config {
      * @returns {boolean}
      */
     copyToUserDir(source) {
-        return copyConfig(source, this._configPath);
+        return copyConfig(source, this.getConfigPath());
     }
 
     /**
@@ -93,10 +100,18 @@ class Config {
      * @returns {boolean}
      */
     copyToDataDir(source) {
-        return copyConfig(source, this._configDataPath);
+        return copyConfig(source, this.getDataDir());
     }
 
     getUsdockerHome() {
+        if (!this._baseHome) {
+            this._baseHome = process.cwd();
+            if (this.program && this.program.home) {
+                this._baseHome = this.program.home;
+            } else if (process.env.USDOCKER_HOME) {
+                this._baseHome = process.env.USDOCKER_HOME;
+            }
+        }
         return this._baseHome;
     }
 
@@ -106,7 +121,7 @@ class Config {
      * @returns {string}
      */
     getUserDir(name) {
-        return path.join(this._configPath, name ? name : '');
+        return path.join(this.getConfigPath(), name ? name : '');
     }
 
     /**
@@ -114,6 +129,10 @@ class Config {
      * @returns {string}
      */
     getDataDir() {
+        if (!this._configDataPath) {
+            this._configDataPath = path.join(this._baseHome, '.usdocker', 'data', this.getScript());
+            fsutil.makeDirectory(this._configDataPath);
+        }
         return path.join(this._configDataPath);
     }
 
@@ -123,7 +142,7 @@ class Config {
      * @param {string|array} value
      */
     set(key, value) {
-        this.nconf.set(key, value);
+        this.getConf().set(key, value);
         this.save();
     }
 
@@ -145,7 +164,7 @@ class Config {
      * @returns {*}
      */
     get(key, defaultValue) {
-        let result = this.nconf.get(key);
+        let result = this.getConf().get(key);
         if (result === undefined) {
             return defaultValue;
         }
@@ -157,7 +176,7 @@ class Config {
      * @param {string} key
      */
     clear(key) {
-        this.nconf.clear(key);
+        this.getConf().clear(key);
         this.save();
     }
 
@@ -165,7 +184,7 @@ class Config {
      * Dump the config
      */
     dump() {
-        return fs.readFileSync(this._configJson).toString();
+        return fs.readFileSync(this.path()).toString();
     }
 
     /**
@@ -178,6 +197,9 @@ class Config {
     }
 
     path() {
+        if (!this._configJson) {
+            this.getConfigPath();
+        }
         return this._configJson;
     }
 

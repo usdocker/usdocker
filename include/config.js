@@ -111,6 +111,7 @@ class Config {
             } else if (process.env.USDOCKER_HOME) {
                 this._baseHome = process.env.USDOCKER_HOME;
             }
+            this._baseHome = path.resolve(this._baseHome);
         }
         return this._baseHome;
     }
@@ -130,7 +131,7 @@ class Config {
      */
     getDataDir() {
         if (!this._configDataPath) {
-            this._configDataPath = path.join(this._baseHome, '.usdocker', 'data', this.getScript());
+            this._configDataPath = path.join(this.getUsdockerHome(), '.usdocker', 'data', this.getScript());
             fsutil.makeDirectory(this._configDataPath);
         }
         return path.join(this._configDataPath);

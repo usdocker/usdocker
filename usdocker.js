@@ -169,7 +169,7 @@ try {
             if (setParts.length !== 2) throw new Error('Invalid key pair set');
             let oldValue = configGlobal.get(setParts[0]);
             configGlobal.set(setParts[0], setParts[1]);
-            output.print(null, 'global "' + setParts[0].global + '" replaced "' + oldValue + '" by "' + setParts[1] + '"');
+            output.print(null, 'global "' + setParts[0] + '" replaced "' + oldValue + '" by "' + setParts[1] + '"');
         }
     }
 

@@ -22,17 +22,17 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.1.0",
-    "commander": "^2.11.0",
-    "dockerode": "^2.5.0",
-    "moment-timezone": "^0.5.13",
-    "nconf": "^0.8.4",
+    "chalk": "^2.3.0",
+    "commander": "^2.12.2",
+    "dockerode": "^2.5.3",
+    "moment-timezone": "^0.5.14",
+    "nconf": "^0.8.5",
     "require-uncached": "^1.0.3",
     "yesno": "0.0.1"
   },
   "devDependencies": {
-    "eslint": "^4.5.0",
+    "eslint": "^4.13.1",
     "jest": "^20.0.1",
-    "jsdoc-to-markdown": "^3.0.0"
+    "jsdoc-to-markdown": "^3.0.3"
   }
 }

@@ -22,16 +22,16 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.3.1",
-    "commander": "^2.14.1",
-    "dockerode": "^2.5.4",
-    "moment-timezone": "^0.5.14",
+    "chalk": "^2.4.1",
+    "commander": "^2.15.1",
+    "dockerode": "^2.5.5",
+    "moment-timezone": "^0.5.16",
     "nconf": "^0.10.0",
     "require-uncached": "^1.0.3",
     "yesno": "0.0.1"
   },
   "devDependencies": {
-    "eslint": "^4.18.1",
-    "jest": "^22.4.2"
+    "eslint": "^4.19.1",
+    "jest": "^22.4.3"
   }
 }

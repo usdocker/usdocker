@@ -26,7 +26,7 @@
     "commander": "^2.20.0",
     "dockerode": "^2.5.8",
     "moment-timezone": "^0.5.26",
-    "nconf": "^0.10.0",
+    "nconf": "^0.11.4",
     "require-uncached": "^2.0.0",
     "yesno": "^0.2.0"
   },
